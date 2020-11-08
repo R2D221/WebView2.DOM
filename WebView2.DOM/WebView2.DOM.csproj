@@ -5,6 +5,8 @@
     <UseWPF>true</UseWPF>
     <UseWindowsForms>True</UseWindowsForms>
     <Nullable>enable</Nullable>
+    <Version>0.0.1</Version>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -14,13 +16,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <WarningsAsErrors>NU1605;nullable</WarningsAsErrors>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="HTML\%2528top level%2529\**" />
-    <EmbeddedResource Remove="HTML\%2528top level%2529\**" />
-    <None Remove="HTML\%2528top level%2529\**" />
-    <Page Remove="HTML\%2528top level%2529\**" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Enums.NET" Version="3.0.3" />
