@@ -5,3 +5,6 @@
 /.vs
 /WebView2.DOM/bin
 /WebView2.DOM/obj
+/WebView2.DOM.Sample/bin
+/WebView2.DOM.Sample/obj
+*.user
