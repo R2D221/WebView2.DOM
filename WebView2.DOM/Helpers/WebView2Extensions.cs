@@ -155,25 +155,25 @@ namespace WebView2.DOM
 			return wpfEvents.GetValue(webView, _webView => new WpfEvents(_webView));
 		}
 
-		public static async Task Run(this Microsoft.Web.WebView2.WinForms.WebView2 webView, Action<Window> action)
+		public static async Task RunOnJsThread(this Microsoft.Web.WebView2.WinForms.WebView2 webView, Action<Window> action)
 		{
 			await (Task)webView.Invoke((Func<Task>)(async () =>
 			{
 				var coreWebView = winformsWebViews.GetValue(webView, _webView => _webView.CoreWebView2);
-				await coreWebView.Run(action);
+				await coreWebView.RunOnJsThread(action);
 			}));
 		}
 
-		public static async Task Run(this Microsoft.Web.WebView2.Wpf.WebView2 webView, Action<Window> action)
+		public static async Task RunOnJsThread(this Microsoft.Web.WebView2.Wpf.WebView2 webView, Action<Window> action)
 		{
 			await webView.Dispatcher.Invoke(async () =>
 			{
 				var coreWebView = wpfWebViews.GetValue(webView, _webView => _webView.CoreWebView2);
-				await coreWebView.Run(action);
+				await coreWebView.RunOnJsThread(action);
 			});
 		}
 
-		public static async Task Run(this CoreWebView2 coreWebView, Action<Window> action)
+		public static async Task RunOnJsThread(this CoreWebView2 coreWebView, Action<Window> action)
 		{
 			var runId = coreWebView.Coordinator().AddRunHandler(action);
 
@@ -184,6 +184,65 @@ namespace WebView2.DOM
 					WebView2DOM.EventLoop();
 				}})()
 			");
+		}
+
+		public static void RunOnWinFormsUiThread(this Microsoft.Web.WebView2.WinForms.WebView2 webView, Action action)
+		{
+			var coreWebView = winformsWebViews.GetValue(webView, _webView => _webView.CoreWebView2);
+			coreWebView.RunOnUiThread(action);
+		}
+
+		public static void RunOnWpfUiThread(this Microsoft.Web.WebView2.Wpf.WebView2 webView, Action action)
+		{
+			var coreWebView = wpfWebViews.GetValue(webView, _webView => _webView.CoreWebView2);
+			coreWebView.RunOnUiThread(action);
+		}
+
+		public static void RunOnUiThread(this CoreWebView2 coreWebView, Action action)
+		{
+			var tcs = new TaskCompletionSource();
+			coreWebView.Coordinator().EnqueueUiThreadAction(() =>
+			{
+				try
+				{
+					action();
+					tcs.SetResult();
+				}
+				catch (Exception ex)
+				{
+					tcs.SetException(ex);
+				}
+			});
+			tcs.Task.GetAwaiter().GetResult();
+		}
+
+		public static T RunOnWinFormsUiThread<T>(this Microsoft.Web.WebView2.WinForms.WebView2 webView, Func<T> action)
+		{
+			var coreWebView = winformsWebViews.GetValue(webView, _webView => _webView.CoreWebView2);
+			return coreWebView.RunOnUiThread(action);
+		}
+
+		public static T RunOnWpfUiThread<T>(this Microsoft.Web.WebView2.Wpf.WebView2 webView, Func<T> action)
+		{
+			var coreWebView = wpfWebViews.GetValue(webView, _webView => _webView.CoreWebView2);
+			return coreWebView.RunOnUiThread(action);
+		}
+
+		public static T RunOnUiThread<T>(this CoreWebView2 coreWebView, Func<T> action)
+		{
+			var tcs = new TaskCompletionSource<T>();
+			coreWebView.Coordinator().EnqueueUiThreadAction(() =>
+			{
+				try
+				{
+					tcs.SetResult(action());
+				}
+				catch (Exception ex)
+				{
+					tcs.SetException(ex);
+				}
+			});
+			return tcs.Task.GetAwaiter().GetResult();
 		}
 	}
 

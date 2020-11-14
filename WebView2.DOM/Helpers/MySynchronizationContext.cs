@@ -22,7 +22,7 @@ namespace WebView2.DOM
 		public override void Post(SendOrPostCallback d, object? state)
 		{
 			(dispatcher ?? throw new InvalidOperationException())
-				.Invoke(() => _ = coreWebView.Run(_ => d(state)));
+				.Invoke(() => _ = coreWebView.RunOnJsThread(_ => d(state)));
 		}
 	}
 }

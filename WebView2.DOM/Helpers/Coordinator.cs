@@ -26,14 +26,14 @@ namespace WebView2.DOM
 		//private readonly BlockingCollection<object?> objects = new BlockingCollection<object?>();
 		//private IEnumerator<string> enumerator;
 
-		private readonly ConcurrentDictionary<string, BlockingCollection<string>> callsDict =
-			new ConcurrentDictionary<string, BlockingCollection<string>>();
+		private readonly ConcurrentDictionary<string, BlockingCollection<object>> callsDict =
+			new ConcurrentDictionary<string, BlockingCollection<object>>();
 
 		private readonly ConcurrentDictionary<string, BlockingCollection<object?>> objectsDict =
 			new ConcurrentDictionary<string, BlockingCollection<object?>>();
 
-		private readonly ConcurrentDictionary<string, IEnumerator<string>> enumeratorDict =
-			new ConcurrentDictionary<string, IEnumerator<string>>();
+		private readonly ConcurrentDictionary<string, IEnumerator<object>> enumeratorDict =
+			new ConcurrentDictionary<string, IEnumerator<object>>();
 
 		private readonly CoreWebView2 coreWebView;
 		private readonly Action<Action>? dispatcher;
@@ -43,7 +43,7 @@ namespace WebView2.DOM
 		private CancellationToken CancellationToken =>
 			asyncLocalCts.Value?.Token ?? throw new OperationCanceledException();
 
-		private BlockingCollection<string> Calls(string windowId) =>
+		private BlockingCollection<object> Calls(string windowId) =>
 			callsDict.GetOrAdd(windowId, _ => throw new OperationCanceledException());
 
 		private BlockingCollection<object?> Objects(string windowId) =>
@@ -256,15 +256,30 @@ namespace WebView2.DOM
 		#endregion
 
 		#region Called from JavaScript: IEnumerator
-		public string Current(string windowId) => enumeratorDict.GetOrAdd(windowId, _ => throw new InvalidOperationException()).Current;
+		public string Current(string windowId) => (string)enumeratorDict.GetOrAdd(windowId, _ => throw new InvalidOperationException()).Current;
 
-		public bool MoveNext(string windowId) => enumeratorDict.GetOrAdd(windowId, _ => throw new InvalidOperationException()).MoveNext();
+		public bool MoveNext(string windowId)
+		{
+			var enumerator = enumeratorDict.GetOrAdd(windowId, _ => throw new InvalidOperationException());
+			while (enumerator.MoveNext())
+			{
+				if (enumerator.Current is string)
+				{
+					return true;
+				}
+				else if (enumerator.Current is Action action)
+				{
+					action();
+				}
+			}
+			return false;
+		}
 
 		public void Reset(string windowId)
 		{
 			var calls = callsDict.AddOrUpdate(windowId,
-				_ => new BlockingCollection<string>(),
-				(_, __) => new BlockingCollection<string>());
+				_ => new BlockingCollection<object>(),
+				(_, __) => new BlockingCollection<object>());
 			//calls = new BlockingCollection<string>();
 			enumeratorDict.AddOrUpdate(windowId,
 				_ => calls.GetConsumingEnumerable().GetEnumerator(),
@@ -558,6 +573,21 @@ namespace WebView2.DOM
 			var id = System.Guid.NewGuid().ToString();
 			runHandlers.TryAdd(id, action);
 			return id;
+		}
+
+		internal void EnqueueUiThreadAction(Action action)
+		{
+			Debugger.NotifyOfCrossThreadDependency();
+			CancellationToken.ThrowIfCancellationRequested();
+			var windowId = window.Instance.referenceId;
+			try
+			{
+				Calls(windowId).Add(action, CancellationToken);
+			}
+			catch (InvalidOperationException ex) when (ex.Source == "System.Collections.Concurrent")
+			{
+				throw new InvalidOperationException("The calling thread cannot access this object because a different thread owns it.");
+			}
 		}
 		#endregion
 	}
