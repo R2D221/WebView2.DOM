@@ -114,9 +114,9 @@ namespace WebView2.DOM
 			return references.GetValue(coreWebView, x => new References(x));
 		}
 
-		public static Coordinator Coordinator(this CoreWebView2 coreWebView)
+		public static Coordinator Coordinator(this CoreWebView2 coreWebView, Action<Action>? dispatcher = null)
 		{
-			return coordinators.GetValue(coreWebView, x => new Coordinator(x));
+			return coordinators.GetValue(coreWebView, x => new Coordinator(x, dispatcher));
 		}
 
 		public static JsonSerializerOptions Options(this CoreWebView2 coreWebView)

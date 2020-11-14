@@ -1,4 +1,5 @@
 ﻿using Microsoft.Web.WebView2.Core;
+using System;
 using System.Threading.Tasks;
 
 namespace WebView2.DOM
@@ -8,20 +9,20 @@ namespace WebView2.DOM
 		public static async Task InitAsync(Microsoft.Web.WebView2.WinForms.WebView2 webView)
 		{
 			var coreWebView = WebView2Extensions.winformsWebViews.GetValue(webView, _webView => _webView.CoreWebView2);
-			await InitAsync(coreWebView);
+			await InitAsync(coreWebView, action => webView.Invoke(action));
 		}
 
 		public static async Task InitAsync(Microsoft.Web.WebView2.Wpf.WebView2 webView)
 		{
 			var coreWebView = WebView2Extensions.wpfWebViews.GetValue(webView, _webView => _webView.CoreWebView2);
-			await InitAsync(coreWebView);
+			await InitAsync(coreWebView, action => webView.Dispatcher.Invoke(action));
 		}
 
-		public static async Task InitAsync(CoreWebView2 coreWebView)
+		public static async Task InitAsync(CoreWebView2 coreWebView, Action<Action> dispatcher)
 		{
 			coreWebView.AddHostObjectToScript("Guid", new Guid());
 			coreWebView.AddHostObjectToScript("References", coreWebView.References());
-			coreWebView.AddHostObjectToScript("Coordinator", coreWebView.Coordinator());
+			coreWebView.AddHostObjectToScript("Coordinator", coreWebView.Coordinator(dispatcher));
 
 			coreWebView.ContentLoading += (_, __) =>
 			{
@@ -92,7 +93,7 @@ namespace WebView2.DOM
 									promiseId,
 									JSON.stringify(WebView2DOM.pre_stringify(value)),
 									isComplete);
-								WebView2DOM.EventLoop();
+								//WebView2DOM.EventLoop();
 							}},
 							ex =>
 							{{
@@ -120,7 +121,7 @@ namespace WebView2.DOM
 									promiseId,
 									exJson,
 									isComplete);
-								WebView2DOM.EventLoop();
+								//WebView2DOM.EventLoop();
 							}}
 						);
 						isComplete = false;

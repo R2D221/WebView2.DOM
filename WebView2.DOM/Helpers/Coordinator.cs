@@ -1,6 +1,5 @@
 ﻿using Microsoft.Web.WebView2.Core;
 using System;
-using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -37,6 +36,7 @@ namespace WebView2.DOM
 			new ConcurrentDictionary<string, IEnumerator<string>>();
 
 		private readonly CoreWebView2 coreWebView;
+		private readonly Action<Action>? dispatcher;
 		private CancellationTokenSource cts;
 		private readonly AsyncLocal<CancellationTokenSource?> asyncLocalCts = new AsyncLocal<CancellationTokenSource?>();
 
@@ -49,12 +49,13 @@ namespace WebView2.DOM
 		private BlockingCollection<object?> Objects(string windowId) =>
 			objectsDict.GetOrAdd(windowId, _ => throw new OperationCanceledException());
 
-		internal Coordinator(CoreWebView2 coreWebView)
+		internal Coordinator(CoreWebView2 coreWebView, Action<Action>? dispatcher)
 		{
 			//calls = new BlockingCollection<string>();
 			//enumerator = calls.GetConsumingEnumerable().GetEnumerator();
 			cts = new CancellationTokenSource();
 			this.coreWebView = coreWebView;
+			this.dispatcher = dispatcher;
 		}
 
 		internal void CancelRunningThreads()
@@ -75,6 +76,7 @@ namespace WebView2.DOM
 			Reset(windowId);
 			Task.Run(() =>
 			{
+				SynchronizationContext.SetSynchronizationContext(new MySynchronizationContext(coreWebView, dispatcher));
 				try
 				{
 					asyncLocalCts.Value = cts;
@@ -95,6 +97,7 @@ namespace WebView2.DOM
 			Reset(windowId);
 			Task.Run(() =>
 			{
+				SynchronizationContext.SetSynchronizationContext(new MySynchronizationContext(coreWebView, dispatcher));
 				try
 				{
 					asyncLocalCts.Value = cts;
@@ -115,28 +118,28 @@ namespace WebView2.DOM
 		{
 			json ??= "null";
 			var tcs = References.GetTaskCompletionSource(promiseId);
-			if (isComplete)
-			{
-				tcs.SetResult(json);
-			}
-			else
-			{
-				Reset(windowId);
-				Task.Run(() =>
-				{
-					try
-					{
-						asyncLocalCts.Value = cts;
-						window.SetInstance(References.Get<Window>(windowId));
-						tcs.SetResult(json);
-					}
-					finally
-					{
-						window.SetInstance(null);
-						Calls(windowId).CompleteAdding();
-					}
-				});
-			}
+			//if (isComplete)
+			//{
+			tcs.SetResult(json);
+			//}
+			//else
+			//{
+			//	Reset(windowId);
+			//	Task.Run(() =>
+			//	{
+			//		try
+			//		{
+			//			asyncLocalCts.Value = cts;
+			//			window.SetInstance(References.Get<Window>(windowId));
+			//			tcs.SetResult(json);
+			//		}
+			//		finally
+			//		{
+			//			window.SetInstance(null);
+			//			Calls(windowId).CompleteAdding();
+			//		}
+			//	});
+			//}
 		}
 
 		public void RejectPromise(string windowId, string promiseId, string json, bool isComplete)
@@ -144,30 +147,35 @@ namespace WebView2.DOM
 			json ??= "null";
 			var tcs = References.GetTaskCompletionSource(promiseId);
 			var errorWrapper = JsonSerializer.Deserialize<ErrorWrapper>(json, coreWebView.Options());
+			if (errorWrapper is null)
+			{
+				tcs.SetException(new NullReferenceException());
+				return;
+			}
 			var ex = errorWrapper.GetException();
 
-			if (isComplete)
-			{
-				tcs.SetException(ex);
-			}
-			else
-			{
-				Reset(windowId);
-				Task.Run(() =>
-				{
-					try
-					{
-						asyncLocalCts.Value = cts;
-						window.SetInstance(References.Get<Window>(windowId));
-						tcs.SetException(ex);
-					}
-					finally
-					{
-						window.SetInstance(null);
-						Calls(windowId).CompleteAdding();
-					}
-				});
-			}
+			//if (isComplete)
+			//{
+			tcs.SetException(ex);
+			//}
+			//else
+			//{
+			//	Reset(windowId);
+			//	Task.Run(() =>
+			//	{
+			//		try
+			//		{
+			//			asyncLocalCts.Value = cts;
+			//			window.SetInstance(References.Get<Window>(windowId));
+			//			tcs.SetException(ex);
+			//		}
+			//		finally
+			//		{
+			//			window.SetInstance(null);
+			//			Calls(windowId).CompleteAdding();
+			//		}
+			//	});
+			//}
 		}
 
 		public void OnRun(string windowId, string runId)
@@ -175,6 +183,7 @@ namespace WebView2.DOM
 			Reset(windowId);
 			Task.Run(() =>
 			{
+				SynchronizationContext.SetSynchronizationContext(new MySynchronizationContext(coreWebView, dispatcher));
 				try
 				{
 					asyncLocalCts.Value = cts;
@@ -205,6 +214,7 @@ namespace WebView2.DOM
 				Reset(windowId);
 				Task.Run(() =>
 				{
+					SynchronizationContext.SetSynchronizationContext(new MySynchronizationContext(coreWebView, dispatcher));
 					try
 					{
 						asyncLocalCts.Value = cts;
@@ -282,7 +292,7 @@ namespace WebView2.DOM
 		public void Throw(string windowId, string json)
 		{
 			var errorWrapper = JsonSerializer.Deserialize<ErrorWrapper>(json ?? "null", coreWebView.Options());
-			Objects(windowId).Add(errorWrapper.GetException());
+			Objects(windowId).Add(errorWrapper?.GetException() ?? (Exception)new NullReferenceException());
 		}
 		#endregion
 

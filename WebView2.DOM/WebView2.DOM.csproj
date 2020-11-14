@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>True</UseWindowsForms>
     <Nullable>enable</Nullable>
@@ -21,11 +21,11 @@
   <ItemGroup>
     <PackageReference Include="Enums.NET" Version="3.0.3" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.674-prerelease" />
-    <PackageReference Include="NodaTime" Version="3.0.2" />
+    <PackageReference Include="NodaTime" Version="3.0.3" />
     <PackageReference Include="Range" Version="3.0.6" />
-    <PackageReference Include="SmartAnalyzers.CSharpExtensions.Annotations" Version="3.0.72" />
-    <PackageReference Include="System.Text.Json" Version="4.7.2" />
-    <PackageReference Include="TypeConvert" Version="2.1.5" />
+    <PackageReference Include="SmartAnalyzers.CSharpExtensions.Annotations" Version="3.1.76" />
+    <PackageReference Include="System.Text.Json" Version="5.0.0" />
+    <PackageReference Include="TypeConvert" Version="2.1.6" />
   </ItemGroup>
 
 </Project>

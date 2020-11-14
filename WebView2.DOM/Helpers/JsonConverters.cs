@@ -1,5 +1,4 @@
 ﻿using EnumsNET;
-using NodaTime;
 using System;
 using System.Linq;
 using System.Text.Json;
@@ -27,7 +26,7 @@ namespace WebView2.DOM.Helpers
 			Enums.RegisterCustomEnumFormat(x => x.AsString() == "_" ? "" : x.AsString().Replace("_", "-"));
 
 		public override TEnum Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
-			Enums.Parse<TEnum>(reader.GetString(), ignoreCase: false, enumFormat);
+			Enums.Parse<TEnum>(reader.GetString() ?? throw new NullReferenceException(), ignoreCase: false, enumFormat);
 
 		public override void Write(Utf8JsonWriter writer, TEnum value, JsonSerializerOptions options) =>
 			writer.WriteStringValue(Enums.AsString(value, enumFormat));
@@ -116,12 +115,9 @@ namespace WebView2.DOM.Helpers
 			&& reader.TokenType == JsonTokenType.EndObject
 			)
 			{
-				return x();
-				async Task<T> x()
-				{
-					var json = await References.GetTask(promiseId);
-					return JsonSerializer.Deserialize<T>(json, options);
-				}
+				return References.GetTask(promiseId).ContinueWith(x =>
+					JsonSerializer.Deserialize<T>(x.GetAwaiter().GetResult(), options)!
+				);
 			}
 			else
 			{
@@ -155,11 +151,7 @@ namespace WebView2.DOM.Helpers
 			&& reader.TokenType == JsonTokenType.EndObject
 			)
 			{
-				return x();
-				async Task x()
-				{
-					_ = await References.GetTask(promiseId);
-				}
+				return References.GetTask(promiseId);
 			}
 			else
 			{

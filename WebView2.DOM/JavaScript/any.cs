@@ -8,7 +8,7 @@ namespace WebView2.DOM
 		public JsonElement json { get; set; }
 		public JsonSerializerOptions? options { get; set; }
 
-		public override bool TryConvert(ConvertBinder binder, out object result)
+		public override bool TryConvert(ConvertBinder binder, out object? result)
 		{
 			result = JsonSerializer.Deserialize(json.GetRawText(), binder.Type, options);
 			return true;

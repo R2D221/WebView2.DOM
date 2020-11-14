@@ -16,7 +16,7 @@ namespace WebView2.DOM
 		internal T Get<T>([CallerMemberName] string property = "")
 		{
 			var json = coreWebView.Coordinator().Get(referenceId, property);
-			return JsonSerializer.Deserialize<T>(json, coreWebView.Options());
+			return JsonSerializer.Deserialize<T>(json, coreWebView.Options())!;
 		}
 
 		internal void Set<T>(T value, [CallerMemberName] string property = "")
@@ -27,7 +27,7 @@ namespace WebView2.DOM
 		internal T IndexerGet<T>(object? index)
 		{
 			var json = coreWebView.Coordinator().IndexerGet(referenceId, index);
-			return JsonSerializer.Deserialize<T>(json, coreWebView.Options());
+			return JsonSerializer.Deserialize<T>(json, coreWebView.Options())!;
 		}
 
 		internal void IndexerSet<T>(object? index, T value)
@@ -67,7 +67,7 @@ namespace WebView2.DOM
 			public T Invoke(params object?[] args)
 			{
 				var json = @this.coreWebView.Coordinator().Invoke(@this.referenceId, method, args);
-				return JsonSerializer.Deserialize<T>(json, @this.coreWebView.Options());
+				return JsonSerializer.Deserialize<T>(json, @this.coreWebView.Options())!;
 			}
 		}
 
@@ -83,7 +83,7 @@ namespace WebView2.DOM
 			public T Invoke(params object?[] args)
 			{
 				var json = @this.coreWebView.Coordinator().InvokeSymbol(@this.referenceId, method, args);
-				return JsonSerializer.Deserialize<T>(json, @this.coreWebView.Options());
+				return JsonSerializer.Deserialize<T>(json, @this.coreWebView.Options())!;
 			}
 		}
 	}
