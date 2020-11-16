@@ -184,6 +184,8 @@ namespace WebView2.DOM
 					WebView2DOM.EventLoop();
 				}})()
 			");
+
+			await coreWebView.Coordinator().Run(runId);
 		}
 
 		public static void RunOnWinFormsUiThread(this Microsoft.Web.WebView2.WinForms.WebView2 webView, Action action)

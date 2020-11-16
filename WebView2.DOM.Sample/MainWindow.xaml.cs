@@ -1,8 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using System.Windows;
-using WebView2.DOM;
+﻿using System.Windows;
 
 namespace WebView2.DOM.Sample
 {

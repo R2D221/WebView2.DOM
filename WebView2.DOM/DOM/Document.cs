@@ -101,8 +101,8 @@ namespace WebView2.DOM
 		#region DOM tree accessors
 		public string title { get => Get<string>(); set => Set(value); }
 		public string dir { get => Get<string>(); set => Set(value); }
-		public HTMLBodyElement? body { get => Get<HTMLBodyElement?>(); set => Set(value); }
-		public HTMLHeadElement? head => Get<HTMLHeadElement?>();
+		public HTMLBodyElement/*?*/ body { get => Get<HTMLBodyElement/*?*/>(); set => Set(value); }
+		public HTMLHeadElement/*?*/ head => Get<HTMLHeadElement/*?*/>();
 		public HTMLCollection<HTMLImageElement> images => _images ??= Get<HTMLCollection<HTMLImageElement>>();
 		private HTMLCollection<HTMLImageElement>? _images;
 		public HTMLCollection<HTMLEmbedElement> embeds => _embeds ??= Get<HTMLCollection<HTMLEmbedElement>>();

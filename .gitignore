@@ -8,3 +8,5 @@
 /WebView2.DOM.Sample/bin
 /WebView2.DOM.Sample/obj
 *.user
+/WebView2.DOM.Tests/bin
+/WebView2.DOM.Tests/obj

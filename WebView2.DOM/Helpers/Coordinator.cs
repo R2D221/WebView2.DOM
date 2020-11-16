@@ -68,29 +68,8 @@ namespace WebView2.DOM
 
 		#region Called from JavaScript: Entry points
 		public event Action? DOMContentLoaded;
-		private ConcurrentDictionary<string, Action<Window>> runHandlers =
-			new ConcurrentDictionary<string, Action<Window>>();
-
-		public void OnDOMContentLoaded(string windowId)
-		{
-			Reset(windowId);
-			Task.Run(() =>
-			{
-				SynchronizationContext.SetSynchronizationContext(new MySynchronizationContext(coreWebView, dispatcher));
-				try
-				{
-					asyncLocalCts.Value = cts;
-					var w = References.Get<Window>(windowId);
-					window.SetInstance(w);
-					DOMContentLoaded?.Invoke();
-				}
-				finally
-				{
-					window.SetInstance(null);
-					Calls(windowId).CompleteAdding();
-				}
-			});
-		}
+		private readonly ConcurrentDictionary<string, Action<Window>> runHandlers = new();
+		private readonly ConcurrentDictionary<string, Task> runTasks = new();
 
 		public void RaiseEvent(string windowId, string eventTargetId, string eventName, string eventId)
 		{
@@ -181,30 +160,40 @@ namespace WebView2.DOM
 		public void OnRun(string windowId, string runId)
 		{
 			Reset(windowId);
-			Task.Run(() =>
-			{
-				SynchronizationContext.SetSynchronizationContext(new MySynchronizationContext(coreWebView, dispatcher));
-				try
-				{
-					asyncLocalCts.Value = cts;
-					var w = References.Get<Window>(windowId);
-					window.SetInstance(w);
-					if (runHandlers.TryRemove(runId, out var action))
+			runTasks.AddOrUpdate(
+				key: runId,
+				addValueFactory: _ =>
+					Task.Run(() =>
 					{
-						action(w);
-					}
-					else
-					{
-						throw new InvalidOperationException();
-					}
-				}
-				finally
-				{
-					window.SetInstance(null);
-					Calls(windowId).CompleteAdding();
-				}
-			});
+						SynchronizationContext.SetSynchronizationContext(new MySynchronizationContext(coreWebView, dispatcher));
+						try
+						{
+							asyncLocalCts.Value = cts;
+							var w = References.Get<Window>(windowId);
+							window.SetInstance(w);
+							if (runHandlers.TryRemove(runId, out var action))
+							{
+								action(w);
+							}
+							else
+							{
+								throw new InvalidOperationException();
+							}
+						}
+						finally
+						{
+							window.SetInstance(null);
+							Calls(windowId).CompleteAdding();
+						}
+					}),
+				updateValueFactory: (_, _) => throw new InvalidOperationException()
+				);
 		}
+
+		public Task Run(string runId) =>
+			runTasks.TryRemove(runId, out var run)
+			? run
+			: throw new InvalidOperationException();
 
 		public void OnCallback(string windowId, string callbackId, string json)
 		{

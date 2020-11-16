@@ -345,13 +345,6 @@ namespace WebView2.DOM
 					Object.freeze(x);
 					return x;
 				}})();
-
-				//window.addEventListener('DOMContentLoaded', event =>
-				//{{
-				//	const Coordinator = () => window.chrome.webview.hostObjects.sync.Coordinator;
-				//	Coordinator().{nameof(DOM.Coordinator.OnDOMContentLoaded)}(WebView2DOM.GetId(window));
-				//	WebView2DOM.EventLoop();
-				//}});
 			");
 		}
 	}
