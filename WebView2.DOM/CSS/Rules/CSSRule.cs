@@ -1,9 +1,7 @@
-﻿namespace WebView2.DOM
-{
-#if DEBUG
-#error CSSRule subtypes
-#endif
+﻿using System;
 
+namespace WebView2.DOM
+{
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/css/css_rule.idl
 
 	public enum CSSRuleType : ushort
@@ -18,6 +16,7 @@
 		KEYFRAME_RULE/*	*/= 8,
 		MARGIN_RULE/*	*/= 9,
 		NAMESPACE_RULE/*	*/= 10,
+		COUNTER_STYLE_RULE/*	*/= 11,
 		SUPPORTS_RULE/*	*/= 12,
 	}
 
