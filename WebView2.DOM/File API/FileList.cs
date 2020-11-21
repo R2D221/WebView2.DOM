@@ -15,8 +15,8 @@ namespace WebView2.DOM
 			IndexerGet<File?>(index) ?? throw new ArgumentOutOfRangeException(nameof(index));
 		public uint length => Get<uint>();
 
-		public ArrayIterator<File> GetEnumerator() =>
-			SymbolMethod<ArrayIterator<File>>("iterator").Invoke();
+		public Iterator<File> GetEnumerator() =>
+			SymbolMethod<Iterator<File>>("iterator").Invoke();
 
 		int IReadOnlyCollection<File>.Count => (int)length;
 		int ICollection<File>.Count => (int)length;

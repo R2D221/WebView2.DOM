@@ -22,9 +22,11 @@ namespace WebView2.DOM
 			new ConcurrentDictionary<string, Delegate>();
 
 		private readonly Dictionary<string, Func<string, JsObject>> types;
+		private readonly CoreWebView2 coreWebView;
 
 		internal References(CoreWebView2 coreWebView)
 		{
+			this.coreWebView = coreWebView;
 			types =
 				typeof(Window).Assembly
 				.GetTypes()
@@ -45,7 +47,21 @@ namespace WebView2.DOM
 		public void Add(string id, string type)
 		{
 			objRefs.AddOrUpdate(id,
-				_ => types[type](id),
+				_ =>
+				{
+					if (types.TryGetValue(type, out var constructor))
+					{
+						return constructor(id);
+					}
+					else if (type.EndsWith("Iterator"))
+					{
+						return new Iterator { coreWebView = coreWebView, referenceId = id };
+					}
+					else
+					{
+						throw new InvalidOperationException($"JavaScript type {type} not found in C#");
+					}
+				},
 				(_, __) => throw new InvalidOperationException()
 				);
 		}

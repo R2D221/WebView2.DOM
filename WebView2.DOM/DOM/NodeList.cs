@@ -26,8 +26,8 @@ namespace WebView2.DOM
 			IndexerGet<TNode?>(index) ?? throw new ArgumentOutOfRangeException(nameof(index));
 		public uint length => Get<uint>();
 
-		public ArrayIterator<TNode> GetEnumerator() =>
-			SymbolMethod<ArrayIterator<TNode>>("iterator").Invoke();
+		public Iterator<TNode> GetEnumerator() =>
+			SymbolMethod<Iterator<TNode>>("iterator").Invoke();
 
 		int IReadOnlyCollection<TNode>.Count => (int)length;
 		int ICollection<TNode>.Count => (int)length;

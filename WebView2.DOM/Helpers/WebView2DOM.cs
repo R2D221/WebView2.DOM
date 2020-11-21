@@ -67,7 +67,7 @@ namespace WebView2.DOM
 
 						const newId = Guid().NewGuid();
 
-						References().{nameof(DOM.References.Add)}(newId, obj[Symbol.toStringTag].replace(' ', ''));
+						References().{nameof(DOM.References.Add)}(newId, obj[Symbol.toStringTag]/*.replace(' ', '')*/);
 						objToId.set(obj, newId);
 						idToObj[newId] = new WeakRef(obj);
 						registry.register(obj, newId);

@@ -38,8 +38,8 @@ namespace WebView2.DOM
 			return itemsToRemove.Length;
 		}
 
-		public ArrayIterator<DataTransferItem> GetEnumerator() =>
-			SymbolMethod<ArrayIterator<DataTransferItem>>("iterator").Invoke();
+		public Iterator<DataTransferItem> GetEnumerator() =>
+			SymbolMethod<Iterator<DataTransferItem>>("iterator").Invoke();
 
 		int IReadOnlyCollection<DataTransferItem>.Count => (int)length;
 		int ICollection<DataTransferItem>.Count => (int)length;

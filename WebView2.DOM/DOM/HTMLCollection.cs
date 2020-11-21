@@ -28,8 +28,8 @@ namespace WebView2.DOM
 			IndexerGet<TElement?>(name) ?? throw new ArgumentException(message: null, paramName: nameof(name));
 		public uint length => Get<uint>();
 
-		public ArrayIterator<TElement> GetEnumerator() =>
-			SymbolMethod<ArrayIterator<TElement>>("iterator").Invoke();
+		public Iterator<TElement> GetEnumerator() =>
+			SymbolMethod<Iterator<TElement>>("iterator").Invoke();
 
 		int IReadOnlyCollection<TElement>.Count => (int)length;
 		int ICollection<TElement>.Count => (int)length;

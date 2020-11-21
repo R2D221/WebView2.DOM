@@ -1,5 +1,6 @@
 ﻿using EnumsNET;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -207,6 +208,48 @@ namespace WebView2.DOM.Helpers
 		public override void Write(Utf8JsonWriter writer, any value, JsonSerializerOptions options)
 		{
 			throw new NotImplementedException();
+		}
+	}
+
+	internal sealed class KeyValuePairJsonConverter : JsonConverterFactory
+	{
+		public override bool CanConvert(Type typeToConvert) =>
+			typeToConvert.IsGenericType && typeToConvert.GetGenericTypeDefinition() == typeof(KeyValuePair<,>);
+
+		public override JsonConverter? CreateConverter(Type typeToConvert, JsonSerializerOptions options) =>
+			(JsonConverter)Activator.CreateInstance(typeof(KeyValuePairJsonConverter<,>).MakeGenericType(typeToConvert.GetGenericArguments()))!;
+	}
+
+	internal sealed class KeyValuePairJsonConverter<TKey, TValue> : JsonConverter<KeyValuePair<TKey, TValue>>
+	{
+		public override KeyValuePair<TKey, TValue> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			if (reader.TokenType == JsonTokenType.Null)
+			{
+				throw new NullReferenceException();
+			}
+
+			if (true
+			&& reader.TokenType == JsonTokenType.StartArray
+			&& reader.Read()
+			&& JsonSerializer.Deserialize<TKey>(ref reader, options) is TKey key
+			&& reader.Read()
+			&& JsonSerializer.Deserialize<TValue>(ref reader, options) is TValue value
+			&& reader.Read()
+			&& reader.TokenType == JsonTokenType.EndArray
+			)
+			{
+				return KeyValuePair.Create(key, value);
+			}
+			else
+			{
+				throw new InvalidOperationException();
+			}
+		}
+
+		public override void Write(Utf8JsonWriter writer, KeyValuePair<TKey, TValue> value, JsonSerializerOptions options)
+		{
+			JsonSerializer.Serialize(writer, new object?[] { value.Key, value.Value }, options);
 		}
 	}
 }

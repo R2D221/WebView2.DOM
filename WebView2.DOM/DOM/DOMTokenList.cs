@@ -23,8 +23,8 @@ namespace WebView2.DOM
 		public bool supports(string token) => Method<bool>().Invoke(token);
 		public string value { get => Get<string>(); set => Set(value); }
 
-		public ArrayIterator<string> GetEnumerator() =>
-			SymbolMethod<ArrayIterator<string>>("iterator").Invoke();
+		public Iterator<string> GetEnumerator() =>
+			SymbolMethod<Iterator<string>>("iterator").Invoke();
 
 		int IReadOnlyCollection<string>.Count => (int)length;
 		int ICollection<string>.Count => (int)length;

@@ -147,8 +147,8 @@ namespace WebView2.DOM
 		public int clientHeight => Get<int>();
 
 		// Typed OM
-		//public StylePropertyMap attributeStyleMap => _attributeStyleMap ??= Get<StylePropertyMap>();
-		//private StylePropertyMap? _attributeStyleMap;
+		public StylePropertyMap attributeStyleMap => _attributeStyleMap ??= Get<StylePropertyMap>();
+		private StylePropertyMap? _attributeStyleMap;
 
 		// Non-standard API
 		public void scrollIntoViewIfNeeded()
@@ -176,5 +176,8 @@ namespace WebView2.DOM
 
 		// Element Timing
 		public string elementTiming { get => Get<string>(); set => Set(value); }
+
+		// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/css/cssom/element_computed_style_map.idl
+		public StylePropertyMapReadOnly computedStyleMap() => Method<StylePropertyMapReadOnly>().Invoke();
 	}
 }

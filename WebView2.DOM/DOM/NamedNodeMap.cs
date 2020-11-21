@@ -24,8 +24,8 @@ namespace WebView2.DOM
 		public Attr removeNamedItem(string name) => Method<Attr>().Invoke(name);
 		public Attr removeNamedItemNS(string? namespaceURI, string localName) => Method<Attr>().Invoke(namespaceURI, localName);
 
-		public ArrayIterator<Attr> GetEnumerator() =>
-			SymbolMethod<ArrayIterator<Attr>>("iterator").Invoke();
+		public Iterator<Attr> GetEnumerator() =>
+			SymbolMethod<Iterator<Attr>>("iterator").Invoke();
 
 		int IReadOnlyCollection<Attr>.Count => (int)length;
 		int ICollection<Attr>.Count => (int)length;

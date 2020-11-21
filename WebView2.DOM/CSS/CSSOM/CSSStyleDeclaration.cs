@@ -31,7 +31,7 @@ namespace WebView2.DOM
 
 		public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
 		{
-			var enumerator = SymbolMethod<ArrayIterator<string>>("iterator").Invoke();
+			var enumerator = SymbolMethod<Iterator<string>>("iterator").Invoke();
 			while (enumerator.MoveNext())
 			{
 				var current = enumerator.Current;

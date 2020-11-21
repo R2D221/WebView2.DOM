@@ -16,8 +16,8 @@ namespace WebView2.DOM
 		public uint length => Get<uint>();
 		public TextTrackCue? getCueById(string id) => Method<TextTrackCue?>().Invoke(id);
 
-		public ArrayIterator<TextTrackCue> GetEnumerator() =>
-			SymbolMethod<ArrayIterator<TextTrackCue>>("iterator").Invoke();
+		public Iterator<TextTrackCue> GetEnumerator() =>
+			SymbolMethod<Iterator<TextTrackCue>>("iterator").Invoke();
 
 		int IReadOnlyCollection<TextTrackCue>.Count => (int)length;
 		int ICollection<TextTrackCue>.Count => (int)length;

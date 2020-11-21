@@ -131,6 +131,7 @@ namespace WebView2.DOM
 					new ActionJsonConverter(),
 					new anyJsonConverter(),
 					//new LocalDateTimeJsonConverter(),
+					new KeyValuePairJsonConverter(),
 				},
 			});
 
@@ -186,6 +187,53 @@ namespace WebView2.DOM
 			");
 
 			await coreWebView.Coordinator().Run(runId);
+		}
+
+		public static async Task RunOnJsThread(this Microsoft.Web.WebView2.WinForms.WebView2 webView, Func<Window, Task> action)
+		{
+			await (Task)webView.Invoke((Func<Task>)(async () =>
+			{
+				var coreWebView = winformsWebViews.GetValue(webView, _webView => _webView.CoreWebView2);
+				await coreWebView.RunOnJsThread(action);
+			}));
+		}
+
+		public static async Task RunOnJsThread(this Microsoft.Web.WebView2.Wpf.WebView2 webView, Func<Window, Task> action)
+		{
+			await webView.Dispatcher.Invoke(async () =>
+			{
+				var coreWebView = wpfWebViews.GetValue(webView, _webView => _webView.CoreWebView2);
+				await coreWebView.RunOnJsThread(action);
+			});
+		}
+
+		public static async Task RunOnJsThread(this CoreWebView2 coreWebView, Func<Window, Task> action)
+		{
+			TaskCompletionSource tcs = new TaskCompletionSource();
+
+			var runId = coreWebView.Coordinator().AddRunHandler(async x =>
+			{
+				try
+				{
+					await action(x);
+					tcs.SetResult();
+				}
+				catch (Exception ex)
+				{
+					tcs.SetException(ex);
+				}
+			});
+
+			await coreWebView.ExecuteScriptAsync($@"
+				(() => {{
+					const Coordinator = () => window.chrome.webview.hostObjects.sync.Coordinator;
+					Coordinator().{nameof(DOM.Coordinator.OnRun)}(WebView2DOM.GetId(window), '{runId}');
+					WebView2DOM.EventLoop();
+				}})()
+			");
+
+			await coreWebView.Coordinator().Run(runId);
+			await tcs.Task;
 		}
 
 		public static void RunOnWinFormsUiThread(this Microsoft.Web.WebView2.WinForms.WebView2 webView, Action action)

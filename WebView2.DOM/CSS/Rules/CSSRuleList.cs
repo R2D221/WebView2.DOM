@@ -15,8 +15,8 @@ namespace WebView2.DOM
 			IndexerGet<CSSRule?>(index) ?? throw new ArgumentOutOfRangeException(nameof(index));
 		public uint length => Get<uint>();
 
-		public ArrayIterator<CSSRule> GetEnumerator() =>
-			SymbolMethod<ArrayIterator<CSSRule>>("iterator").Invoke();
+		public Iterator<CSSRule> GetEnumerator() =>
+			SymbolMethod<Iterator<CSSRule>>("iterator").Invoke();
 
 		int IReadOnlyCollection<CSSRule>.Count => (int)length;
 		int ICollection<CSSRule>.Count => (int)length;

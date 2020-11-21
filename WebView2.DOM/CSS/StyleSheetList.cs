@@ -17,8 +17,8 @@ namespace WebView2.DOM
 			IndexerGet<CSSStyleSheet?>(name) ?? throw new ArgumentException(message: null, paramName: nameof(name));
 		public uint length => Get<uint>();
 
-		public ArrayIterator<StyleSheet> GetEnumerator() =>
-			SymbolMethod<ArrayIterator<StyleSheet>>("iterator").Invoke();
+		public Iterator<StyleSheet> GetEnumerator() =>
+			SymbolMethod<Iterator<StyleSheet>>("iterator").Invoke();
 
 		int IReadOnlyCollection<StyleSheet>.Count => (int)length;
 		int ICollection<StyleSheet>.Count => (int)length;

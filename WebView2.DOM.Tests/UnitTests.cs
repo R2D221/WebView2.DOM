@@ -1,6 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Threading.Tasks;
 using static WebView2.DOM.HTMLElementTag;
 
@@ -10,7 +10,7 @@ namespace WebView2.DOM.Tests
 	public partial class UnitTests
 	{
 		[TestMethod]
-		public async Task T001_RunsNormally()
+		public async Task RunsNormally()
 		{
 			var ran = false;
 
@@ -23,19 +23,50 @@ namespace WebView2.DOM.Tests
 		}
 
 		[TestMethod]
-		public async Task T002_ExceptionPropagatesToCaller()
+		public async Task ExceptionPropagatesToCaller()
 		{
 			await Assert.ThrowsExceptionAsync<MyException>(async () =>
 			{
 				await webView.RunOnJsThread(window =>
 				{
 					throw new MyException();
+#pragma warning disable CS0162
+					// Explicit return so the Action<Window> overload is preferred
+					return;
+#pragma warning restore CS0162
 				});
 			});
 		}
 
 		[TestMethod]
-		public async Task T003_EnumeratesStyleProperties()
+		public async Task ExceptionPropagatesToCallerAsynchronously()
+		{
+			await Assert.ThrowsExceptionAsync<MyException>(async () =>
+			{
+				await webView.RunOnJsThread(async window =>
+				{
+					await Task.Delay(1);
+					throw new MyException();
+				});
+			});
+		}
+
+		[TestMethod]
+		public async Task JsIteratorBindsToCSharpEnumerator()
+		{
+			await webView.RunOnJsThread(window =>
+			{
+				var children = window.document.children;
+				var enumerator = children.GetEnumerator();
+				Assert.IsTrue(enumerator.MoveNext());
+				Assert.IsInstanceOfType(enumerator.Current, typeof(HTMLHtmlElement));
+				Assert.IsFalse(enumerator.MoveNext());
+				Assert.IsNull(enumerator.Current);
+			});
+		}
+
+		[TestMethod]
+		public async Task EnumeratesStyleProperties()
 		{
 			await webView.RunOnJsThread(window =>
 			{
@@ -56,6 +87,18 @@ namespace WebView2.DOM.Tests
 				Assert.AreEqual("10px", styleDict["height"]);
 
 				myDiv.remove();
+			});
+		}
+
+		[TestMethod]
+		public async Task ComputedStyleMapEnumerationWorksCorrectly()
+		{
+			await webView.RunOnJsThread(window =>
+			{
+				var body = window.document.body;
+				var styleMap = body.computedStyleMap();
+				var styleMapEnumerableCount = styleMap.Count();
+				Assert.AreEqual(styleMap.size, (uint)styleMapEnumerableCount);
 			});
 		}
 	}

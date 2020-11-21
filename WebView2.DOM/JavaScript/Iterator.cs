@@ -5,15 +5,15 @@ using System.Collections.Generic;
 
 namespace WebView2.DOM
 {
-	public sealed class ArrayIterator : JsObject { }
+	public sealed class Iterator : JsObject { }
 
-	public sealed class ArrayIterator<T> : JsObject, IEnumerator<T>
+	public sealed class Iterator<T> : JsObject, IEnumerator<T>
 	{
-		public static implicit operator ArrayIterator<T>(ArrayIterator arrayIterator) => new ArrayIterator<T>(arrayIterator);
+		public static implicit operator Iterator<T>(Iterator iterator) => new Iterator<T>(iterator);
 
-		internal ArrayIterator(ArrayIterator arrayIterator)
+		internal Iterator(Iterator iterator)
 		{
-			References.Swap(source: arrayIterator, target: this);
+			References.Swap(source: iterator, target: this);
 		}
 
 		private T current = default!;

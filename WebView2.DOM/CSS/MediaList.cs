@@ -18,8 +18,8 @@ namespace WebView2.DOM
 		public void appendMedium(string medium) => Method().Invoke(medium);
 		public void deleteMedium(string medium) => Method().Invoke(medium);
 
-		public ArrayIterator<string> GetEnumerator() =>
-			SymbolMethod<ArrayIterator<string>>("iterator").Invoke();
+		public Iterator<string> GetEnumerator() =>
+			SymbolMethod<Iterator<string>>("iterator").Invoke();
 
 		int IReadOnlyCollection<string>.Count => (int)length;
 		int ICollection<string>.Count => (int)length;

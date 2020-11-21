@@ -21,8 +21,8 @@ namespace WebView2.DOM
 		public event EventHandler<TrackEvent>? onaddtrack { add => AddEvent(value); remove => RemoveEvent(value); }
 		public event EventHandler<TrackEvent>? onremovetrack { add => AddEvent(value); remove => RemoveEvent(value); }
 
-		public ArrayIterator<TextTrack> GetEnumerator() =>
-			SymbolMethod<ArrayIterator<TextTrack>>("iterator").Invoke();
+		public Iterator<TextTrack> GetEnumerator() =>
+			SymbolMethod<Iterator<TextTrack>>("iterator").Invoke();
 
 		int IReadOnlyCollection<TextTrack>.Count => (int)length;
 		int ICollection<TextTrack>.Count => (int)length;
