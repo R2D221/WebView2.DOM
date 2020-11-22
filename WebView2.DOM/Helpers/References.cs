@@ -90,6 +90,14 @@ namespace WebView2.DOM
 		#endregion
 
 		#region Called from C#
+		internal void Add(JsObject jsObject)
+		{
+			objRefs.AddOrUpdate(jsObject.referenceId,
+				jsObject,
+				(_, __) => throw new InvalidOperationException()
+				);
+		}
+
 		internal static T? GetNullable<T>(string? id)
 			where T : JsObject
 		{

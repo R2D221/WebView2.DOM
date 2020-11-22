@@ -13,6 +13,14 @@ namespace WebView2.DOM
 		[InitRequired]
 		internal string referenceId { get; set; }
 
+		internal void Construct(params object?[] args)
+		{
+			coreWebView = window.Instance.coreWebView;
+			referenceId = System.Guid.NewGuid().ToString();
+			coreWebView.References().Add(this);
+			coreWebView.Coordinator().Construct(referenceId, GetType().Name, args);
+		}
+
 		internal T Get<T>([CallerMemberName] string property = "")
 		{
 			var json = coreWebView.Coordinator().Get(referenceId, property);

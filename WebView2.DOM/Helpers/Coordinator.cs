@@ -301,6 +301,34 @@ namespace WebView2.DOM
 		#endregion
 
 		#region Called from C#
+		internal string Construct(string referenceId, string type, object?[] args)
+		{
+			Debugger.NotifyOfCrossThreadDependency();
+			CancellationToken.ThrowIfCancellationRequested();
+			var windowId = window.Instance.referenceId;
+			try
+			{
+				Calls(windowId).Add(JsonSerializer.Serialize(new CoordinatorCall
+				{
+					referenceId = referenceId,
+					memberType = "constructor",
+					memberName = type,
+					parameters = args,
+				}, coreWebView.Options()), CancellationToken);
+			}
+			catch (InvalidOperationException ex) when (ex.Source == "System.Collections.Concurrent")
+			{
+				throw new InvalidOperationException("The calling thread cannot access this object because a different thread owns it.");
+			}
+
+			switch (Objects(windowId).Take(CancellationToken))
+			{
+			case Exception ex: throw ex;
+			case null: return "";
+			default: throw new InvalidOperationException();
+			}
+		}
+
 		internal string Get(string referenceId, string property)
 		{
 			Debugger.NotifyOfCrossThreadDependency();

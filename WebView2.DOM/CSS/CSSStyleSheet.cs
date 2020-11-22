@@ -6,6 +6,8 @@ namespace WebView2.DOM
 
 	public class CSSStyleSheet : StyleSheet
 	{
+		public CSSStyleSheet() => Construct();
+
 		public CSSRule? ownerRule => Get<CSSRule?>();
 		public CSSRuleList cssRules => _cssRules ??= Get<CSSRuleList>();
 		private CSSRuleList? _cssRules;

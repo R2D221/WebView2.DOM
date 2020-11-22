@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
@@ -99,6 +100,24 @@ namespace WebView2.DOM.Tests
 				var styleMap = body.computedStyleMap();
 				var styleMapEnumerableCount = styleMap.Count();
 				Assert.AreEqual(styleMap.size, (uint)styleMapEnumerableCount);
+			});
+		}
+
+		[TestMethod]
+		public async Task ConstructNewJsObject()
+		{
+			await webView.RunOnJsThread(window =>
+			{
+				var styleSheet = new CSSStyleSheet();
+				Assert.IsInstanceOfType(styleSheet, typeof(CSSStyleSheet));
+				Assert.IsInstanceOfType(styleSheet.cssRules, typeof(CSSRuleList));
+			});
+
+			Assert.ThrowsException<InvalidOperationException>(() =>
+			{
+				// You can't construct a new JS object
+				// if you're not in the JS thread
+				var styleSheet = new CSSStyleSheet();
 			});
 		}
 	}

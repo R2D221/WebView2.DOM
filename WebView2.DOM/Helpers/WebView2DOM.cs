@@ -51,6 +51,18 @@ namespace WebView2.DOM
 
 					const x = {{}};
 
+					x.SetId = function (obj, newId)
+					{{
+						if (obj == null)
+						{{
+							return;
+						}}
+
+						objToId.set(obj, newId);
+						idToObj[newId] = new WeakRef(obj);
+						registry.register(obj, newId);
+					}};
+
 					x.GetId = function (obj)
 					{{
 						if (obj == null)
@@ -77,6 +89,7 @@ namespace WebView2.DOM
 					x.GetObject = function (id)
 					{{
 						if (id == null) {{ return null; }}
+						if (idToObj[id] == null) {{ return null; }}
 						return idToObj[id].deref();
 					}};
 
@@ -217,6 +230,13 @@ namespace WebView2.DOM
 
 								switch (current.{nameof(CoordinatorCall.memberType)})
 								{{
+									case 'constructor':
+									(() => {{
+										const result = new window[memberName](...WebView2DOM.post_parse(current.{nameof(CoordinatorCall.parameters)}));
+										WebView2DOM.SetId(result, current.{nameof(CoordinatorCall.referenceId)});
+										Coordinator().{nameof(DOM.Coordinator.ReturnVoid)}(windowId);
+									}})();
+									break;
 									case 'getter':
 									(() => {{
 										const result = reference[memberName];
