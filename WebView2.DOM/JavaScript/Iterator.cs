@@ -9,9 +9,9 @@ namespace WebView2.DOM
 
 	public sealed class Iterator<T> : JsObject, IEnumerator<T>
 	{
-		public static implicit operator Iterator<T>(Iterator iterator) => new Iterator<T>(iterator);
+		public static Iterator<T> FromJsObject(JsObject iterator) => new Iterator<T>(iterator);
 
-		internal Iterator(Iterator iterator)
+		internal Iterator(JsObject iterator)
 		{
 			References.Swap(source: iterator, target: this);
 		}

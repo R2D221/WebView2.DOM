@@ -37,12 +37,4 @@ namespace WebView2.DOM
 		public void delete(string property) => Method().Invoke(property);
 		public void clear() => Method().Invoke();
 	}
-
-	public class CSSStyleValue : JsObject
-	{
-		//#error
-	}
-
-	public class CSSKeywordValue : CSSStyleValue { }
-	public class CSSPositionValue : CSSStyleValue { }
 }

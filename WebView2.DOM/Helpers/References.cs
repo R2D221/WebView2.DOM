@@ -32,7 +32,11 @@ namespace WebView2.DOM
 				.GetTypes()
 				.Where(x => x.IsClass && typeof(JsObject).IsAssignableFrom(x))
 				.ToDictionary<Type, string, Func<string, JsObject>>(
-					type => type.Name,
+					type => type.Name switch
+					{
+						"JsObject" => "Object",
+						_ => type.Name,
+					},
 					type => (id) =>
 					{
 						var obj = (JsObject)Activator.CreateInstance(type)!;
@@ -53,10 +57,10 @@ namespace WebView2.DOM
 					{
 						return constructor(id);
 					}
-					else if (type.EndsWith("Iterator"))
-					{
-						return new Iterator { coreWebView = coreWebView, referenceId = id };
-					}
+					//else if (type.EndsWith("Iterator"))
+					//{
+					//	return new Iterator { coreWebView = coreWebView, referenceId = id };
+					//}
 					else
 					{
 						throw new InvalidOperationException($"JavaScript type {type} not found in C#");

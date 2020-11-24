@@ -5,7 +5,7 @@ using System.Text.Json;
 
 namespace WebView2.DOM
 {
-	public abstract class JsObject
+	public class JsObject
 	{
 		[InitRequired]
 		internal CoreWebView2 coreWebView { get; set; }
@@ -95,4 +95,6 @@ namespace WebView2.DOM
 			}
 		}
 	}
+
+	public class Function : JsObject { }
 }

@@ -120,5 +120,17 @@ namespace WebView2.DOM.Tests
 				var styleSheet = new CSSStyleSheet();
 			});
 		}
+
+		[TestMethod]
+		public async Task CSSValuesOperations()
+		{
+			await webView.RunOnJsThread(window =>
+			{
+				var x = CSS.number(10);
+				var y = 6;
+				var result = x + y;
+				Assert.AreEqual(16, result);
+			});
+		}
 	}
 }

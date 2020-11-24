@@ -79,7 +79,7 @@ namespace WebView2.DOM
 
 						const newId = Guid().NewGuid();
 
-						References().{nameof(DOM.References.Add)}(newId, obj[Symbol.toStringTag]/*.replace(' ', '')*/);
+						References().{nameof(DOM.References.Add)}(newId, obj.constructor.name);
 						objToId.set(obj, newId);
 						idToObj[newId] = new WeakRef(obj);
 						registry.register(obj, newId);
@@ -151,6 +151,7 @@ namespace WebView2.DOM
 							|| obj instanceof DOMStringList
 							|| obj instanceof DOMRectList
 							|| obj instanceof TouchList
+							|| obj instanceof CSSNumericArray
 							)
 						{{
 							return Array.from(obj, x => WebView2DOM.pre_stringify(x));
