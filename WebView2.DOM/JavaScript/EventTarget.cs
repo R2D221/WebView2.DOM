@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Web.WebView2.Core;
+using System;
 using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 
@@ -6,6 +7,10 @@ namespace WebView2.DOM
 {
 	public class EventTarget : JsObject
 	{
+		protected internal EventTarget(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		internal ConcurrentDictionary<string, Delegate?> events { get; set; } =
 			new ConcurrentDictionary<string, Delegate?>();
 

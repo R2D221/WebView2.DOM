@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Web.WebView2.Core;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,6 +12,10 @@ namespace WebView2.DOM
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
 	public class CSSRuleList : JsObject, ICollection<CSSRule>, IReadOnlyCollection<CSSRule>
 	{
+		protected internal CSSRuleList(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public CSSRule this[uint index] =>
 			IndexerGet<CSSRule?>(index) ?? throw new ArgumentOutOfRangeException(nameof(index));
 		public uint length => Get<uint>();

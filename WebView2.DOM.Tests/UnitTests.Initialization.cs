@@ -32,7 +32,7 @@ namespace WebView2.DOM.Tests
 					mainWindow.Content = webView;
 					await webView.EnsureCoreWebView2Async();
 					await WebView2DOM.InitAsync(webView);
-					void DOMContentLoaded(object? s, CoreWebView2DOMContentLoadedEventArgs e)
+					void DOMContentLoaded(object? s, EventArgs e)
 					{
 						webView.DOMContentLoaded().Handler -= DOMContentLoaded;
 						tcs.SetResult();

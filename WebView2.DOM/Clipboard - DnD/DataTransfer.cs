@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Web.WebView2.Core;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 
 namespace WebView2.DOM
@@ -7,6 +8,10 @@ namespace WebView2.DOM
 
 	public class DataTransfer : JsObject
 	{
+		protected internal DataTransfer(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public string dropEffect { get => Get<string>(); set => Set(value); }
 		public string effectAllowed { get => Get<string>(); set => Set(value); }
 

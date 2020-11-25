@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Web.WebView2.Core;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 
 namespace WebView2.DOM
@@ -7,6 +8,10 @@ namespace WebView2.DOM
 
 	public class PointerEvent : MouseEvent
 	{
+		protected internal PointerEvent(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public int pointerId => Get<int>();
 		public double width => Get<double>();
 		public double height => Get<double>();

@@ -1,10 +1,19 @@
-﻿namespace WebView2.DOM
+﻿using Microsoft.Web.WebView2.Core;
+
+namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/css/cssom/css_keyword_value.idl
 
 	public class CSSKeywordValue : CSSStyleValue
 	{
-		public CSSKeywordValue(string keyword) => Construct(keyword);
+		protected internal CSSKeywordValue(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
+		public CSSKeywordValue(string keyword)
+			: this(window.Instance.coreWebView, System.Guid.NewGuid().ToString()) =>
+			Construct(keyword);
+
 		public string value { get => Get<string>(); set => Set(value); }
 	}
 }

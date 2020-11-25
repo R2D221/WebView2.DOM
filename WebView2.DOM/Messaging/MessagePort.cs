@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Web.WebView2.Core;
+using System;
 using System.Collections.Generic;
 
 namespace WebView2.DOM
@@ -15,6 +16,10 @@ namespace WebView2.DOM
 	[Obsolete("not tested")]
 	public partial class MessagePort : EventTarget
 	{
+		protected internal MessagePort(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public void postMessage(object? message) => Method().Invoke(message);
 		public void postMessage(object? message, IReadOnlyList<Transferable> transfer) => Method().Invoke(message, transfer);
 		public void postMessage(object? message, PostMessageOptions options) => Method().Invoke(message, options);

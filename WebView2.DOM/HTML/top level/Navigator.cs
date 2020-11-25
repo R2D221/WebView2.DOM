@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Web.WebView2.Core;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
@@ -9,6 +10,10 @@ namespace WebView2.DOM
 
 	public class Navigator : JsObject
 	{
+		protected internal Navigator(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		[Obsolete("The value of the Navigator.vendorSub property is always the empty string, in any browser.")]
 		public string vendorSub => Get<string>();
 
@@ -69,6 +74,10 @@ namespace WebView2.DOM
 
 	public class NavigatorUAData : JsObject
 	{
+		protected internal NavigatorUAData(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public IReadOnlyList<NavigatorUABrandVersion> brands => Get<ImmutableArray<NavigatorUABrandVersion>>();
 		public bool mobile => Get<bool>();
 		public Task<UADataValues> getHighEntropyValues(IReadOnlyList<string> hints) =>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Web.WebView2.Core;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 
@@ -8,6 +9,10 @@ namespace WebView2.DOM
 
 	public class Location : JsObject
 	{
+		protected internal Location(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public void assign(string url) => Method().Invoke(url);
 
 		public void replace(string url) => Method().Invoke(url);

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Web.WebView2.Core;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -28,6 +29,10 @@ namespace WebView2.DOM
 
 	public class ScreenOrientation : EventTarget
 	{
+		protected internal ScreenOrientation(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public ushort angle => Get<ushort>();
 		public OrientationType type => Get<OrientationType>();
 

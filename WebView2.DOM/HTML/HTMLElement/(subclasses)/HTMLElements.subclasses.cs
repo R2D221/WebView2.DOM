@@ -1,4 +1,5 @@
-﻿using NodaTime;
+﻿using Microsoft.Web.WebView2.Core;
+using NodaTime;
 using OneOf;
 using OneOf.Types;
 using System;
@@ -14,22 +15,87 @@ using WebView2.DOM.Microsyntaxes;
 namespace WebView2.DOM
 {
 	#region canvas
-	public class HTMLCanvasElement : HTMLElement { }
+	public class HTMLCanvasElement : HTMLElement
+	{
+		protected internal HTMLCanvasElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+	}
 	#endregion
 
 	#region forms
-	public class HTMLButtonElement : HTMLElement { }
-	public class HTMLDataListElement : HTMLElement { }
-	public class HTMLFieldSetElement : HTMLElement { }
-	public class HTMLFormElement : HTMLElement { }
-	public class HTMLInputElement : HTMLElement { }
-	public class HTMLLabelElement : HTMLElement { }
-	public class HTMLLegendElement : HTMLElement { }
-	public class HTMLOptGroupElement : HTMLElement { }
-	public class HTMLOptionElement : HTMLElement { }
-	public class HTMLOutputElement : HTMLElement { }
-	public class HTMLSelectElement : HTMLElement { }
-	public class HTMLTextAreaElement : HTMLElement { }
+	public class HTMLButtonElement : HTMLElement
+	{
+		protected internal HTMLButtonElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+	}
+	public class HTMLDataListElement : HTMLElement
+	{
+		protected internal HTMLDataListElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+	}
+	public class HTMLFieldSetElement : HTMLElement
+	{
+		protected internal HTMLFieldSetElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+	}
+	public class HTMLFormElement : HTMLElement
+	{
+		protected internal HTMLFormElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+	}
+	public class HTMLInputElement : HTMLElement
+	{
+		protected internal HTMLInputElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+	}
+	public class HTMLLabelElement : HTMLElement
+	{
+		protected internal HTMLLabelElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+	}
+	public class HTMLLegendElement : HTMLElement
+	{
+		protected internal HTMLLegendElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+	}
+	public class HTMLOptGroupElement : HTMLElement
+	{
+		protected internal HTMLOptGroupElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+	}
+	public class HTMLOptionElement : HTMLElement
+	{
+		protected internal HTMLOptionElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+	}
+	public class HTMLOutputElement : HTMLElement
+	{
+		protected internal HTMLOutputElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+	}
+	public class HTMLSelectElement : HTMLElement
+	{
+		protected internal HTMLSelectElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+	}
+	public class HTMLTextAreaElement : HTMLElement
+	{
+		protected internal HTMLTextAreaElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+	}
 
 	#endregion
 
@@ -52,6 +118,10 @@ namespace WebView2.DOM
 
 	public sealed class HTMLAnchorElement : HTMLElement
 	{
+		internal HTMLAnchorElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		// HTMLAnchorElement includes HTMLHyperlinkElementUtils
 		public Uri href { get => Get<Uri>(); set => Set(value); }
 
@@ -87,6 +157,10 @@ namespace WebView2.DOM
 
 	public sealed class HTMLAreaElement : HTMLElement
 	{
+		internal HTMLAreaElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		// HTMLAnchorElement includes HTMLHyperlinkElementUtils
 		public Uri href { get => Get<Uri>(); set => Set(value); }
 
@@ -119,11 +193,20 @@ namespace WebView2.DOM
 
 	public class HTMLBaseElement : HTMLElement
 	{
+		protected internal HTMLBaseElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public Uri href { get => Get<Uri>(); set => Set(value); }
 		public string target { get => Get<string>(); set => Set(value); }
 	}
 
-	public partial class HTMLBodyElement : HTMLElement { }
+	public partial class HTMLBodyElement : HTMLElement
+	{
+		protected internal HTMLBodyElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+	}
 
 	public partial class HTMLBodyElement : WindowEventHandlers
 	{
@@ -144,20 +227,37 @@ namespace WebView2.DOM
 		public event EventHandler<Event/*	*/> onunload/*	*/{ add => AddEvent(value); remove => RemoveEvent(value); }
 	}
 
-	public class HTMLBRElement : HTMLElement { }
+	public class HTMLBRElement : HTMLElement
+	{
+		protected internal HTMLBRElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+	}
 
 	public class HTMLDataElement : HTMLElement
 	{
+		protected internal HTMLDataElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public string value { get => Get<string>(); set => Set(value); }
 	}
 
 	public class HTMLDetailsElement : HTMLElement
 	{
+		protected internal HTMLDetailsElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public bool open { get => Get<bool>(); set => Set(value); }
 	}
 
 	public class HTMLDialogElement : HTMLElement
 	{
+		protected internal HTMLDialogElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public bool open { get => Get<bool>(); set => Set(value); }
 		public string returnValue { get => Get<string>(); set => Set(value); }
 		public void show() => Method().Invoke();
@@ -166,12 +266,26 @@ namespace WebView2.DOM
 		public void close(string returnValue) => Method().Invoke(returnValue);
 	}
 
-	public class HTMLDivElement : HTMLElement { }
+	public class HTMLDivElement : HTMLElement
+	{
+		protected internal HTMLDivElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+	}
 
-	public class HTMLDListElement : HTMLElement { }
+	public class HTMLDListElement : HTMLElement
+	{
+		protected internal HTMLDListElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+	}
 
 	public class HTMLEmbedElement : HTMLElement
 	{
+		protected internal HTMLEmbedElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public Uri src { get => Get<Uri>(); set => Set(value); }
 		public string type { get => Get<string>(); set => Set(value); }
 		public uint width { get => JsonSerializer.Deserialize<uint>(Get<string>()); set => Set(JsonSerializer.Serialize(value)); }
@@ -179,18 +293,42 @@ namespace WebView2.DOM
 		public Document? getSVGDocument() => Method<Document?>().Invoke();
 	}
 
-	public class HTMLHeadElement : HTMLElement { }
+	public class HTMLHeadElement : HTMLElement
+	{
+		protected internal HTMLHeadElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+	}
 
-	public class HTMLHeadingElement : HTMLElement { }
+	public class HTMLHeadingElement : HTMLElement
+	{
+		protected internal HTMLHeadingElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+	}
 
-	public class HTMLHRElement : HTMLElement { }
+	public class HTMLHRElement : HTMLElement
+	{
+		protected internal HTMLHRElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+	}
 
-	public class HTMLHtmlElement : HTMLElement { }
+	public class HTMLHtmlElement : HTMLElement
+	{
+		protected internal HTMLHtmlElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+	}
 
 	public enum LazyLoading { _, lazy, eager }
 
 	public class HTMLIFrameElement : HTMLElement
 	{
+		protected internal HTMLIFrameElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public Uri src { get => Get<Uri>(); set => Set(value); }
 		public string srcdoc { get => Get<string>(); set => Set(value); }
 		public string name { get => Get<string>(); set => Set(value); }
@@ -227,6 +365,10 @@ namespace WebView2.DOM
 
 	public class HTMLImageElement : HTMLElement
 	{
+		protected internal HTMLImageElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public string alt { get => Get<string>(); set => Set(value); }
 		public Uri src { get => Get<Uri>(); set => Set(value); }
 		public IReadOnlyList<SrcSetItem> srcset
@@ -258,6 +400,10 @@ namespace WebView2.DOM
 
 	public class HTMLLIElement : HTMLElement
 	{
+		protected internal HTMLLIElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public int value { get => Get<int>(); set => Set(value); }
 	}
 
@@ -265,6 +411,10 @@ namespace WebView2.DOM
 
 	public class HTMLLinkElement : HTMLElement
 	{
+		protected internal HTMLLinkElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public bool disabled { get => Get<bool>(); set => Set(value); }
 		public Uri href { get => Get<Uri>(); set => Set(value); }
 		public CrossOrigin? crossOrigin { get => Get<CrossOrigin?>(); set => Set(value); }
@@ -297,12 +447,20 @@ namespace WebView2.DOM
 
 	public class HTMLMapElement : HTMLElement
 	{
+		protected internal HTMLMapElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public string name { get => Get<string>(); set => Set(value); }
 		public HTMLCollection<HTMLAreaElement> areas => Get<HTMLCollection<HTMLAreaElement>>();
 	}
 
 	public class HTMLMetaElement : HTMLElement
 	{
+		protected internal HTMLMetaElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public string name { get => Get<string>(); set => Set(value); }
 		public string httpEquiv { get => Get<string>(); set => Set(value); }
 		public string content { get => Get<string>(); set => Set(value); }
@@ -310,6 +468,10 @@ namespace WebView2.DOM
 
 	public class HTMLMeterElement : HTMLElement
 	{
+		protected internal HTMLMeterElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public double value { get => Get<double>(); set => Set(value); }
 		public double min { get => Get<double>(); set => Set(value); }
 		public double max { get => Get<double>(); set => Set(value); }
@@ -321,6 +483,10 @@ namespace WebView2.DOM
 
 	public class HTMLModElement : HTMLElement
 	{
+		protected internal HTMLModElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public Uri cite { get => Get<Uri>(); set => Set(value); }
 		public string dateTime
 		{
@@ -336,6 +502,10 @@ namespace WebView2.DOM
 
 	public class HTMLObjectElement : HTMLElement
 	{
+		protected internal HTMLObjectElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public Uri data { get => Get<Uri>(); set => Set(value); }
 		public string type { get => Get<string>(); set => Set(value); }
 		public string name { get => Get<string>(); set => Set(value); }
@@ -357,25 +527,52 @@ namespace WebView2.DOM
 
 	public class HTMLOListElement : HTMLElement
 	{
+		protected internal HTMLOListElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public bool reversed { get => Get<bool>(); set => Set(value); }
 		public int start { get => Get<int>(); set => Set(value); }
 		public string type { get => Get<string>(); set => Set(value); }
 	}
 
-	public class HTMLParagraphElement : HTMLElement { }
+	public class HTMLParagraphElement : HTMLElement
+	{
+		protected internal HTMLParagraphElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+	}
 
 	public class HTMLParamElement : HTMLElement
 	{
+		protected internal HTMLParamElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public string name { get => Get<string>(); set => Set(value); }
 		public string value { get => Get<string>(); set => Set(value); }
 	}
 
-	public class HTMLPictureElement : HTMLElement { }
+	public class HTMLPictureElement : HTMLElement
+	{
+		protected internal HTMLPictureElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+	}
 
-	public class HTMLPreElement : HTMLElement { }
+	public class HTMLPreElement : HTMLElement
+	{
+		protected internal HTMLPreElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+	}
 
 	public class HTMLProgressElement : HTMLElement
 	{
+		protected internal HTMLProgressElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public double value { get => Get<double>(); set => Set(value); }
 		public double max { get => Get<double>(); set => Set(value); }
 		public double position => Get<double>();
@@ -384,11 +581,19 @@ namespace WebView2.DOM
 
 	public class HTMLQuoteElement : HTMLElement
 	{
+		protected internal HTMLQuoteElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public Uri cite { get => Get<Uri>(); set => Set(value); }
 	}
 
 	public class HTMLScriptElement : HTMLElement
 	{
+		protected internal HTMLScriptElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public Uri src { get => Get<Uri>(); set => Set(value); }
 		public string type { get => Get<string>(); set => Set(value); }
 		public bool noModule { get => Get<bool>(); set => Set(value); }
@@ -411,6 +616,10 @@ namespace WebView2.DOM
 
 	public class HTMLSlotElement : HTMLElement
 	{
+		protected internal HTMLSlotElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public string name { get => Get<string>(); set => Set(value); }
 		public IReadOnlyList<Node> assignedNodes() =>
 			Method<ImmutableArray<Node>>().Invoke();
@@ -462,6 +671,10 @@ namespace WebView2.DOM
 
 	public class HTMLSourceElement : HTMLElement
 	{
+		protected internal HTMLSourceElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public Uri src { get => Get<Uri>(); set => Set(value); }
 		public string type { get => Get<string>(); set => Set(value); }
 
@@ -474,10 +687,19 @@ namespace WebView2.DOM
 		public string media { get => Get<string>(); set => Set(value); }
 	}
 
-	public class HTMLSpanElement : HTMLElement { }
+	public class HTMLSpanElement : HTMLElement
+	{
+		protected internal HTMLSpanElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+	}
 
 	public class HTMLStyleElement : HTMLElement
 	{
+		protected internal HTMLStyleElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public bool disabled { get => Get<bool>(); set => Set(value); }
 		public string media { get => Get<string>(); set => Set(value); }
 		public string type { get => Get<string>(); set => Set(value); }
@@ -485,12 +707,21 @@ namespace WebView2.DOM
 		public StyleSheet? sheet => Get<StyleSheet?>();
 	}
 
-	public class HTMLTableCaptionElement : HTMLElement { }
+	public class HTMLTableCaptionElement : HTMLElement
+	{
+		protected internal HTMLTableCaptionElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+	}
 
 	public enum TableHeaderCellScope { _, row, col, rowgroup, colgroup }
 
 	public class HTMLTableCellElement : HTMLElement
 	{
+		protected internal HTMLTableCellElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public uint colSpan { get => Get<uint>(); set => Set(value); }
 		public uint rowSpan { get => Get<uint>(); set => Set(value); }
 		public string headers { get => Get<string>(); set => Set(value); }
@@ -502,11 +733,19 @@ namespace WebView2.DOM
 
 	public class HTMLTableColElement : HTMLElement
 	{
+		protected internal HTMLTableColElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public uint span { get => Get<uint>(); set => Set(value); }
 	}
 
 	public class HTMLTableElement : HTMLElement
 	{
+		protected internal HTMLTableElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public HTMLTableCaptionElement? caption { get => Get<HTMLTableCaptionElement?>(); set => Set(value); }
 		public HTMLTableCaptionElement createCaption() => Method<HTMLTableCaptionElement>().Invoke();
 		public void deleteCaption() => Method().Invoke();
@@ -527,6 +766,10 @@ namespace WebView2.DOM
 
 	public class HTMLTableRowElement : HTMLElement
 	{
+		protected internal HTMLTableRowElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public int rowIndex => Get<int>();
 		public int sectionRowIndex => Get<int>();
 		public HTMLCollection<HTMLTableCellElement> cells => Get<HTMLCollection<HTMLTableCellElement>>();
@@ -536,6 +779,10 @@ namespace WebView2.DOM
 
 	public class HTMLTableSectionElement : HTMLElement
 	{
+		protected internal HTMLTableSectionElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public HTMLCollection<HTMLTableRowElement> rows => Get<HTMLCollection<HTMLTableRowElement>>();
 		public HTMLTableRowElement insertRow(int index = -1) => Method<HTMLTableRowElement>().Invoke(index);
 		public void deleteRow(int index) => Method().Invoke(index);
@@ -543,12 +790,20 @@ namespace WebView2.DOM
 
 	public class HTMLTemplateElement : HTMLElement
 	{
+		protected internal HTMLTemplateElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public DocumentFragment content => Get<DocumentFragment>();
 		// readonly attribute ShadowRoot? shadowRoot;
 	}
 
 	public class HTMLTimeElement : HTMLElement
 	{
+		protected internal HTMLTimeElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public string dateTime
 		{
 			get => Get<string>();
@@ -584,13 +839,26 @@ namespace WebView2.DOM
 
 	public class HTMLTitleElement : HTMLElement
 	{
+		protected internal HTMLTitleElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public string text { get => Get<string>(); set => Set(value); }
 	}
 
 	public class HTMLUListElement : HTMLElement
 	{
+		protected internal HTMLUListElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public string text { get => Get<string>(); set => Set(value); }
 	}
 
-	public class HTMLUnknownElement : HTMLElement { }
+	public class HTMLUnknownElement : HTMLElement
+	{
+		protected internal HTMLUnknownElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+	}
 }

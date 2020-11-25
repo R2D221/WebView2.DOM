@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Web.WebView2.Core;
+using System;
 
 namespace WebView2.DOM
 {
@@ -6,6 +7,10 @@ namespace WebView2.DOM
 
 	public class CSSFontFaceRule : CSSRule
 	{
+		protected internal CSSFontFaceRule(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public CSSStyleDeclaration style => Get<CSSStyleDeclaration>();
 	}
 }

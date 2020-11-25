@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Web.WebView2.Core;
+using System;
 
 namespace WebView2.DOM
 {
@@ -6,6 +7,10 @@ namespace WebView2.DOM
 
 	public class CSSMediaRule : CSSConditionRule
 	{
+		protected internal CSSMediaRule(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public MediaList media => _media ??= Get<MediaList>();
 		private MediaList? _media;
 	}

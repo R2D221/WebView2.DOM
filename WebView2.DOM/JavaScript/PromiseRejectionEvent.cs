@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Web.WebView2.Core;
+using System;
 using System.Threading.Tasks;
 
 namespace WebView2.DOM
@@ -7,6 +8,10 @@ namespace WebView2.DOM
 
 	public class PromiseRejectionEvent : Event
 	{
+		protected internal PromiseRejectionEvent(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public Task promise => Get<Task>();
 		[Obsolete("not tested")]
 		public dynamic reason => Get<any>();

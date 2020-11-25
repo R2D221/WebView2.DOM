@@ -1,4 +1,6 @@
-﻿namespace WebView2.DOM
+﻿using Microsoft.Web.WebView2.Core;
+
+namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/events/wheel_event.idl
 
@@ -11,6 +13,10 @@
 
 	public class WheelEvent : MouseEvent
 	{
+		protected internal WheelEvent(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public double deltaX => Get<double>();
 		public double deltaY => Get<double>();
 		public double deltaZ => Get<double>();

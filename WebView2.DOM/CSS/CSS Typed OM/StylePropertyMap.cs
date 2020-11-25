@@ -1,11 +1,9 @@
-﻿using OneOf;
-using System;
+﻿using Microsoft.Web.WebView2.Core;
+using OneOf;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WebView2.DOM
 {
@@ -13,6 +11,10 @@ namespace WebView2.DOM
 
 	public class StylePropertyMapReadOnly : JsObject, IEnumerable<KeyValuePair<string, IReadOnlyList<CSSStyleValue>>>
 	{
+		protected internal StylePropertyMapReadOnly(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public CSSStyleValue? get(string property) => Method<CSSStyleValue?>().Invoke(property);
 		public IReadOnlyList<CSSStyleValue> getAll(string property) =>
 			Method<ImmutableArray<CSSStyleValue>>().Invoke(property);
@@ -30,6 +32,10 @@ namespace WebView2.DOM
 
 	public class StylePropertyMap : StylePropertyMapReadOnly
 	{
+		protected internal StylePropertyMap(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public void set(string property, params OneOf<CSSStyleValue, string>[] values) =>
 			Method().Invoke(args: values.Select(x => x.Value).Prepend(property).ToArray());
 		public void append(string property, params OneOf<CSSStyleValue, string>[] values) =>

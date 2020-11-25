@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Web.WebView2.Core;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,6 +12,10 @@ namespace WebView2.DOM
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
 	public class NamedNodeMap : JsObject, ICollection<Attr>, IReadOnlyCollection<Attr>
 	{
+		protected internal NamedNodeMap(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public Attr this[uint index] =>
 			IndexerGet<Attr?>(index) ?? throw new ArgumentOutOfRangeException(nameof(index));
 		public Attr this[string name] =>

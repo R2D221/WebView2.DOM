@@ -1,19 +1,26 @@
-﻿using SmartAnalyzers.CSharpExtensions.Annotations;
+﻿using Microsoft.Web.WebView2.Core;
+using SmartAnalyzers.CSharpExtensions.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 
 namespace WebView2.DOM
 {
-	public sealed class Iterator : JsObject { }
+	public sealed class Iterator : JsObject
+	{
+		internal Iterator(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+	}
 
 	public sealed class Iterator<T> : JsObject, IEnumerator<T>
 	{
 		public static Iterator<T> FromJsObject(JsObject iterator) => new Iterator<T>(iterator);
 
 		internal Iterator(JsObject iterator)
+			 : base(iterator.coreWebView, iterator.referenceId)
 		{
-			References.Swap(source: iterator, target: this);
+			References.Update(target: this);
 		}
 
 		private T current = default!;

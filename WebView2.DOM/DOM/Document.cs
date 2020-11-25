@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Web.WebView2.Core;
+using System;
 using System.Threading.Tasks;
 
 namespace WebView2.DOM
@@ -13,6 +14,10 @@ namespace WebView2.DOM
 
 	public partial class Document : Node
 	{
+		protected internal Document(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		#region url
 		public DOMImplementation implementation => _implementation ??= Get<DOMImplementation>();
 		private DOMImplementation? _implementation;

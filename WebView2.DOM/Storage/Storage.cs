@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Web.WebView2.Core;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,10 @@ namespace WebView2.DOM
 
 	public class Storage : JsObject, ICollection<KeyValuePair<string, string>>, IReadOnlyCollection<KeyValuePair<string, string>>
 	{
+		protected internal Storage(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public uint length => Get<uint>();
 		public string? key(uint index) => Method<string?>().Invoke(index);
 		public string? getItem(string key) => Method<string?>().Invoke(key);

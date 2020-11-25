@@ -164,6 +164,10 @@ namespace WebView2.DOM
 						{{
 							return {{ referenceId: WebView2DOM.GetId(obj) }};
 						}}
+						else if (obj != null && typeof obj === 'object' && obj[Symbol.toStringTag] != null)
+						{{
+							return {{ referenceId: WebView2DOM.GetId(obj) }};
+						}}
 						else if (obj != null && typeof obj === 'object' && Object.getPrototypeOf(obj) === Object.prototype)
 						{{
 							const newObj = {{}};
@@ -366,6 +370,8 @@ namespace WebView2.DOM
 					Object.freeze(x);
 					return x;
 				}})();
+
+				window.addEventListener('DOMContentLoaded', () => window.chrome.webview.postMessage('DOMContentLoaded'));
 			");
 		}
 	}

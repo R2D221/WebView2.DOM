@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Web.WebView2.Core;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -12,6 +13,10 @@ namespace WebView2.DOM
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
 	public class DataTransferItemList : JsObject, ICollection<DataTransferItem>, IReadOnlyCollection<DataTransferItem>
 	{
+		protected internal DataTransferItemList(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public DataTransferItem this[uint index] =>
 			IndexerGet<DataTransferItem?>(index) ?? throw new ArgumentOutOfRangeException(nameof(index));
 		public uint length => Get<uint>();

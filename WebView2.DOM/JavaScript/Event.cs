@@ -1,4 +1,5 @@
-﻿using NodaTime;
+﻿using Microsoft.Web.WebView2.Core;
+using NodaTime;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -17,6 +18,10 @@ namespace WebView2.DOM
 
 	public class Event : JsObject
 	{
+		protected internal Event(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public string type => Get<string>();
 		public EventTarget? target => Get<EventTarget?>();
 		public EventTarget? currentTarget => Get<EventTarget?>();

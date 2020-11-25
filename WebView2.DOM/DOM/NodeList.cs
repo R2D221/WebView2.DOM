@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Web.WebView2.Core;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,7 +9,12 @@ namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/dom/node_list.idl
 
-	public sealed class NodeList : JsObject { }
+	public sealed class NodeList : JsObject
+	{
+		internal NodeList(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+	}
 
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
 	public sealed class NodeList<TNode> : JsObject, ICollection<TNode>, IReadOnlyCollection<TNode>
@@ -18,8 +24,9 @@ namespace WebView2.DOM
 			new NodeList<TNode>(nodeList);
 
 		internal NodeList(NodeList nodeList)
+			: base(nodeList.coreWebView, nodeList.referenceId)
 		{
-			References.Swap(source: nodeList, target: this);
+			References.Update(target: this);
 		}
 
 		public TNode this[uint index] =>

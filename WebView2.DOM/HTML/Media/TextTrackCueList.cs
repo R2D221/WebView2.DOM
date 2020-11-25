@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Web.WebView2.Core;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,6 +12,10 @@ namespace WebView2.DOM
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
 	public class TextTrackCueList : JsObject, ICollection<TextTrackCue>, IReadOnlyCollection<TextTrackCue>
 	{
+		protected internal TextTrackCueList(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public TextTrackCue this[uint index] =>
 			IndexerGet<TextTrackCue?>(index) ?? throw new ArgumentOutOfRangeException(nameof(index));
 		public uint length => Get<uint>();

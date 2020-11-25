@@ -3,6 +3,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace WebView2.DOM
@@ -38,12 +39,12 @@ namespace WebView2.DOM
 						_ => type.Name,
 					},
 					type => (id) =>
-					{
-						var obj = (JsObject)Activator.CreateInstance(type)!;
-						obj.coreWebView = coreWebView;
-						obj.referenceId = id;
-						return obj;
-					}
+						 (JsObject)Activator.CreateInstance(
+							type: type,
+							bindingAttr: BindingFlags.NonPublic | BindingFlags.Instance,
+							binder: null,
+							args: new object?[] { coreWebView, id },
+							culture: null)!
 				);
 		}
 
@@ -141,14 +142,8 @@ namespace WebView2.DOM
 			}
 		}
 
-		internal static void Swap(JsObject source, JsObject target)
+		internal static void Update(JsObject target)
 		{
-			target.referenceId = source.referenceId;
-			target.coreWebView = source.coreWebView;
-
-			source.referenceId = null!;
-			source.coreWebView = null!;
-
 			objRefs.AddOrUpdate(target.referenceId,
 				_ => throw new ObjectDisposedException(target.referenceId),
 				(_, __) => target

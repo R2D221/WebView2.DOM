@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Web.WebView2.Core;
+using System;
 
 namespace WebView2.DOM
 {
@@ -16,6 +17,10 @@ namespace WebView2.DOM
 
 	public partial class HTMLElement : Element
 	{
+		protected internal HTMLElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		// metadata attributes
 		public string title { get => Get<string>(); set => Set(value); }
 		public string lang { get => Get<string>(); set => Set(value); }
@@ -62,11 +67,9 @@ namespace WebView2.DOM
 			private readonly HTMLElement value;
 
 			private OneOf(HTMLElement value)
+				: base(value.coreWebView, value.referenceId)
 			{
 				this.value = value;
-
-				referenceId = value.referenceId;
-				coreWebView = value.coreWebView;
 				events = value.events;
 			}
 

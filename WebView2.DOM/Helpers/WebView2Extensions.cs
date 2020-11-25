@@ -54,25 +54,28 @@ namespace WebView2.DOM
 				coreWebView = winformsWebViews.GetValue(webView, _webView => _webView.CoreWebView2);
 			}
 
-			private EventHandler<CoreWebView2DOMContentLoadedEventArgs>? _handler;
+			private EventHandler<EventArgs>? _handler;
 
-			public event EventHandler<CoreWebView2DOMContentLoadedEventArgs>? Handler
+			public event EventHandler<EventArgs>? Handler
 			{
 				add
 				{
 					_handler += value;
-					if (_handler != null) { coreWebView.DOMContentLoaded += CoreWebView_DOMContentLoaded; }
+					if (_handler != null) { coreWebView.WebMessageReceived += CoreWebView_WebMessageReceived; }
 				}
 				remove
 				{
 					_handler -= value;
-					if (_handler == null) { coreWebView.DOMContentLoaded -= CoreWebView_DOMContentLoaded; }
+					if (_handler == null) { coreWebView.WebMessageReceived -= CoreWebView_WebMessageReceived; }
 				}
 			}
 
-			private void CoreWebView_DOMContentLoaded(object? sender, CoreWebView2DOMContentLoadedEventArgs e)
+			private void CoreWebView_WebMessageReceived(object? sender, CoreWebView2WebMessageReceivedEventArgs e)
 			{
-				_handler?.Invoke(webView, e);
+				if (e.WebMessageAsJson == "\"DOMContentLoaded\"")
+				{
+					_handler?.Invoke(webView, e);
+				}
 			}
 		}
 
@@ -87,25 +90,28 @@ namespace WebView2.DOM
 				coreWebView = wpfWebViews.GetValue(webView, _webView => _webView.CoreWebView2);
 			}
 
-			private EventHandler<CoreWebView2DOMContentLoadedEventArgs>? _handler;
+			private EventHandler<EventArgs>? _handler;
 
-			public event EventHandler<CoreWebView2DOMContentLoadedEventArgs>? Handler
+			public event EventHandler<EventArgs>? Handler
 			{
 				add
 				{
 					_handler += value;
-					if (_handler != null) { coreWebView.DOMContentLoaded += CoreWebView_DOMContentLoaded; }
+					if (_handler != null) { coreWebView.WebMessageReceived += CoreWebView_WebMessageReceived; }
 				}
 				remove
 				{
 					_handler -= value;
-					if (_handler == null) { coreWebView.DOMContentLoaded -= CoreWebView_DOMContentLoaded; }
+					if (_handler == null) { coreWebView.WebMessageReceived -= CoreWebView_WebMessageReceived; }
 				}
 			}
 
-			private void CoreWebView_DOMContentLoaded(object? sender, CoreWebView2DOMContentLoadedEventArgs e)
+			private void CoreWebView_WebMessageReceived(object? sender, CoreWebView2WebMessageReceivedEventArgs e)
 			{
-				_handler?.Invoke(webView, e);
+				if (e.WebMessageAsJson == "\"DOMContentLoaded\"")
+				{
+					_handler?.Invoke(webView, e);
+				}
 			}
 		}
 

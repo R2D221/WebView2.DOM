@@ -1,7 +1,13 @@
-﻿namespace WebView2.DOM
+﻿using Microsoft.Web.WebView2.Core;
+
+namespace WebView2.DOM
 {
 	public class CSSTransformValue : CSSStyleValue
 	{
+		protected internal CSSTransformValue(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 #if DEBUG
 #error Iterable
 #endif

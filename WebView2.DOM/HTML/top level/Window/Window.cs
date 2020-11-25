@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Web.WebView2.Core;
+using System;
 using System.Collections.Generic;
 
 namespace WebView2.DOM
@@ -14,6 +15,10 @@ namespace WebView2.DOM
 
 	public partial class Window : EventTarget
 	{
+		protected internal Window(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		//public Window window => Get<Window>();
 		public Window self => Get<Window>();
 		public Document document => Get<Document>();

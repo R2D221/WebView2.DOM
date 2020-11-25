@@ -1,5 +1,4 @@
 ﻿using Microsoft.Web.WebView2.Core;
-using SmartAnalyzers.CSharpExtensions.Annotations;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 
@@ -7,16 +6,17 @@ namespace WebView2.DOM
 {
 	public class JsObject
 	{
-		[InitRequired]
-		internal CoreWebView2 coreWebView { get; set; }
+		internal readonly CoreWebView2 coreWebView;
+		internal readonly string referenceId;
 
-		[InitRequired]
-		internal string referenceId { get; set; }
+		protected internal JsObject(CoreWebView2 coreWebView, string referenceId)
+		{
+			this.coreWebView = coreWebView;
+			this.referenceId = referenceId;
+		}
 
 		internal void Construct(params object?[] args)
 		{
-			coreWebView = window.Instance.coreWebView;
-			referenceId = System.Guid.NewGuid().ToString();
 			coreWebView.References().Add(this);
 			coreWebView.Coordinator().Construct(referenceId, GetType().Name, args);
 		}
@@ -96,5 +96,10 @@ namespace WebView2.DOM
 		}
 	}
 
-	public class Function : JsObject { }
+	public class Function : JsObject
+	{
+		protected internal Function(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+	}
 }

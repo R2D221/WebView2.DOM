@@ -1,4 +1,6 @@
-﻿namespace WebView2.DOM
+﻿using Microsoft.Web.WebView2.Core;
+
+namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/events/keyboard_event.idl
 
@@ -12,6 +14,10 @@
 
 	public class KeyboardEvent : UIEvent
 	{
+		protected internal KeyboardEvent(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public string key => Get<string>();
 		public string code => Get<string>();
 		public KeyLocation location => Get<KeyLocation>();

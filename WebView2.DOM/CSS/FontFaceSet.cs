@@ -1,4 +1,6 @@
-﻿namespace WebView2.DOM
+﻿using Microsoft.Web.WebView2.Core;
+
+namespace WebView2.DOM
 {
 #if DEBUG
 #error Incomplete
@@ -7,5 +9,8 @@
 
 	public class FontFaceSet : EventTarget
 	{
+		protected internal FontFaceSet(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
 	}
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Web.WebView2.Core;
+using System;
 
 namespace WebView2.DOM
 {
@@ -26,6 +27,10 @@ namespace WebView2.DOM
 
 	public class MouseEvent : UIEvent
 	{
+		protected internal MouseEvent(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public double screenX => Get<double>();
 		public double screenY => Get<double>();
 		public double clientX => Get<double>();

@@ -1,4 +1,5 @@
-﻿using OneOf;
+﻿using Microsoft.Web.WebView2.Core;
+using OneOf;
 using System.Linq;
 
 namespace WebView2.DOM

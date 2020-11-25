@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Web.WebView2.Core;
+using System;
 
 namespace WebView2.DOM
 {
@@ -6,6 +7,10 @@ namespace WebView2.DOM
 
 	public class MediaQueryList : EventTarget
 	{
+		protected internal MediaQueryList(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public string media => Get<string>();
 		public bool matches => Get<bool>();
 		public event EventHandler<MediaQueryListEvent> onchange { add => AddEvent(value); remove => RemoveEvent(value); }

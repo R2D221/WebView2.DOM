@@ -7,6 +7,10 @@ namespace WebView2.DOM
 
 	public class BarProp : JsObject
 	{
+		protected internal BarProp(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public bool visible => Get<bool>();
 	}
 }

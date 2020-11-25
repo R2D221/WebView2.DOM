@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Web.WebView2.Core;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 
@@ -8,6 +9,10 @@ namespace WebView2.DOM
 
 	public partial class Element : Node
 	{
+		protected internal Element(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public string? namespaceURI => Get<string?>();
 		public string? prefix => Get<string?>();
 		public string localName => Get<string>();

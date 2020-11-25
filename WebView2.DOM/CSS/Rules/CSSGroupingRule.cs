@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Web.WebView2.Core;
+using System;
 
 namespace WebView2.DOM
 {
@@ -6,6 +7,10 @@ namespace WebView2.DOM
 
 	public class CSSGroupingRule : CSSRule
 	{
+		protected internal CSSGroupingRule(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public CSSRuleList cssRules => _cssRules ??= Get<CSSRuleList>();
 		private CSSRuleList? _cssRules;
 		public uint insertRule(string rule, uint index) => Method<uint>().Invoke(rule, index);

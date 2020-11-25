@@ -1,9 +1,14 @@
-﻿using System;
+﻿using Microsoft.Web.WebView2.Core;
+using System;
 
 namespace WebView2.DOM
 {
 	public class TextTrackCue : EventTarget
 	{
+		protected internal TextTrackCue(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public TextTrack? track => Get<TextTrack?>();
 
 		public string id { get => Get<string>(); set => Set(value); }

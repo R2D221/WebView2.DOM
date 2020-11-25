@@ -1,9 +1,15 @@
-﻿namespace WebView2.DOM
+﻿using Microsoft.Web.WebView2.Core;
+
+namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/input/touch.idl
 
 	public class Touch : JsObject
 	{
+		protected internal Touch(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public int identifier => Get<int>();
 		public EventTarget target => Get<EventTarget>();
 		public double screenX => Get<double>();

@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using Microsoft.Web.WebView2.Core;
+using System.Threading;
 
 namespace WebView2.DOM
 {
@@ -7,15 +8,22 @@ namespace WebView2.DOM
 
 	public class CSSUnitValue : CSSNumericValue
 	{
-		public CSSUnitValue(double value, string unit) => Construct(value, unit);
+		protected internal CSSUnitValue(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
+		public CSSUnitValue(double value, string unit)
+			: this(window.Instance.coreWebView, System.Guid.NewGuid().ToString()) =>
+			Construct(value, unit);
+
 		public double value => Get<double>();
 		public string unit => Get<string>();
 	}
 
 	public static class CSS
 	{
-		private static readonly AsyncLocal<Function?> _static = new();
-		private static Function @static => _static.Value ??= window.Instance.Get<Function>(nameof(CSS));
+		private static readonly AsyncLocal<JsObject?> _static = new();
+		private static JsObject @static => _static.Value ??= window.Instance.Get<JsObject>(nameof(CSS));
 
 		public static CSSUnitValue number(double value) => @static.Method<CSSUnitValue>().Invoke(value);
 		public static CSSUnitValue percent(double value) => @static.Method<CSSUnitValue>().Invoke(value);

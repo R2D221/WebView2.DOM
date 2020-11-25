@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Web.WebView2.Core;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,6 +12,10 @@ namespace WebView2.DOM
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
 	public class StyleSheetList : JsObject, ICollection<StyleSheet>, IReadOnlyCollection<StyleSheet>
 	{
+		protected internal StyleSheetList(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public StyleSheet this[uint index] =>
 			IndexerGet<StyleSheet?>(index) ?? throw new ArgumentOutOfRangeException(nameof(index));
 		public CSSStyleSheet this[string name] =>

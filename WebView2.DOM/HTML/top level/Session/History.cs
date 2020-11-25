@@ -1,4 +1,6 @@
-﻿namespace WebView2.DOM
+﻿using Microsoft.Web.WebView2.Core;
+
+namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/frame/history.idl
 
@@ -6,6 +8,10 @@
 
 	public class History : JsObject
 	{
+		protected internal History(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public uint length => Get<uint>();
 		public ScrollRestoration scrollRestoration { get => Get<ScrollRestoration>(); set => Set(value); }
 		public dynamic state => Get<any>();

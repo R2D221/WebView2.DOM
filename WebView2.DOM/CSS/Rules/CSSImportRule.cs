@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Web.WebView2.Core;
+using System;
 
 namespace WebView2.DOM
 {
@@ -6,6 +7,10 @@ namespace WebView2.DOM
 
 	public class CSSImportRule : CSSRule
 	{
+		protected internal CSSImportRule(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public Uri href => Get<Uri>();
 		public MediaList media => _media ??= Get<MediaList>();
 		private MediaList? _media;

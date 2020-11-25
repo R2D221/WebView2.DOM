@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Web.WebView2.Core;
+using System;
 
 namespace WebView2.DOM
 {
@@ -14,6 +15,10 @@ namespace WebView2.DOM
 
 	public class HTMLTrackElement : HTMLElement
 	{
+		protected internal HTMLTrackElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public TextTrackKind kind { get => Get<TextTrackKind>(); set => Set(value); }
 		public Uri src { get => Get<Uri>(); set => Set(value); }
 		public string srclang { get => Get<string>(); set => Set(value); }

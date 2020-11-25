@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Web.WebView2.Core;
+using System;
 
 namespace WebView2.DOM
 {
@@ -6,6 +7,10 @@ namespace WebView2.DOM
 
 	public class CSSKeyframeRule : CSSRule
 	{
+		protected internal CSSKeyframeRule(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public string keyText { get => Get<string>(); set => Set(value); }
 		public CSSStyleDeclaration style => _style ??= Get<CSSStyleDeclaration>();
 		private CSSStyleDeclaration? _style;

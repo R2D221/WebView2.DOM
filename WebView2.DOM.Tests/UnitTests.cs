@@ -129,7 +129,10 @@ namespace WebView2.DOM.Tests
 				var x = CSS.number(10);
 				var y = 6;
 				var result = x + y;
-				Assert.AreEqual(16, result);
+				Assert.IsInstanceOfType(result, typeof(CSSUnitValue));
+				var unitResult = (CSSUnitValue)result;
+				Assert.AreEqual(16, unitResult.value);
+				Assert.AreEqual("number", unitResult.unit);
 			});
 		}
 	}

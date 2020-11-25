@@ -1,4 +1,5 @@
-﻿using Savage.Range;
+﻿using Microsoft.Web.WebView2.Core;
+using Savage.Range;
 using System;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
@@ -30,6 +31,10 @@ namespace WebView2.DOM
 
 	public class HTMLMediaElement : HTMLElement
 	{
+		protected internal HTMLMediaElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		// error state
 		public MediaError? error => Get<MediaError?>();
 

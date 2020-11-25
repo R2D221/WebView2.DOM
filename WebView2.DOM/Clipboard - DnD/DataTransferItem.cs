@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Web.WebView2.Core;
+using System;
 
 namespace WebView2.DOM
 {
@@ -8,6 +9,10 @@ namespace WebView2.DOM
 
 	public class DataTransferItem : JsObject
 	{
+		protected internal DataTransferItem(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public DataTransferItemKind kind => Get<DataTransferItemKind>();
 		public string type => Get<string>();
 		public void getAsString(Action<string> callback) => Method().Invoke(callback);

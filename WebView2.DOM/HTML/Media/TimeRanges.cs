@@ -1,4 +1,5 @@
-﻿using Savage.Range;
+﻿using Microsoft.Web.WebView2.Core;
+using Savage.Range;
 using System;
 using System.Collections.Immutable;
 using System.Linq;
@@ -9,6 +10,10 @@ namespace WebView2.DOM
 
 	public class TimeRanges : JsObject
 	{
+		protected internal TimeRanges(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
 		public uint length => Get<uint>();
 		public double start(uint index) => Method<double>().Invoke(index);
 		public double end(uint index) => Method<double>().Invoke(index);

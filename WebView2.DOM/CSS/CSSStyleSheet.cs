@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using Microsoft.Web.WebView2.Core;
+using System.Threading.Tasks;
 
 namespace WebView2.DOM
 {
@@ -6,7 +7,13 @@ namespace WebView2.DOM
 
 	public class CSSStyleSheet : StyleSheet
 	{
-		public CSSStyleSheet() => Construct();
+		protected internal CSSStyleSheet(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		{
+		}
+
+		public CSSStyleSheet()
+			: this(window.Instance.coreWebView, System.Guid.NewGuid().ToString()) =>
+			Construct();
 
 		public CSSRule? ownerRule => Get<CSSRule?>();
 		public CSSRuleList cssRules => _cssRules ??= Get<CSSRuleList>();
