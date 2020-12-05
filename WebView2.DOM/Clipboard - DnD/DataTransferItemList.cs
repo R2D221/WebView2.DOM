@@ -40,7 +40,7 @@ namespace WebView2.DOM
 				remove(index);
 			}
 
-			return itemsToRemove.Length;
+			return itemsToRemove.Count;
 		}
 
 		public Iterator<DataTransferItem> GetEnumerator() =>
