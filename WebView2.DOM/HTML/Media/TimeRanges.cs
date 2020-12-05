@@ -18,10 +18,10 @@ namespace WebView2.DOM
 		public double start(uint index) => Method<double>().Invoke(index);
 		public double end(uint index) => Method<double>().Invoke(index);
 
-		public ImmutableArray<Range<TimeSpan>> ToImmutableArray() =>
+		public ImmutableList<Range<TimeSpan>> ToImmutableList() =>
 			Enumerable.Range(0, (int)length)
 			.Select(i => (uint)i)
 			.Select(i => new Range<TimeSpan>(TimeSpan.FromSeconds(start(i)), TimeSpan.FromSeconds(end(i))))
-			.ToImmutableArray();
+			.ToImmutableList();
 	}
 }

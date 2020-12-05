@@ -12,9 +12,9 @@ namespace WebView2.DOM
 		{
 		}
 
-		public IReadOnlyList<Touch> touches => Get<ImmutableArray<Touch>>();
-		public IReadOnlyList<Touch> targetTouches => Get<ImmutableArray<Touch>>();
-		public IReadOnlyList<Touch> changedTouches => Get<ImmutableArray<Touch>>();
+		public IReadOnlyList<Touch> touches => Get<ImmutableList<Touch>>();
+		public IReadOnlyList<Touch> targetTouches => Get<ImmutableList<Touch>>();
+		public IReadOnlyList<Touch> changedTouches => Get<ImmutableList<Touch>>();
 		public bool altKey => Get<bool>();
 		public bool metaKey => Get<bool>();
 		public bool ctrlKey => Get<bool>();

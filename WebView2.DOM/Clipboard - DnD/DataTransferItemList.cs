@@ -33,7 +33,7 @@ namespace WebView2.DOM
 				this.Select((item, index) => (item, index: (uint)index))
 				.Reverse()
 				.Where(x => match(x.item))
-				.ToImmutableArray();
+				.ToImmutableList();
 
 			foreach (var (item, index) in itemsToRemove)
 			{

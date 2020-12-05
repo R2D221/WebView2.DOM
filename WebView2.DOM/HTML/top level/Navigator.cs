@@ -58,7 +58,7 @@ namespace WebView2.DOM
 
 		public string language => Get<string>();
 
-		public IReadOnlyList<string> languages => Get<ImmutableArray<string>>();
+		public IReadOnlyList<string> languages => Get<ImmutableList<string>>();
 
 		//Navigator includes NavigatorOnLine;
 		public bool onLine => Get<bool>();
@@ -78,7 +78,7 @@ namespace WebView2.DOM
 		{
 		}
 
-		public IReadOnlyList<NavigatorUABrandVersion> brands => Get<ImmutableArray<NavigatorUABrandVersion>>();
+		public IReadOnlyList<NavigatorUABrandVersion> brands => Get<ImmutableList<NavigatorUABrandVersion>>();
 		public bool mobile => Get<bool>();
 		public Task<UADataValues> getHighEntropyValues(IReadOnlyList<string> hints) =>
 			Method<Task<UADataValues>>().Invoke(hints);

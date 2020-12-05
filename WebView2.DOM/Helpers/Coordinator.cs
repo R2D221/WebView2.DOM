@@ -226,11 +226,12 @@ namespace WebView2.DOM
 			{
 				var callback = References.GetCallback(callbackId);
 
-				var parameters = JsonSerializer.Deserialize<ImmutableArray<JsonElement>>(json, coreWebView.Options());
+				var parameters = JsonSerializer.Deserialize<ImmutableList<JsonElement>>(json, coreWebView.Options())
+					?? ImmutableList<JsonElement>.Empty;
 
 				var parametersInfo = callback.Method.GetParameters();
 
-				if (parametersInfo.Length != parameters.Length)
+				if (parametersInfo.Length != parameters.Count)
 				{
 					throw new InvalidOperationException("Error invoking callback: number of parameters doesn't match");
 				}

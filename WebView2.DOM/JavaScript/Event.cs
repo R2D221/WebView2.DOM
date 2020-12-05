@@ -25,7 +25,7 @@ namespace WebView2.DOM
 		public string type => Get<string>();
 		public EventTarget? target => Get<EventTarget?>();
 		public EventTarget? currentTarget => Get<EventTarget?>();
-		public IReadOnlyList<EventTarget> composedPath() => Method<ImmutableArray<EventTarget>>().Invoke();
+		public IReadOnlyList<EventTarget> composedPath() => Method<ImmutableList<EventTarget>>().Invoke();
 
 		public EventPhase eventPhase => Get<EventPhase>();
 
@@ -47,6 +47,6 @@ namespace WebView2.DOM
 		//public EventTarget srcElement => Get<EventTarget>();
 		//public bool returnValue { get => Get<bool>(); set => Set(value); }
 		//public bool cancelBubble { get => Get<bool>(); set => Set(value); }
-		//public IReadOnlyList<EventTarget> path => Get<ImmutableArray<EventTarget>>();
+		//public IReadOnlyList<EventTarget> path => Get<ImmutableList<EventTarget>>();
 	}
 }

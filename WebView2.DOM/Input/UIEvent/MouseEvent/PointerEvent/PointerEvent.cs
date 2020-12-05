@@ -25,7 +25,7 @@ namespace WebView2.DOM
 		public string pointerType => Get<string>();
 		public bool isPrimary => Get<bool>();
 
-		public IReadOnlyList<PointerEvent> getCoalescedEvents() => Method<ImmutableArray<PointerEvent>>().Invoke();
-		public IReadOnlyList<PointerEvent> getPredictedEvents() => Method<ImmutableArray<PointerEvent>>().Invoke();
+		public IReadOnlyList<PointerEvent> getCoalescedEvents() => Method<ImmutableList<PointerEvent>>().Invoke();
+		public IReadOnlyList<PointerEvent> getPredictedEvents() => Method<ImmutableList<PointerEvent>>().Invoke();
 	}
 }

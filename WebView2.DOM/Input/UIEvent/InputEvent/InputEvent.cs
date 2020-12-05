@@ -18,6 +18,6 @@ namespace WebView2.DOM
 		// Input Events Level 1
 		public string inputType => Get<string>();
 		public DataTransfer? dataTransfer => Get<DataTransfer?>();
-		public IReadOnlyList<StaticRange> getTargetRanges() => Method<ImmutableArray<StaticRange>>().Invoke();
+		public IReadOnlyList<StaticRange> getTargetRanges() => Method<ImmutableList<StaticRange>>().Invoke();
 	}
 }

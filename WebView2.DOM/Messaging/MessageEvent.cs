@@ -16,7 +16,7 @@ namespace WebView2.DOM
 		public string origin => Get<string>();
 		public string lastEventId => Get<string>();
 		public EventTarget? source => Get<EventTarget?>(); //MessageEventSource
-		public IReadOnlyList<MessagePort> ports => Get<ImmutableArray<MessagePort>>();
+		public IReadOnlyList<MessagePort> ports => Get<ImmutableList<MessagePort>>();
 		public UserActivation? userActivation => Get<UserActivation?>();
 	}
 }

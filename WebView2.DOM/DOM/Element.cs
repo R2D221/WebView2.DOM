@@ -29,7 +29,7 @@ namespace WebView2.DOM
 		public NamedNodeMap attributes => _attributes ??= Get<NamedNodeMap>();
 		private NamedNodeMap? _attributes;
 		public IReadOnlyList<string> getAttributeNames()
-			=> Method<ImmutableArray<string>>().Invoke();
+			=> Method<ImmutableList<string>>().Invoke();
 		public string? getAttribute(string name)
 		  => Method<string?>().Invoke(name);
 		public string? getAttributeNS(string? namespaceURI, string localName)
@@ -114,7 +114,7 @@ namespace WebView2.DOM
 
 		// CSSOM View Module
 		public IReadOnlyList<DOMRect> getClientRects()
-		  => Method<ImmutableArray<DOMRect>>().Invoke();
+		  => Method<ImmutableList<DOMRect>>().Invoke();
 		public DOMRect getBoundingClientRect()
 		  => Method<DOMRect>().Invoke();
 

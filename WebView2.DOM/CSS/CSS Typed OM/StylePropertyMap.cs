@@ -17,7 +17,7 @@ namespace WebView2.DOM
 
 		public CSSStyleValue? get(string property) => Method<CSSStyleValue?>().Invoke(property);
 		public IReadOnlyList<CSSStyleValue> getAll(string property) =>
-			Method<ImmutableArray<CSSStyleValue>>().Invoke(property);
+			Method<ImmutableList<CSSStyleValue>>().Invoke(property);
 		public bool has(string property) => Method<bool>().Invoke(property);
 		public uint size => Get<uint>();
 

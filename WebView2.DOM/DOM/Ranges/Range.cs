@@ -55,7 +55,7 @@ namespace WebView2.DOM
 		public bool intersectsNode(Node node) => Method<bool>().Invoke(node);
 
 		// CSSOM View Module
-		public IReadOnlyList<DOMRect> getClientRects() => Method<ImmutableArray<DOMRect>>().Invoke();
+		public IReadOnlyList<DOMRect> getClientRects() => Method<ImmutableList<DOMRect>>().Invoke();
 		public DOMRect getBoundingClientRect() => Method<DOMRect>().Invoke();
 
 		// DOM Parsing and Serialization

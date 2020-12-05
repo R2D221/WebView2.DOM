@@ -132,7 +132,7 @@ namespace WebView2.DOM
 			get => Get<string>().Trim()
 				.Split(Array.Empty<char>(), StringSplitOptions.RemoveEmptyEntries)
 				.Select(x => new Uri(x))
-				.ToImmutableArray()
+				.ToImmutableList()
 				;
 			set => Set(string.Join(' ', value));
 		}
@@ -170,7 +170,7 @@ namespace WebView2.DOM
 			get => Get<string>().Trim()
 				.Split(',')
 				.Select(x => double.Parse(x, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite, CultureInfo.InvariantCulture))
-				.ToImmutableArray();
+				.ToImmutableList();
 			set => Set(string.Join(',', value.Select(x => x.ToString(CultureInfo.InvariantCulture))));
 		}
 		public string download { get => Get<string>(); set => Set(value); }
@@ -181,7 +181,7 @@ namespace WebView2.DOM
 			get => Get<string>().Trim()
 				.Split(Array.Empty<char>(), StringSplitOptions.RemoveEmptyEntries)
 				.Select(x => new Uri(x))
-				.ToImmutableArray()
+				.ToImmutableList()
 				;
 			set => Set(string.Join(' ', value));
 		}
@@ -622,13 +622,13 @@ namespace WebView2.DOM
 
 		public string name { get => Get<string>(); set => Set(value); }
 		public IReadOnlyList<Node> assignedNodes() =>
-			Method<ImmutableArray<Node>>().Invoke();
+			Method<ImmutableList<Node>>().Invoke();
 		public IReadOnlyList<Node> assignedNodes(AssignedNodesOptions options) =>
-			Method<ImmutableArray<Node>>().Invoke(options);
+			Method<ImmutableList<Node>>().Invoke(options);
 		public IReadOnlyList<Element> assignedElements() =>
-			Method<ImmutableArray<Element>>().Invoke();
+			Method<ImmutableList<Element>>().Invoke();
 		public IReadOnlyList<Element> assignedElements(AssignedNodesOptions options) =>
-			Method<ImmutableArray<Element>>().Invoke(options);
+			Method<ImmutableList<Element>>().Invoke(options);
 		public void assign(IReadOnlyList<Node> nodes) =>
 			Method().Invoke(nodes);
 	}
@@ -655,7 +655,7 @@ namespace WebView2.DOM
 					parts.Length > 1 && parts[1].EndsWith("x") ? double.Parse(parts[1][0..^1], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture) :
 					default(double?),
 			})
-			.ToImmutableArray();
+			.ToImmutableList();
 
 		public static string ToString(IReadOnlyList<SrcSetItem> value) =>
 			string.Join(",",

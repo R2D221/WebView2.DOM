@@ -18,7 +18,7 @@ namespace WebView2.DOM
 		public void replace(string url) => Method().Invoke(url);
 		public void reload() => Method().Invoke();
 
-		public IReadOnlyList<string> ancestorOrigins => Get<ImmutableArray<string>>();
+		public IReadOnlyList<string> ancestorOrigins => Get<ImmutableList<string>>();
 
 		public Uri href { get => Get<Uri>(); set => Set(value); }
 		public override string ToString() => Method<string>("toString").Invoke();
