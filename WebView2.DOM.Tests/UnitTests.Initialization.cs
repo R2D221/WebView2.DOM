@@ -24,7 +24,9 @@ namespace WebView2.DOM.Tests
 				application = new Application();
 				mainWindow = application.MainWindow = new System.Windows.Window
 				{
-					WindowState = WindowState.Maximized,
+					WindowStartupLocation = WindowStartupLocation.CenterScreen,
+					Width = 400,
+					Height = 300,
 				};
 				mainWindow.Loaded += async (s, e) =>
 				{

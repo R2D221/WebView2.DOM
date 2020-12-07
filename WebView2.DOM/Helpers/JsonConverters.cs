@@ -1,4 +1,5 @@
 ﻿using EnumsNET;
+using OneOf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace WebView2.DOM.Helpers
 {
-	internal sealed class EnumJsonConverter : JsonConverterFactory
+	internal sealed class EnumJsonConverterFactory : JsonConverterFactory
 	{
 		public override bool CanConvert(Type typeToConvert) =>
 			typeToConvert.IsEnum
@@ -33,7 +34,7 @@ namespace WebView2.DOM.Helpers
 			writer.WriteStringValue(Enums.AsString(value, enumFormat));
 	}
 
-	internal sealed class JsObjectJsonConverter : JsonConverterFactory
+	internal sealed class JsObjectJsonConverterFactory : JsonConverterFactory
 	{
 		public override bool CanConvert(Type typeToConvert) =>
 			typeof(JsObject).IsAssignableFrom(typeToConvert)
@@ -82,7 +83,7 @@ namespace WebView2.DOM.Helpers
 		}
 	}
 
-	internal sealed class TaskJsonConverter : JsonConverterFactory
+	internal sealed class TaskJsonConverterFactory : JsonConverterFactory
 	{
 		public override bool CanConvert(Type typeToConvert) =>
 			typeof(Task).IsAssignableFrom(typeToConvert)
@@ -166,7 +167,7 @@ namespace WebView2.DOM.Helpers
 		}
 	}
 
-	internal sealed class ActionJsonConverter : JsonConverterFactory
+	internal sealed class ActionJsonConverterFactory : JsonConverterFactory
 	{
 		public override bool CanConvert(Type typeToConvert) =>
 			typeToConvert.IsGenericType && typeToConvert.GetGenericTypeDefinition() == typeof(Action<>);
@@ -211,7 +212,7 @@ namespace WebView2.DOM.Helpers
 		}
 	}
 
-	internal sealed class KeyValuePairJsonConverter : JsonConverterFactory
+	internal sealed class KeyValuePairJsonConverterFactory : JsonConverterFactory
 	{
 		public override bool CanConvert(Type typeToConvert) =>
 			typeToConvert.IsGenericType && typeToConvert.GetGenericTypeDefinition() == typeof(KeyValuePair<,>);
@@ -250,6 +251,37 @@ namespace WebView2.DOM.Helpers
 		public override void Write(Utf8JsonWriter writer, KeyValuePair<TKey, TValue> value, JsonSerializerOptions options)
 		{
 			JsonSerializer.Serialize(writer, new object?[] { value.Key, value.Value }, options);
+		}
+	}
+
+	internal sealed class OneOfJsonConverterFactory : JsonConverterFactory
+	{
+		public override bool CanConvert(Type typeToConvert) =>
+			typeToConvert.IsGenericType && typeToConvert.GetGenericTypeDefinition() == typeof(OneOf<,>);
+
+		public override JsonConverter? CreateConverter(Type typeToConvert, JsonSerializerOptions options) =>
+			(JsonConverter)Activator.CreateInstance(typeof(OneOfJsonConverter<,>).MakeGenericType(typeToConvert.GetGenericArguments()))!;
+	}
+
+	internal sealed class OneOfJsonConverter<T0, T1> : JsonConverter<OneOf<T0, T1>>
+	{
+		public override OneOf<T0, T1> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+
+			try
+			{
+				return JsonSerializer.Deserialize<T0>(element.GetRawText(), options)!;
+			}
+			catch
+			{
+				return JsonSerializer.Deserialize<T1>(element.GetRawText(), options)!;
+			}
+		}
+
+		public override void Write(Utf8JsonWriter writer, OneOf<T0, T1> value, JsonSerializerOptions options)
+		{
+			JsonSerializer.Serialize(writer, value.Value, options);
 		}
 	}
 }

@@ -131,13 +131,14 @@ namespace WebView2.DOM
 			{
 				Converters =
 				{
-					new EnumJsonConverter(),
-					new JsObjectJsonConverter(),
-					new TaskJsonConverter(),
-					new ActionJsonConverter(),
+					new EnumJsonConverterFactory(),
+					new JsObjectJsonConverterFactory(),
+					new TaskJsonConverterFactory(),
+					new ActionJsonConverterFactory(),
 					new anyJsonConverter(),
 					//new LocalDateTimeJsonConverter(),
-					new KeyValuePairJsonConverter(),
+					new KeyValuePairJsonConverterFactory(),
+					new OneOfJsonConverterFactory(),
 				},
 			});
 

@@ -135,5 +135,50 @@ namespace WebView2.DOM.Tests
 				Assert.AreEqual("number", unitResult.unit);
 			});
 		}
+
+		[TestMethod]
+		public async Task CSSUnparsedSegments()
+		{
+			await webView.RunOnJsThread(window =>
+			{
+				var document = window.document;
+
+				var myDiv = document.createHTMLElement(div);
+				myDiv.setAttribute("style", "width: calc(42px + var(--foo, 15em) + var(--bar, var(--far) + 15px))");
+
+				var width = myDiv.attributeStyleMap.get("width")!;
+				Assert.IsNotNull(width);
+				Assert.IsInstanceOfType(width, typeof(CSSUnparsedValue));
+
+				var unparsedWidth = (CSSUnparsedValue)width;
+
+				Assert.AreEqual<uint>(5, unparsedWidth.length);
+
+				unparsedWidth[0].Switch(
+					(string/*	*/ x) => Assert.IsInstanceOfType(x, typeof(string)),
+					(CSSVariableReferenceValue/*	*/ x) => Assert.IsInstanceOfType(x, typeof(string))
+				);
+
+				unparsedWidth[1].Switch(
+					(string/*	*/ x) => Assert.IsInstanceOfType(x, typeof(CSSVariableReferenceValue)),
+					(CSSVariableReferenceValue/*	*/ x) => Assert.IsInstanceOfType(x, typeof(CSSVariableReferenceValue))
+				);
+
+				unparsedWidth[2].Switch(
+					(string/*	*/ x) => Assert.IsInstanceOfType(x, typeof(string)),
+					(CSSVariableReferenceValue/*	*/ x) => Assert.IsInstanceOfType(x, typeof(string))
+				);
+
+				unparsedWidth[3].Switch(
+					(string/*	*/ x) => Assert.IsInstanceOfType(x, typeof(CSSVariableReferenceValue)),
+					(CSSVariableReferenceValue/*	*/ x) => Assert.IsInstanceOfType(x, typeof(CSSVariableReferenceValue))
+				);
+
+				unparsedWidth[4].Switch(
+					(string/*	*/ x) => Assert.IsInstanceOfType(x, typeof(string)),
+					(CSSVariableReferenceValue/*	*/ x) => Assert.IsInstanceOfType(x, typeof(string))
+				);
+			});
+		}
 	}
 }
