@@ -216,7 +216,7 @@ namespace WebView2.DOM
 
 		public static async Task RunOnJsThread(this CoreWebView2 coreWebView, Func<Window, Task> action)
 		{
-			TaskCompletionSource tcs = new TaskCompletionSource();
+			var tcs = new TaskCompletionSource();
 
 			var runId = coreWebView.Coordinator().AddRunHandler(async x =>
 			{

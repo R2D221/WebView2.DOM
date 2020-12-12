@@ -20,7 +20,12 @@ namespace WebView2.DOM
 			events.AddOrUpdate(@event,
 				addValueFactory: _ =>
 				{
-					coreWebView.Coordinator().AddEvent(referenceId, @event);
+					coreWebView.Coordinator().Call(new()
+					{
+						referenceId = referenceId,
+						memberType = "addevent",
+						memberName = @event,
+					});
 					return value;
 				},
 				updateValueFactory: (_, prev) =>
@@ -51,7 +56,12 @@ namespace WebView2.DOM
 					var @new = ((EventHandler<T>?)prev) - value;
 					if (@new == null)
 					{
-						coreWebView.Coordinator().RemoveEvent(referenceId, @event);
+						coreWebView.Coordinator().Call(new()
+						{
+							referenceId = referenceId,
+							memberType = "removeevent",
+							memberName = @event,
+						});
 					}
 					return @new;
 				});

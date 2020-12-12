@@ -18,35 +18,55 @@ namespace WebView2.DOM
 		internal void Construct(params object?[] args)
 		{
 			coreWebView.References().Add(this);
-			coreWebView.Coordinator().Construct(referenceId, GetType().Name, args);
+			coreWebView.Coordinator().Call(new()
+			{
+				referenceId = referenceId,
+				memberType = "constructor",
+				memberName = GetType().Name,
+				parameters = args,
+			});
 		}
 
-		internal T Get<T>([CallerMemberName] string property = "")
-		{
-			var json = coreWebView.Coordinator().Get(referenceId, property);
-			return JsonSerializer.Deserialize<T>(json, coreWebView.Options())!;
-		}
+		internal T Get<T>([CallerMemberName] string property = "") =>
+			coreWebView.Coordinator().Call<T>(new()
+			{
+				referenceId = referenceId,
+				memberType = "getter",
+				memberName = property,
+			});
 
-		internal void Set<T>(T value, [CallerMemberName] string property = "")
-		{
-			coreWebView.Coordinator().Set(referenceId, property, value);
-		}
+		internal void Set<T>(T value, [CallerMemberName] string property = "") =>
+			coreWebView.Coordinator().Call(new()
+			{
+				referenceId = referenceId,
+				memberType = "setter",
+				memberName = property,
+				parameters = new object?[] { value },
+			});
 
-		internal T IndexerGet<T>(object? index)
-		{
-			var json = coreWebView.Coordinator().IndexerGet(referenceId, index);
-			return JsonSerializer.Deserialize<T>(json, coreWebView.Options())!;
-		}
+		internal T IndexerGet<T>(object? index) =>
+			coreWebView.Coordinator().Call<T>(new()
+			{
+				referenceId = referenceId,
+				memberType = "indexerGetter",
+				parameters = new[] { index },
+			});
 
-		internal void IndexerSet<T>(object? index, T value)
-		{
-			coreWebView.Coordinator().IndexerSet(referenceId, index, value);
-		}
+		internal void IndexerSet<T>(object? index, T value) =>
+			coreWebView.Coordinator().Call(new()
+			{
+				referenceId = referenceId,
+				memberType = "indexerSetter",
+				parameters = new[] { index, value },
+			});
 
-		internal void IndexerDelete(object? index)
-		{
-			coreWebView.Coordinator().IndexerDelete(referenceId, index);
-		}
+		internal void IndexerDelete(object? index) =>
+			coreWebView.Coordinator().Call(new()
+			{
+				referenceId = referenceId,
+				memberType = "indexerDeleter",
+				parameters = new[] { index },
+			});
 
 		internal Invoker Method([CallerMemberName] string method = "")
 			=> new Invoker(this, method);
@@ -54,13 +74,17 @@ namespace WebView2.DOM
 		internal struct Invoker
 		{
 			public Invoker(JsObject @this, string method) => (this.@this, this.method) = (@this, method);
-			private JsObject @this;
-			private string method;
+			private readonly JsObject @this;
+			private readonly string method;
 
-			public void Invoke(params object?[] args)
-			{
-				@this.coreWebView.Coordinator().Invoke(@this.referenceId, method, args);
-			}
+			public void Invoke(params object?[] args) =>
+				@this.coreWebView.Coordinator().Call<string?>(new()
+				{
+					referenceId = @this.referenceId,
+					memberType = "invoke",
+					memberName = method,
+					parameters = args,
+				});
 		}
 
 		internal Invoker<T> Method<T>([CallerMemberName] string method = "")
@@ -69,14 +93,17 @@ namespace WebView2.DOM
 		internal struct Invoker<T>
 		{
 			public Invoker(JsObject @this, string method) => (this.@this, this.method) = (@this, method);
-			private JsObject @this;
-			private string method;
+			private readonly JsObject @this;
+			private readonly string method;
 
-			public T Invoke(params object?[] args)
-			{
-				var json = @this.coreWebView.Coordinator().Invoke(@this.referenceId, method, args);
-				return JsonSerializer.Deserialize<T>(json, @this.coreWebView.Options())!;
-			}
+			public T Invoke(params object?[] args) =>
+				@this.coreWebView.Coordinator().Call<T>(new()
+				{
+					referenceId = @this.referenceId,
+					memberType = "invoke",
+					memberName = method,
+					parameters = args,
+				});
 		}
 
 		internal SymbolInvoker<T> SymbolMethod<T>([CallerMemberName] string method = "")
@@ -85,21 +112,17 @@ namespace WebView2.DOM
 		internal struct SymbolInvoker<T>
 		{
 			public SymbolInvoker(JsObject @this, string method) => (this.@this, this.method) = (@this, method);
-			private JsObject @this;
-			private string method;
+			private readonly JsObject @this;
+			private readonly string method;
 
-			public T Invoke(params object?[] args)
-			{
-				var json = @this.coreWebView.Coordinator().InvokeSymbol(@this.referenceId, method, args);
-				return JsonSerializer.Deserialize<T>(json, @this.coreWebView.Options())!;
-			}
-		}
-	}
-
-	public class Function : JsObject
-	{
-		protected internal Function(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
+			public T Invoke(params object?[] args) =>
+				@this.coreWebView.Coordinator().Call<T>(new()
+				{
+					referenceId = @this.referenceId,
+					memberType = "invokeSymbol",
+					memberName = method,
+					parameters = args,
+				});
 		}
 	}
 }

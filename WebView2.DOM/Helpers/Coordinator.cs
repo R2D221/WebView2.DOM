@@ -302,7 +302,29 @@ namespace WebView2.DOM
 		#endregion
 
 		#region Called from C#
-		private object? Call(CoordinatorCall call)
+		internal void Call(CoordinatorCall call)
+		{
+			Debugger.NotifyOfCrossThreadDependency();
+			CancellationToken.ThrowIfCancellationRequested();
+			var windowId = window.Instance.referenceId;
+			try
+			{
+				Calls(windowId).Add(JsonSerializer.Serialize(call, coreWebView.Options()), CancellationToken);
+			}
+			catch (InvalidOperationException ex) when (ex.Source == "System.Collections.Concurrent")
+			{
+				throw new InvalidOperationException("The calling thread cannot access this object because a different thread owns it.");
+			}
+
+			switch (Objects(windowId).Take(CancellationToken))
+			{
+			case Exception ex: throw ex;
+			case null: break;
+			default: throw new InvalidOperationException("should never happen");
+			}
+		}
+
+		internal T Call<T>(CoordinatorCall call)
 		{
 			Debugger.NotifyOfCrossThreadDependency();
 			CancellationToken.ThrowIfCancellationRequested();
@@ -319,173 +341,9 @@ namespace WebView2.DOM
 			return (Objects(windowId).Take(CancellationToken)) switch
 			{
 				Exception ex => throw ex,
-				var result => result,
+				string json => JsonSerializer.Deserialize<T>(json, coreWebView.Options())!,
+				_ => throw new InvalidOperationException("should never happen"),
 			};
-		}
-
-		internal string Construct(string referenceId, string type, object?[] args)
-		{
-			var result = Call(new()
-			{
-				referenceId = referenceId,
-				memberType = "constructor",
-				memberName = type,
-				parameters = args,
-			});
-
-			return result switch
-			{
-				null => "",
-				_ => throw new InvalidOperationException(),
-			};
-		}
-
-		internal string Get(string referenceId, string property)
-		{
-			var result = Call(new()
-			{
-				referenceId = referenceId,
-				memberType = "getter",
-				memberName = property,
-			});
-
-			return result switch
-			{
-				string json => json,
-				_ => throw new InvalidOperationException(),
-			};
-		}
-
-		internal void Set(string referenceId, string property, object? value)
-		{
-			var result = Call(new()
-			{
-				referenceId = referenceId,
-				memberType = "setter",
-				memberName = property,
-				parameters = new[] { value },
-			});
-
-			switch (result)
-			{
-			case null: break;
-			default: throw new InvalidOperationException();
-			}
-		}
-
-		internal string IndexerGet(string referenceId, object? index)
-		{
-			var result = Call(new()
-			{
-				referenceId = referenceId,
-				memberType = "indexerGetter",
-				parameters = new[] { index },
-			});
-
-			return result switch
-			{
-				string json => json,
-				_ => throw new InvalidOperationException(),
-			};
-		}
-
-		internal void IndexerSet(string referenceId, object? index, object? value)
-		{
-			var result = Call(new()
-			{
-				referenceId = referenceId,
-				memberType = "indexerSetter",
-				parameters = new[] { index, value },
-			});
-
-			switch (result)
-			{
-			case null: break;
-			default: throw new InvalidOperationException();
-			}
-		}
-
-		internal void IndexerDelete(string referenceId, object? index)
-		{
-			var result = Call(new()
-			{
-				referenceId = referenceId,
-				memberType = "indexerDeleter",
-				parameters = new[] { index },
-			});
-
-			switch (result)
-			{
-			case null: break;
-			default: throw new InvalidOperationException();
-			}
-		}
-
-		internal string Invoke(string referenceId, string method, object?[] args)
-		{
-			var result = Call(new()
-			{
-				referenceId = referenceId,
-				memberType = "invoke",
-				memberName = method,
-				parameters = args,
-			});
-
-			switch (result)
-			{
-			case string json: return json;
-			case null: return "";
-			default: throw new InvalidOperationException();
-			}
-		}
-
-		internal string InvokeSymbol(string referenceId, string method, object?[] args)
-		{
-			var result = Call(new()
-			{
-				referenceId = referenceId,
-				memberType = "invokeSymbol",
-				memberName = method,
-				parameters = args,
-			});
-
-			switch (result)
-			{
-			case string json: return json;
-			default: throw new InvalidOperationException();
-			}
-		}
-
-		internal void AddEvent(string referenceId, string @event)
-		{
-			var result = Call(new()
-			{
-				referenceId = referenceId,
-				memberType = "addevent",
-				memberName = @event,
-			});
-
-			switch (result)
-			{
-			case null: break;
-			default: throw new InvalidOperationException();
-			}
-		}
-
-		internal void RemoveEvent(string referenceId, string @event)
-		{
-			var result = Call(new()
-			{
-				referenceId = referenceId,
-				memberType = "removeevent",
-				memberName = @event,
-			});
-
-			switch (result)
-			{
-			case null: break;
-			default: throw new InvalidOperationException();
-			}
 		}
 
 		internal string AddRunHandler(Action<Window> action)
