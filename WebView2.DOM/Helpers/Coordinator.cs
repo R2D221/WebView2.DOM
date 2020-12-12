@@ -302,86 +302,72 @@ namespace WebView2.DOM
 		#endregion
 
 		#region Called from C#
-		internal string Construct(string referenceId, string type, object?[] args)
+		private object? Call(CoordinatorCall call)
 		{
 			Debugger.NotifyOfCrossThreadDependency();
 			CancellationToken.ThrowIfCancellationRequested();
 			var windowId = window.Instance.referenceId;
 			try
 			{
-				Calls(windowId).Add(JsonSerializer.Serialize(new CoordinatorCall
-				{
-					referenceId = referenceId,
-					memberType = "constructor",
-					memberName = type,
-					parameters = args,
-				}, coreWebView.Options()), CancellationToken);
+				Calls(windowId).Add(JsonSerializer.Serialize(call, coreWebView.Options()), CancellationToken);
 			}
 			catch (InvalidOperationException ex) when (ex.Source == "System.Collections.Concurrent")
 			{
 				throw new InvalidOperationException("The calling thread cannot access this object because a different thread owns it.");
 			}
 
-			switch (Objects(windowId).Take(CancellationToken))
+			return (Objects(windowId).Take(CancellationToken)) switch
 			{
-			case Exception ex: throw ex;
-			case null: return "";
-			default: throw new InvalidOperationException();
-			}
+				Exception ex => throw ex,
+				var result => result,
+			};
+		}
+
+		internal string Construct(string referenceId, string type, object?[] args)
+		{
+			var result = Call(new()
+			{
+				referenceId = referenceId,
+				memberType = "constructor",
+				memberName = type,
+				parameters = args,
+			});
+
+			return result switch
+			{
+				null => "",
+				_ => throw new InvalidOperationException(),
+			};
 		}
 
 		internal string Get(string referenceId, string property)
 		{
-			Debugger.NotifyOfCrossThreadDependency();
-			CancellationToken.ThrowIfCancellationRequested();
-			var windowId = window.Instance.referenceId;
-			try
+			var result = Call(new()
 			{
-				Calls(windowId).Add(JsonSerializer.Serialize(new CoordinatorCall
-				{
-					//windowId = windowId,
-					referenceId = referenceId,
-					memberType = "getter",
-					memberName = property,
-				}, coreWebView.Options()), CancellationToken);
-			}
-			catch (InvalidOperationException ex) when (ex.Source == "System.Collections.Concurrent")
-			{
-				throw new InvalidOperationException("The calling thread cannot access this object because a different thread owns it.");
-			}
+				referenceId = referenceId,
+				memberType = "getter",
+				memberName = property,
+			});
 
-			switch (Objects(windowId).Take(CancellationToken))
+			return result switch
 			{
-			case Exception ex: throw ex;
-			case string json: return json;
-			default: throw new InvalidOperationException();
-			}
+				string json => json,
+				_ => throw new InvalidOperationException(),
+			};
 		}
 
 		internal void Set(string referenceId, string property, object? value)
 		{
-			Debugger.NotifyOfCrossThreadDependency();
-			CancellationToken.ThrowIfCancellationRequested();
-			var windowId = window.Instance.referenceId;
-			try
+			var result = Call(new()
 			{
-				Calls(windowId).Add(JsonSerializer.Serialize(new CoordinatorCall
-				{
-					//windowId = windowId,
-					referenceId = referenceId,
-					memberType = "setter",
-					memberName = property,
-					parameters = new[] { value },
-				}, coreWebView.Options()), CancellationToken);
-			}
-			catch (InvalidOperationException ex) when (ex.Source == "System.Collections.Concurrent")
-			{
-				throw new InvalidOperationException("The calling thread cannot access this object because a different thread owns it.");
-			}
+				referenceId = referenceId,
+				memberType = "setter",
+				memberName = property,
+				parameters = new[] { value },
+			});
 
-			switch (Objects(windowId).Take(CancellationToken))
+			switch (result)
 			{
-			case Exception ex: throw ex;
 			case null: break;
 			default: throw new InvalidOperationException();
 			}
@@ -389,55 +375,31 @@ namespace WebView2.DOM
 
 		internal string IndexerGet(string referenceId, object? index)
 		{
-			Debugger.NotifyOfCrossThreadDependency();
-			CancellationToken.ThrowIfCancellationRequested();
-			var windowId = window.Instance.referenceId;
-			try
+			var result = Call(new()
 			{
-				Calls(windowId).Add(JsonSerializer.Serialize(new CoordinatorCall
-				{
-					//windowId = windowId,
-					referenceId = referenceId,
-					memberType = "indexerGetter",
-					parameters = new[] { index },
-				}, coreWebView.Options()), CancellationToken);
-			}
-			catch (InvalidOperationException ex) when (ex.Source == "System.Collections.Concurrent")
-			{
-				throw new InvalidOperationException("The calling thread cannot access this object because a different thread owns it.");
-			}
+				referenceId = referenceId,
+				memberType = "indexerGetter",
+				parameters = new[] { index },
+			});
 
-			switch (Objects(windowId).Take(CancellationToken))
+			return result switch
 			{
-			case Exception ex: throw ex;
-			case string json: return json;
-			default: throw new InvalidOperationException();
-			}
+				string json => json,
+				_ => throw new InvalidOperationException(),
+			};
 		}
 
 		internal void IndexerSet(string referenceId, object? index, object? value)
 		{
-			Debugger.NotifyOfCrossThreadDependency();
-			CancellationToken.ThrowIfCancellationRequested();
-			var windowId = window.Instance.referenceId;
-			try
+			var result = Call(new()
 			{
-				Calls(windowId).Add(JsonSerializer.Serialize(new CoordinatorCall
-				{
-					//windowId = windowId,
-					referenceId = referenceId,
-					memberType = "indexerSetter",
-					parameters = new[] { index, value },
-				}, coreWebView.Options()), CancellationToken);
-			}
-			catch (InvalidOperationException ex) when (ex.Source == "System.Collections.Concurrent")
-			{
-				throw new InvalidOperationException("The calling thread cannot access this object because a different thread owns it.");
-			}
+				referenceId = referenceId,
+				memberType = "indexerSetter",
+				parameters = new[] { index, value },
+			});
 
-			switch (Objects(windowId).Take(CancellationToken))
+			switch (result)
 			{
-			case Exception ex: throw ex;
 			case null: break;
 			default: throw new InvalidOperationException();
 			}
@@ -445,27 +407,15 @@ namespace WebView2.DOM
 
 		internal void IndexerDelete(string referenceId, object? index)
 		{
-			Debugger.NotifyOfCrossThreadDependency();
-			CancellationToken.ThrowIfCancellationRequested();
-			var windowId = window.Instance.referenceId;
-			try
+			var result = Call(new()
 			{
-				Calls(windowId).Add(JsonSerializer.Serialize(new CoordinatorCall
-				{
-					//windowId = windowId,
-					referenceId = referenceId,
-					memberType = "indexerDeleter",
-					parameters = new[] { index },
-				}, coreWebView.Options()), CancellationToken);
-			}
-			catch (InvalidOperationException ex) when (ex.Source == "System.Collections.Concurrent")
-			{
-				throw new InvalidOperationException("The calling thread cannot access this object because a different thread owns it.");
-			}
+				referenceId = referenceId,
+				memberType = "indexerDeleter",
+				parameters = new[] { index },
+			});
 
-			switch (Objects(windowId).Take(CancellationToken))
+			switch (result)
 			{
-			case Exception ex: throw ex;
 			case null: break;
 			default: throw new InvalidOperationException();
 			}
@@ -473,28 +423,16 @@ namespace WebView2.DOM
 
 		internal string Invoke(string referenceId, string method, object?[] args)
 		{
-			Debugger.NotifyOfCrossThreadDependency();
-			CancellationToken.ThrowIfCancellationRequested();
-			var windowId = window.Instance.referenceId;
-			try
+			var result = Call(new()
 			{
-				Calls(windowId).Add(JsonSerializer.Serialize(new CoordinatorCall
-				{
-					//windowId = windowId,
-					referenceId = referenceId,
-					memberType = "invoke",
-					memberName = method,
-					parameters = args,
-				}, coreWebView.Options()), CancellationToken);
-			}
-			catch (InvalidOperationException ex) when (ex.Source == "System.Collections.Concurrent")
-			{
-				throw new InvalidOperationException("The calling thread cannot access this object because a different thread owns it.");
-			}
+				referenceId = referenceId,
+				memberType = "invoke",
+				memberName = method,
+				parameters = args,
+			});
 
-			switch (Objects(windowId).Take(CancellationToken))
+			switch (result)
 			{
-			case Exception ex: throw ex;
 			case string json: return json;
 			case null: return "";
 			default: throw new InvalidOperationException();
@@ -503,28 +441,16 @@ namespace WebView2.DOM
 
 		internal string InvokeSymbol(string referenceId, string method, object?[] args)
 		{
-			Debugger.NotifyOfCrossThreadDependency();
-			CancellationToken.ThrowIfCancellationRequested();
-			var windowId = window.Instance.referenceId;
-			try
+			var result = Call(new()
 			{
-				Calls(windowId).Add(JsonSerializer.Serialize(new CoordinatorCall
-				{
-					//windowId = windowId,
-					referenceId = referenceId,
-					memberType = "invokeSymbol",
-					memberName = method,
-					parameters = args,
-				}, coreWebView.Options()), CancellationToken);
-			}
-			catch (InvalidOperationException ex) when (ex.Source == "System.Collections.Concurrent")
-			{
-				throw new InvalidOperationException("The calling thread cannot access this object because a different thread owns it.");
-			}
+				referenceId = referenceId,
+				memberType = "invokeSymbol",
+				memberName = method,
+				parameters = args,
+			});
 
-			switch (Objects(windowId).Take(CancellationToken))
+			switch (result)
 			{
-			case Exception ex: throw ex;
 			case string json: return json;
 			default: throw new InvalidOperationException();
 			}
@@ -532,27 +458,15 @@ namespace WebView2.DOM
 
 		internal void AddEvent(string referenceId, string @event)
 		{
-			Debugger.NotifyOfCrossThreadDependency();
-			CancellationToken.ThrowIfCancellationRequested();
-			var windowId = window.Instance.referenceId;
-			try
+			var result = Call(new()
 			{
-				Calls(windowId).Add(JsonSerializer.Serialize(new CoordinatorCall
-				{
-					//windowId = windowId,
-					referenceId = referenceId,
-					memberType = "addevent",
-					memberName = @event,
-				}, coreWebView.Options()), CancellationToken);
-			}
-			catch (InvalidOperationException ex) when (ex.Source == "System.Collections.Concurrent")
-			{
-				throw new InvalidOperationException("The calling thread cannot access this object because a different thread owns it.");
-			}
+				referenceId = referenceId,
+				memberType = "addevent",
+				memberName = @event,
+			});
 
-			switch (Objects(windowId).Take(CancellationToken))
+			switch (result)
 			{
-			case Exception ex: throw ex;
 			case null: break;
 			default: throw new InvalidOperationException();
 			}
@@ -560,27 +474,15 @@ namespace WebView2.DOM
 
 		internal void RemoveEvent(string referenceId, string @event)
 		{
-			Debugger.NotifyOfCrossThreadDependency();
-			CancellationToken.ThrowIfCancellationRequested();
-			var windowId = window.Instance.referenceId;
-			try
+			var result = Call(new()
 			{
-				Calls(windowId).Add(JsonSerializer.Serialize(new CoordinatorCall
-				{
-					//windowId = windowId,
-					referenceId = referenceId,
-					memberType = "removeevent",
-					memberName = @event,
-				}, coreWebView.Options()), CancellationToken);
-			}
-			catch (InvalidOperationException ex) when (ex.Source == "System.Collections.Concurrent")
-			{
-				throw new InvalidOperationException("The calling thread cannot access this object because a different thread owns it.");
-			}
+				referenceId = referenceId,
+				memberType = "removeevent",
+				memberName = @event,
+			});
 
-			switch (Objects(windowId).Take(CancellationToken))
+			switch (result)
 			{
-			case Exception ex: throw ex;
 			case null: break;
 			default: throw new InvalidOperationException();
 			}
