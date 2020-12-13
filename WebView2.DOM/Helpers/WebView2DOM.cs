@@ -22,7 +22,7 @@ namespace WebView2.DOM
 		{
 			coreWebView.AddHostObjectToScript("Guid", new Guid());
 			coreWebView.AddHostObjectToScript("References", coreWebView.References());
-			coreWebView.AddHostObjectToScript("Coordinator", coreWebView.Coordinator(dispatcher));
+			coreWebView.AddHostObjectToScript("Coordinator", coreWebView.NewCoordinator(dispatcher));
 
 			coreWebView.ContentLoading += (_, __) =>
 			{

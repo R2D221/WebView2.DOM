@@ -36,7 +36,7 @@ namespace WebView2.DOM
 			new ConcurrentDictionary<string, IEnumerator<object>>();
 
 		private readonly CoreWebView2 coreWebView;
-		private readonly Action<Action>? dispatcher;
+		private readonly Action<Action> dispatcher;
 		private CancellationTokenSource cts;
 		private readonly AsyncLocal<CancellationTokenSource?> asyncLocalCts = new AsyncLocal<CancellationTokenSource?>();
 
@@ -49,7 +49,7 @@ namespace WebView2.DOM
 		private BlockingCollection<object?> Objects(string windowId) =>
 			objectsDict.GetOrAdd(windowId, _ => throw new OperationCanceledException());
 
-		internal Coordinator(CoreWebView2 coreWebView, Action<Action>? dispatcher)
+		internal Coordinator(CoreWebView2 coreWebView, Action<Action> dispatcher)
 		{
 			//calls = new BlockingCollection<string>();
 			//enumerator = calls.GetConsumingEnumerable().GetEnumerator();

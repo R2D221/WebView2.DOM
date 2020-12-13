@@ -1,6 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Web.WebView2.Core;
 using System;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -14,6 +16,7 @@ namespace WebView2.DOM.Tests
 		private static Application application = default!;
 		private static System.Windows.Window mainWindow = default!;
 		private static WebView2 webView = default!;
+		private static SynchronizationContext wpfSyncContext = default!;
 
 		[ClassInitialize]
 		public static async Task ClassInitialize(TestContext context)
@@ -30,6 +33,7 @@ namespace WebView2.DOM.Tests
 				};
 				mainWindow.Loaded += async (s, e) =>
 				{
+					wpfSyncContext = SynchronizationContext.Current!;
 					webView = new WebView2();
 					mainWindow.Content = webView;
 					await webView.EnsureCoreWebView2Async();
@@ -51,11 +55,36 @@ namespace WebView2.DOM.Tests
 		[ClassCleanup]
 		public static async Task ClassCleanup()
 		{
-			mainWindow.Dispatcher.Invoke(() =>
+			await mainWindow.Dispatcher.InvokeAsync(() =>
 			{
 				mainWindow.Close();
 			});
 			await windowTask;
+		}
+	}
+
+	public struct SynchronizationContextAwaiter : INotifyCompletion
+	{
+		private static readonly SendOrPostCallback _postCallback = state => ((Action)state!)();
+
+		private readonly SynchronizationContext _context;
+		public SynchronizationContextAwaiter(SynchronizationContext context)
+		{
+			_context = context;
+		}
+
+		public bool IsCompleted => _context == SynchronizationContext.Current;
+
+		public void OnCompleted(Action continuation) => _context.Post(_postCallback, continuation);
+
+		public void GetResult() { }
+	}
+
+	public static class SyncContExtensions
+	{
+		public static SynchronizationContextAwaiter GetAwaiter(this SynchronizationContext context)
+		{
+			return new SynchronizationContextAwaiter(context);
 		}
 	}
 }

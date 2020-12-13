@@ -13,6 +13,8 @@ namespace WebView2.DOM.Tests
 		[TestMethod]
 		public async Task RunsNormally()
 		{
+			await wpfSyncContext;
+
 			var ran = false;
 
 			await webView.RunOnJsThread(window =>
@@ -26,6 +28,8 @@ namespace WebView2.DOM.Tests
 		[TestMethod]
 		public async Task ExceptionPropagatesToCaller()
 		{
+			await wpfSyncContext;
+
 			await Assert.ThrowsExceptionAsync<MyException>(async () =>
 			{
 				await webView.RunOnJsThread(window =>
@@ -42,6 +46,8 @@ namespace WebView2.DOM.Tests
 		[TestMethod]
 		public async Task ExceptionPropagatesToCallerAsynchronously()
 		{
+			await wpfSyncContext;
+
 			await Assert.ThrowsExceptionAsync<MyException>(async () =>
 			{
 				await webView.RunOnJsThread(async window =>
@@ -55,6 +61,8 @@ namespace WebView2.DOM.Tests
 		[TestMethod]
 		public async Task JsIteratorBindsToCSharpEnumerator()
 		{
+			await wpfSyncContext;
+
 			await webView.RunOnJsThread(window =>
 			{
 				var children = window.document.children;
@@ -69,6 +77,8 @@ namespace WebView2.DOM.Tests
 		[TestMethod]
 		public async Task EnumeratesStyleProperties()
 		{
+			await wpfSyncContext;
+
 			await webView.RunOnJsThread(window =>
 			{
 				var document = window.document;
@@ -94,6 +104,8 @@ namespace WebView2.DOM.Tests
 		[TestMethod]
 		public async Task ComputedStyleMapEnumerationWorksCorrectly()
 		{
+			await wpfSyncContext;
+
 			await webView.RunOnJsThread(window =>
 			{
 				var body = window.document.body;
@@ -106,6 +118,8 @@ namespace WebView2.DOM.Tests
 		[TestMethod]
 		public async Task ConstructNewJsObject()
 		{
+			await wpfSyncContext;
+
 			await webView.RunOnJsThread(window =>
 			{
 				var styleSheet = new CSSStyleSheet();
@@ -124,6 +138,8 @@ namespace WebView2.DOM.Tests
 		[TestMethod]
 		public async Task CSSValuesOperations()
 		{
+			await wpfSyncContext;
+
 			await webView.RunOnJsThread(window =>
 			{
 				var x = CSS.number(10);
@@ -139,6 +155,8 @@ namespace WebView2.DOM.Tests
 		[TestMethod]
 		public async Task CSSUnparsedSegments()
 		{
+			await wpfSyncContext;
+
 			await webView.RunOnJsThread(window =>
 			{
 				var document = window.document;

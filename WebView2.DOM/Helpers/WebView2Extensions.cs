@@ -120,9 +120,15 @@ namespace WebView2.DOM
 			return references.GetValue(coreWebView, x => new References(x));
 		}
 
-		public static Coordinator Coordinator(this CoreWebView2 coreWebView, Action<Action>? dispatcher = null)
+		public static Coordinator NewCoordinator(this CoreWebView2 coreWebView, Action<Action> dispatcher)
 		{
+			coordinators.Remove(coreWebView);
 			return coordinators.GetValue(coreWebView, x => new Coordinator(x, dispatcher));
+		}
+
+		public static Coordinator Coordinator(this CoreWebView2 coreWebView)
+		{
+			return coordinators.GetValue(coreWebView, _ => throw new InvalidOperationException("should never happen"));
 		}
 
 		public static JsonSerializerOptions Options(this CoreWebView2 coreWebView)
@@ -165,20 +171,20 @@ namespace WebView2.DOM
 
 		public static async Task RunOnJsThread(this Microsoft.Web.WebView2.WinForms.WebView2 webView, Action<Window> action)
 		{
-			await (Task)webView.Invoke((Func<Task>)(async () =>
-			{
+			//await (Task)webView.Invoke((Func<Task>)(async () =>
+			//{
 				var coreWebView = winformsWebViews.GetValue(webView, _webView => _webView.CoreWebView2);
 				await coreWebView.RunOnJsThread(action);
-			}));
+			//}));
 		}
 
 		public static async Task RunOnJsThread(this Microsoft.Web.WebView2.Wpf.WebView2 webView, Action<Window> action)
 		{
-			await webView.Dispatcher.Invoke(async () =>
-			{
+			//await webView.Dispatcher.Invoke(async () =>
+			//{
 				var coreWebView = wpfWebViews.GetValue(webView, _webView => _webView.CoreWebView2);
 				await coreWebView.RunOnJsThread(action);
-			});
+			//});
 		}
 
 		public static async Task RunOnJsThread(this CoreWebView2 coreWebView, Action<Window> action)
