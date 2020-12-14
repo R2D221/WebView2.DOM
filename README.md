@@ -53,7 +53,7 @@ await WebView2DOM.InitAsync(webView);
 webView.DOMContentLoaded().Handler += async (s, e) =>
 {
 	// With this we get the DOM available in C#
-	await webView.RunOnJsThread(DOMContentLoaded);
+	await webView.InvokeInBrowserContextAsync(DOMContentLoaded);
 };
 
 void DOMContentLoaded(WebView2.DOM.Window window)
