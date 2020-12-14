@@ -21,7 +21,7 @@ namespace WebView2.DOM.Sample
 			await WebView2DOM.InitAsync(webView);
 			webView.DOMContentLoaded().Handler += async (s, e) =>
 			{
-				await webView.RunOnJsThread(DOMContentLoaded);
+				await webView.InvokeInBrowserContextAsync(DOMContentLoaded);
 			};
 			webView.NavigateToString(@"
 				<h1>Welcome to C# DOM</h1>
@@ -47,11 +47,11 @@ namespace WebView2.DOM.Sample
 			window.alert("Hello! You invoked window.alert()");
 		}
 
-		private void CsAlertButton_onclick(object sender, MouseEvent e)
+		private async void CsAlertButton_onclick(object sender, MouseEvent e)
 		{
-			webView.RunOnWpfUiThread(() =>
+			await webView.InvokeInWpfContextAsync(() =>
 			{
-				MessageBox.Show($"Hello! You invoked MessageBox.Show()");
+				MessageBox.Show("Hello! You invoked MessageBox.Show()");
 			});
 		}
 	}

@@ -13,7 +13,6 @@ namespace WebView2.DOM
 {
 	struct CoordinatorCall
 	{
-		//public string windowId { get; set; }
 		public string referenceId { get; set; }
 		public string memberType { get; set; }
 		public string memberName { get; set; }
@@ -36,7 +35,6 @@ namespace WebView2.DOM
 			new ConcurrentDictionary<string, IEnumerator<object>>();
 
 		private readonly CoreWebView2 coreWebView;
-		private readonly Action<Action> dispatcher;
 		private CancellationTokenSource cts;
 		private readonly AsyncLocal<CancellationTokenSource?> asyncLocalCts = new AsyncLocal<CancellationTokenSource?>();
 
@@ -49,13 +47,12 @@ namespace WebView2.DOM
 		private BlockingCollection<object?> Objects(string windowId) =>
 			objectsDict.GetOrAdd(windowId, _ => throw new OperationCanceledException());
 
-		internal Coordinator(CoreWebView2 coreWebView, Action<Action> dispatcher)
+		internal Coordinator(CoreWebView2 coreWebView)
 		{
 			//calls = new BlockingCollection<string>();
 			//enumerator = calls.GetConsumingEnumerable().GetEnumerator();
 			cts = new CancellationTokenSource();
 			this.coreWebView = coreWebView;
-			this.dispatcher = dispatcher;
 		}
 
 		internal void CancelRunningThreads()
@@ -67,16 +64,13 @@ namespace WebView2.DOM
 		}
 
 		#region Called from JavaScript: Entry points
-		public event Action? DOMContentLoaded;
-		private readonly ConcurrentDictionary<string, Action<Window>> runHandlers = new();
-		private readonly ConcurrentDictionary<string, Task> runTasks = new();
 
 		public void RaiseEvent(string windowId, string eventTargetId, string eventName, string eventId)
 		{
 			Reset(windowId);
 			Task.Run(() =>
 			{
-				SynchronizationContext.SetSynchronizationContext(new MySynchronizationContext(coreWebView, dispatcher));
+				SynchronizationContext.SetSynchronizationContext(WebViewSynchronizationContext.For(coreWebView));
 				try
 				{
 					asyncLocalCts.Value = cts;
@@ -97,28 +91,7 @@ namespace WebView2.DOM
 		{
 			json ??= "null";
 			var tcs = References.GetTaskCompletionSource(promiseId);
-			//if (isComplete)
-			//{
 			tcs.SetResult(json);
-			//}
-			//else
-			//{
-			//	Reset(windowId);
-			//	Task.Run(() =>
-			//	{
-			//		try
-			//		{
-			//			asyncLocalCts.Value = cts;
-			//			window.SetInstance(References.Get<Window>(windowId));
-			//			tcs.SetResult(json);
-			//		}
-			//		finally
-			//		{
-			//			window.SetInstance(null);
-			//			Calls(windowId).CompleteAdding();
-			//		}
-			//	});
-			//}
 		}
 
 		public void RejectPromise(string windowId, string promiseId, string json, bool isComplete)
@@ -133,67 +106,56 @@ namespace WebView2.DOM
 			}
 			var ex = errorWrapper.GetException();
 
-			//if (isComplete)
-			//{
 			tcs.SetException(ex);
-			//}
-			//else
-			//{
-			//	Reset(windowId);
-			//	Task.Run(() =>
-			//	{
-			//		try
-			//		{
-			//			asyncLocalCts.Value = cts;
-			//			window.SetInstance(References.Get<Window>(windowId));
-			//			tcs.SetException(ex);
-			//		}
-			//		finally
-			//		{
-			//			window.SetInstance(null);
-			//			Calls(windowId).CompleteAdding();
-			//		}
-			//	});
-			//}
+		}
+
+		private readonly ConcurrentDictionary<string, Action<string>> _onRun = new();
+
+		public void SyncContextPost(SendOrPostCallback d, object? state)
+		{
+			var runId = System.Guid.NewGuid().ToString();
+
+			_onRun.TryAdd(runId, windowId =>
+			{
+				Task.Run(() =>
+				{
+					SynchronizationContext.SetSynchronizationContext(WebViewSynchronizationContext.For(coreWebView));
+					try
+					{
+						asyncLocalCts.Value = cts;
+						var w = References.Get<Window>(windowId);
+						window.SetInstance(w);
+						d(state);
+					}
+					finally
+					{
+						window.SetInstance(null);
+						Calls(windowId).CompleteAdding();
+					}
+				});
+			});
+
+			_ = coreWebView.ExecuteScriptAsync($@"
+				(() => {{
+					const Coordinator = () => window.chrome.webview.hostObjects.sync.Coordinator;
+					Coordinator().{nameof(OnRun)}(WebView2DOM.GetId(window), '{runId}');
+					WebView2DOM.EventLoop();
+				}})()
+			");
 		}
 
 		public void OnRun(string windowId, string runId)
 		{
 			Reset(windowId);
-			runTasks.AddOrUpdate(
-				key: runId,
-				addValueFactory: _ =>
-					Task.Run(() =>
-					{
-						SynchronizationContext.SetSynchronizationContext(new MySynchronizationContext(coreWebView, dispatcher));
-						try
-						{
-							asyncLocalCts.Value = cts;
-							var w = References.Get<Window>(windowId);
-							window.SetInstance(w);
-							if (runHandlers.TryRemove(runId, out var action))
-							{
-								action(w);
-							}
-							else
-							{
-								throw new InvalidOperationException();
-							}
-						}
-						finally
-						{
-							window.SetInstance(null);
-							Calls(windowId).CompleteAdding();
-						}
-					}),
-				updateValueFactory: (_, _) => throw new InvalidOperationException()
-				);
+			if (_onRun.TryRemove(runId, out var action))
+			{
+				action(windowId);
+			}
+			else
+			{
+				throw new InvalidOperationException();
+			}
 		}
-
-		public Task Run(string runId) =>
-			runTasks.TryRemove(runId, out var run)
-			? run
-			: throw new InvalidOperationException();
 
 		public void OnCallback(string windowId, string callbackId, string json)
 		{
@@ -203,7 +165,7 @@ namespace WebView2.DOM
 				Reset(windowId);
 				Task.Run(() =>
 				{
-					SynchronizationContext.SetSynchronizationContext(new MySynchronizationContext(coreWebView, dispatcher));
+					SynchronizationContext.SetSynchronizationContext(WebViewSynchronizationContext.For(coreWebView));
 					try
 					{
 						asyncLocalCts.Value = cts;
@@ -344,13 +306,6 @@ namespace WebView2.DOM
 				string json => JsonSerializer.Deserialize<T>(json, coreWebView.Options())!,
 				_ => throw new InvalidOperationException("should never happen"),
 			};
-		}
-
-		internal string AddRunHandler(Action<Window> action)
-		{
-			var id = System.Guid.NewGuid().ToString();
-			runHandlers.TryAdd(id, action);
-			return id;
 		}
 
 		internal void EnqueueUiThreadAction(Action action)

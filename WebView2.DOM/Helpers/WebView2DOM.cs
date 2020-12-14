@@ -6,23 +6,17 @@ namespace WebView2.DOM
 {
 	public static class WebView2DOM
 	{
-		public static async Task InitAsync(Microsoft.Web.WebView2.WinForms.WebView2 webView)
-		{
-			var coreWebView = WebView2Extensions.winformsWebViews.GetValue(webView, _webView => _webView.CoreWebView2);
-			await InitAsync(coreWebView, action => webView.BeginInvoke(action));
-		}
+		public static async Task InitAsync(Microsoft.Web.WebView2.WinForms.WebView2 webView) =>
+			await InitAsync(webView.GetCoreWebView());
 
-		public static async Task InitAsync(Microsoft.Web.WebView2.Wpf.WebView2 webView)
-		{
-			var coreWebView = WebView2Extensions.wpfWebViews.GetValue(webView, _webView => _webView.CoreWebView2);
-			await InitAsync(coreWebView, action => webView.Dispatcher.BeginInvoke(action));
-		}
+		public static async Task InitAsync(Microsoft.Web.WebView2.Wpf.WebView2 webView) =>
+			await InitAsync(webView.GetCoreWebView());
 
-		public static async Task InitAsync(CoreWebView2 coreWebView, Action<Action> dispatcher)
+		public static async Task InitAsync(CoreWebView2 coreWebView)
 		{
 			coreWebView.AddHostObjectToScript("Guid", new Guid());
 			coreWebView.AddHostObjectToScript("References", coreWebView.References());
-			coreWebView.AddHostObjectToScript("Coordinator", coreWebView.NewCoordinator(dispatcher));
+			coreWebView.AddHostObjectToScript("Coordinator", coreWebView.Coordinator());
 
 			coreWebView.ContentLoading += (_, __) =>
 			{

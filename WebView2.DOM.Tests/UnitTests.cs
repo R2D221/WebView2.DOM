@@ -17,12 +17,52 @@ namespace WebView2.DOM.Tests
 
 			var ran = false;
 
-			await webView.RunOnJsThread(window =>
+			await webView.InvokeInBrowserContextAsync(window =>
 			{
 				ran = true;
 			});
 
 			Assert.AreEqual(true, ran);
+		}
+
+		[TestMethod]
+		public async Task RunsNormallyAsynchronously()
+		{
+			await wpfSyncContext;
+
+			var ran = false;
+
+			await webView.InvokeInBrowserContextAsync(async window =>
+			{
+				await Task.Yield();
+				ran = true;
+			});
+
+			Assert.AreEqual(true, ran);
+		}
+
+		[TestMethod]
+		public async Task ValuePropagatesToCaller()
+		{
+			await wpfSyncContext;
+
+			var value = await webView.InvokeInBrowserContextAsync(window => "foo");
+
+			Assert.AreEqual(value, "foo");
+		}
+
+		[TestMethod]
+		public async Task ValuePropagatesToCallerAsynchronously()
+		{
+			await wpfSyncContext;
+
+			var value = await webView.InvokeInBrowserContextAsync(async window =>
+			{
+				await Task.Yield();
+				return "bar";
+			});
+
+			Assert.AreEqual(value, "bar");
 		}
 
 		[TestMethod]
@@ -32,13 +72,13 @@ namespace WebView2.DOM.Tests
 
 			await Assert.ThrowsExceptionAsync<MyException>(async () =>
 			{
-				await webView.RunOnJsThread(window =>
+				await webView.InvokeInBrowserContextAsync(window =>
 				{
 					throw new MyException();
-#pragma warning disable CS0162
+#pragma warning disable CS0162, RCS1134
 					// Explicit return so the Action<Window> overload is preferred
 					return;
-#pragma warning restore CS0162
+#pragma warning restore CS0162, RCS1134
 				});
 			});
 		}
@@ -50,11 +90,81 @@ namespace WebView2.DOM.Tests
 
 			await Assert.ThrowsExceptionAsync<MyException>(async () =>
 			{
-				await webView.RunOnJsThread(async window =>
+				await webView.InvokeInBrowserContextAsync(async window =>
 				{
-					await Task.Delay(1);
+					await Task.Yield();
 					throw new MyException();
 				});
+			});
+		}
+
+		[TestMethod]
+		public async Task CallsUiContext()
+		{
+			await wpfSyncContext;
+
+			await webView.InvokeInBrowserContextAsync(async window =>
+			{
+				Assert.ThrowsException<InvalidOperationException>(() =>
+				{
+					var width = mainWindow.Width;
+				});
+
+				await webView.InvokeInWpfContextAsync(() =>
+				{
+					var width = mainWindow.Width;
+				});
+			});
+		}
+
+		[TestMethod]
+		public async Task CallsUiContextAndReturnsValue()
+		{
+			await wpfSyncContext;
+
+			await webView.InvokeInBrowserContextAsync(async window =>
+			{
+				var width = await webView.InvokeInWpfContextAsync(() => mainWindow.Width);
+
+				Assert.AreEqual(400, width);
+			});
+		}
+
+		[TestMethod]
+		public async Task CallsUiContextAsynchronously()
+		{
+			await wpfSyncContext;
+
+			await webView.InvokeInBrowserContextAsync(async window =>
+			{
+				await Assert.ThrowsExceptionAsync<InvalidOperationException>(async () =>
+				{
+					await Task.Yield();
+					var width = mainWindow.Width;
+				});
+
+				await webView.InvokeInWpfContextAsync(async () =>
+				{
+					await Task.Yield();
+					var width = mainWindow.Width;
+				});
+			});
+		}
+
+		[TestMethod]
+		public async Task CallsUiContextAndReturnsValueAsynchronously()
+		{
+			await wpfSyncContext;
+
+			await webView.InvokeInBrowserContextAsync(async window =>
+			{
+				var width = await webView.InvokeInWpfContextAsync(async () =>
+				{
+					await Task.Yield();
+					return mainWindow.Width;
+				});
+
+				Assert.AreEqual(400, width);
 			});
 		}
 
@@ -63,7 +173,7 @@ namespace WebView2.DOM.Tests
 		{
 			await wpfSyncContext;
 
-			await webView.RunOnJsThread(window =>
+			await webView.InvokeInBrowserContextAsync(window =>
 			{
 				var children = window.document.children;
 				var enumerator = children.GetEnumerator();
@@ -79,7 +189,7 @@ namespace WebView2.DOM.Tests
 		{
 			await wpfSyncContext;
 
-			await webView.RunOnJsThread(window =>
+			await webView.InvokeInBrowserContextAsync(window =>
 			{
 				var document = window.document;
 
@@ -106,7 +216,7 @@ namespace WebView2.DOM.Tests
 		{
 			await wpfSyncContext;
 
-			await webView.RunOnJsThread(window =>
+			await webView.InvokeInBrowserContextAsync(window =>
 			{
 				var body = window.document.body;
 				var styleMap = body.computedStyleMap();
@@ -120,7 +230,7 @@ namespace WebView2.DOM.Tests
 		{
 			await wpfSyncContext;
 
-			await webView.RunOnJsThread(window =>
+			await webView.InvokeInBrowserContextAsync(window =>
 			{
 				var styleSheet = new CSSStyleSheet();
 				Assert.IsInstanceOfType(styleSheet, typeof(CSSStyleSheet));
@@ -140,7 +250,7 @@ namespace WebView2.DOM.Tests
 		{
 			await wpfSyncContext;
 
-			await webView.RunOnJsThread(window =>
+			await webView.InvokeInBrowserContextAsync(window =>
 			{
 				var x = CSS.number(10);
 				var y = 6;
@@ -157,7 +267,7 @@ namespace WebView2.DOM.Tests
 		{
 			await wpfSyncContext;
 
-			await webView.RunOnJsThread(window =>
+			await webView.InvokeInBrowserContextAsync(window =>
 			{
 				var document = window.document;
 
