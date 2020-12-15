@@ -337,5 +337,11 @@ namespace WebView2.DOM.Tests
 			var a1 = new Float32Array();
 			var a2 = new Float64Array();
 		}
+
+		[TestMethod]
+		public void Forms()
+		{
+			var f = new HTMLFormElement();
+		}
 	}
 }
