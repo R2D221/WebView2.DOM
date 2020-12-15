@@ -1,4 +1,5 @@
 ﻿using Microsoft.Web.WebView2.Core;
+using System.Threading;
 
 namespace WebView2.DOM
 {
@@ -6,13 +7,33 @@ namespace WebView2.DOM
 
 	public class DOMRect : DOMRectReadOnly
 	{
-		protected internal DOMRect(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private static readonly AsyncLocal<JsObject?> _static = new();
+		private static JsObject @static => _static.Value ??=
+			window.Instance.Get<JsObject>(nameof(DOMRect));
 
-		public new double x { get => Get<double>(); set => Set(value); }
-		public new double y { get => Get<double>(); set => Set(value); }
-		public new double width { get => Get<double>(); set => Set(value); }
-		public new double height { get => Get<double>(); set => Set(value); }
+		protected internal DOMRect(CoreWebView2 coreWebView, string referenceId)
+			: base(coreWebView, referenceId) { }
+
+		public DOMRect(double x = 0, double y = 0, double width = 0, double height = 0)
+			: this(window.Instance.coreWebView, System.Guid.NewGuid().ToString()) =>
+			_ = (x, y, width, height) switch
+			{
+				(0, 0, 0, 0) => Construct(),
+				(_, 0, 0, 0) => Construct(x),
+				(_, _, 0, 0) => Construct(x, y),
+				(_, _, _, 0) => Construct(x, y, width),
+				(_, _, _, _) => Construct(x, y, width, height),
+			};
+
+		new public static DOMRect fromRect(DOMRectInit other) =>
+			@static.Method<DOMRect>().Invoke(other);
+
+		new public static DOMRect fromRect(DOMRectReadOnly other) =>
+			@static.Method<DOMRect>().Invoke(other);
+
+		new public double x { get => Get<double>(); set => Set(value); }
+		new public double y { get => Get<double>(); set => Set(value); }
+		new public double width { get => Get<double>(); set => Set(value); }
+		new public double height { get => Get<double>(); set => Set(value); }
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Web.WebView2.Core;
+using System;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 
@@ -15,7 +16,7 @@ namespace WebView2.DOM
 			this.referenceId = referenceId;
 		}
 
-		internal void Construct(params object?[] args)
+		internal @void Construct(params object?[] args)
 		{
 			coreWebView.References().Add(this);
 			coreWebView.Coordinator().Call(new()
@@ -25,6 +26,7 @@ namespace WebView2.DOM
 				memberName = GetType().Name,
 				parameters = args,
 			});
+			return default!;
 		}
 
 		internal T Get<T>([CallerMemberName] string property = "") =>
