@@ -10,7 +10,6 @@ using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using System.Windows.Data;
 using WebView2.DOM.Microsyntaxes;
 
 namespace WebView2.DOM
@@ -334,7 +333,7 @@ namespace WebView2.DOM
 		public string srcdoc { get => Get<string>(); set => Set(value); }
 		public string name { get => Get<string>(); set => Set(value); }
 		public DOMTokenList sandbox => Get<DOMTokenList>();
-		public bool allowFullscreen{ get => Get<bool>(); set => Set(value); }
+		public bool allowFullscreen { get => Get<bool>(); set => Set(value); }
 		public bool disallowDocumentAccess { get => Get<bool>(); set => Set(value); }
 		public uint width { get => JsonSerializer.Deserialize<uint>(Get<string>()); set => Set(JsonSerializer.Serialize(value)); }
 		public uint height { get => JsonSerializer.Deserialize<uint>(Get<string>()); set => Set(JsonSerializer.Serialize(value)); }
@@ -614,7 +613,7 @@ namespace WebView2.DOM
 	{
 		public bool flatten { get; init; }
 	}
-	
+
 	public class HTMLSlotElement : HTMLElement
 	{
 		protected internal HTMLSlotElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
