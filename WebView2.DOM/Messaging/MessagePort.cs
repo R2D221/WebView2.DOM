@@ -7,10 +7,10 @@ namespace WebView2.DOM
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/messaging/message_port.idl
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/messaging/post_message_options.idl
 
-	public class PostMessageOptions
+	public record PostMessageOptions
 	{
-		public IReadOnlyList<Transferable> transfer { get; set; } = Array.Empty<Transferable>();
-		public bool includeUserActivation { get; set; }
+		public IReadOnlyList<Transferable> transfer { get; init; } = Array.Empty<Transferable>();
+		public bool includeUserActivation { get; init; }
 	}
 
 	[Obsolete("not tested")]

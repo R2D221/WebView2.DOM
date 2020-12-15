@@ -4,20 +4,20 @@
 
 	public enum ScrollLogicalPosition { start, center, end, nearest }
 
-	public class ScrollOptions
+	public record ScrollOptions
 	{
-		public ScrollBehavior behavior { get; set; }
+		public ScrollBehavior behavior { get; init; }
 	}
 
-	public sealed class ScrollIntoViewOptions : ScrollOptions
+	public record ScrollIntoViewOptions : ScrollOptions
 	{
-		public ScrollLogicalPosition block { get; set; } = ScrollLogicalPosition.start;
-		public ScrollLogicalPosition inline { get; set; } = ScrollLogicalPosition.nearest;
+		public ScrollLogicalPosition block { get; init; } = ScrollLogicalPosition.start;
+		public ScrollLogicalPosition inline { get; init; } = ScrollLogicalPosition.nearest;
 	}
 
-	public sealed class ScrollToOptions : ScrollOptions
+	public record ScrollToOptions : ScrollOptions
 	{
-		public double left { get; set; }
-		public double top { get; set; }
+		public double left { get; init; }
+		public double top { get; init; }
 	}
 }

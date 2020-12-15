@@ -2,9 +2,9 @@
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/html/html_or_foreign_element.idl
 
-	public struct FocusOptions
+	public record FocusOptions
 	{
-		public bool preventScroll { get; set; }
+		public bool preventScroll { get; init; }
 	}
 
 	public interface HTMLOrForeignElement

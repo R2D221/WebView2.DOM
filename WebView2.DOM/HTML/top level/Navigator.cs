@@ -1,4 +1,5 @@
 ﻿using Microsoft.Web.WebView2.Core;
+using SmartAnalyzers.CSharpExtensions.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -86,21 +87,22 @@ namespace WebView2.DOM
 
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/frame/navigator_ua_brand_version.idl
 
-	public class NavigatorUABrandVersion
+	[InitRequired]
+	public record NavigatorUABrandVersion
 	{
-		public string brand { get; set; } = "";
-
-		public string version { get; set; } = "";
+		public string brand { get; init; }
+		public string version { get; init; }
 	}
 
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/frame/ua_data_values.idl
 
-	public class UADataValues
+	[InitRequired]
+	public record UADataValues
 	{
-		public string platform { get; set; } = "";
-		public string platformVersion { get; set; } = "";
-		public string architecture { get; set; } = "";
-		public string model { get; set; } = "";
-		public string uaFullVersion { get; set; } = "";
+		public string platform { get; init; }
+		public string platformVersion { get; init; }
+		public string architecture { get; init; }
+		public string model { get; init; }
+		public string uaFullVersion { get; init; }
 	}
 }

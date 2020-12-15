@@ -1,4 +1,5 @@
 ﻿using Microsoft.Web.WebView2.Core;
+using SmartAnalyzers.CSharpExtensions.Annotations;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -11,12 +12,12 @@ using System.Threading.Tasks;
 
 namespace WebView2.DOM
 {
-	struct CoordinatorCall
+	internal record CoordinatorCall
 	{
-		public string referenceId { get; set; }
-		public string memberType { get; set; }
-		public string memberName { get; set; }
-		public object?[] parameters { get; set; }
+		[InitRequired] public string referenceId { get; init; }
+		[InitRequired] public string memberType { get; init; }
+		[InitRequired] public string memberName { get; init; }
+		public object?[]? parameters { get; init; }
 	}
 
 	public sealed class Coordinator

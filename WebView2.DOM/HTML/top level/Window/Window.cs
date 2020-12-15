@@ -8,9 +8,9 @@ namespace WebView2.DOM
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/frame/window_post_message_options.idl
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/modules/storage/window_storage.idl
 
-	public class WindowPostMessageOptions : PostMessageOptions
+	public record WindowPostMessageOptions : PostMessageOptions
 	{
-		public string targetOrigin { get; set; } = "/";
+		public string targetOrigin { get; init; } = "/";
 	}
 
 	public partial class Window : EventTarget

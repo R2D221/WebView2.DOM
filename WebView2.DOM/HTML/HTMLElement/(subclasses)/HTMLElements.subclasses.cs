@@ -2,6 +2,7 @@
 using NodaTime;
 using OneOf;
 using OneOf.Types;
+using SmartAnalyzers.CSharpExtensions.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -609,11 +610,11 @@ namespace WebView2.DOM
 		public string integrity { get => Get<string>(); set => Set(value); }
 	}
 
-	public struct AssignedNodesOptions
+	public record AssignedNodesOptions
 	{
-		public bool flatten { get; set; }
+		public bool flatten { get; init; }
 	}
-
+	
 	public class HTMLSlotElement : HTMLElement
 	{
 		protected internal HTMLSlotElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
@@ -633,12 +634,11 @@ namespace WebView2.DOM
 			Method().Invoke(nodes);
 	}
 
-#warning This should be a record
-	public struct SrcSetItem
+	public record SrcSetItem
 	{
-		public Uri src { get; set; }
-		public int? width { get; set; }
-		public double? density { get; set; }
+		[InitRequired] public Uri src { get; init; }
+		public int? width { get; init; }
+		public double? density { get; init; }
 
 		public static IReadOnlyList<SrcSetItem> Parse(string value) =>
 			value.Split(',')

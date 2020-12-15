@@ -41,10 +41,10 @@ namespace WebView2.DOM
 		public void Reset() => throw new NotSupportedException();
 	}
 
-	[InitOnly]
-	public sealed class IteratorItem<T>
+	[InitRequired]
+	internal sealed record IteratorItem<T>
 	{
-		public T value { get; set; }
-		public bool done { get; set; }
+		public T value { get; init; }
+		public bool done { get; init; }
 	}
 }

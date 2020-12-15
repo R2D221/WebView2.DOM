@@ -15,7 +15,7 @@ namespace WebView2.DOM
 		percent,
 	};
 
-	public class CSSNumericType
+	public record CSSNumericType
 	{
 		public int length { get; init; }
 		public int angle { get; init; }
