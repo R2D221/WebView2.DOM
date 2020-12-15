@@ -308,5 +308,34 @@ namespace WebView2.DOM.Tests
 				);
 			});
 		}
+
+
+
+
+		[TestMethod]
+		public void FileApi()
+		{
+			var blob = new Blob();
+			var file = new File();
+		}
+
+		[TestMethod]
+		public void FontFaceSet()
+		{
+			var set = new FontFaceSet();
+		}
+
+		[TestMethod]
+		public void FormData()
+		{
+			var fd = new FormData();
+		}
+
+		[TestMethod]
+		public void TypedArrays()
+		{
+			var a1 = new Float32Array();
+			var a2 = new Float64Array();
+		}
 	}
 }
