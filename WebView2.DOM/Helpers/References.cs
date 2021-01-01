@@ -58,10 +58,6 @@ namespace WebView2.DOM
 					{
 						return constructor(id);
 					}
-					//else if (type.EndsWith("Iterator"))
-					//{
-					//	return new Iterator { coreWebView = coreWebView, referenceId = id };
-					//}
 					else
 					{
 						throw new InvalidOperationException($"JavaScript type {type} not found in C#");
@@ -70,6 +66,37 @@ namespace WebView2.DOM
 				(_, __) => throw new InvalidOperationException()
 				);
 		}
+
+		public void AddHTMLInputElement(string id, string type) =>
+			objRefs.AddOrUpdate(id,
+				_ => type switch
+					{
+						"hidden"/*	*/ => new HTMLHiddenInputElement/*	*/(coreWebView, id),
+						"text"/*	*/ => new HTMLTextInputElement/*	*/(coreWebView, id),
+						"search"/*	*/ => new HTMLSearchInputElement/*	*/(coreWebView, id),
+						"tel"/*	*/ => new HTMLTelephoneInputElement/*	*/(coreWebView, id),
+						"url"/*	*/ => new HTMLURLInputElement/*	*/(coreWebView, id),
+						"email"/*	*/ => new HTMLEmailInputElement/*	*/(coreWebView, id),
+						"password"/*	*/ => new HTMLPasswordInputElement/*	*/(coreWebView, id),
+						"date"/*	*/ => new HTMLDateInputElement/*	*/(coreWebView, id),
+						"month"/*	*/ => new HTMLMonthInputElement/*	*/(coreWebView, id),
+						"week"/*	*/ => new HTMLWeekInputElement/*	*/(coreWebView, id),
+						"time"/*	*/ => new HTMLTimeInputElement/*	*/(coreWebView, id),
+						"datetime-local"/*	*/ => new HTMLLocalDateTimeInputElement/*	*/(coreWebView, id),
+						"number"/*	*/ => new HTMLNumberInputElement/*	*/(coreWebView, id),
+						"range"/*	*/ => new HTMLRangeInputElement/*	*/(coreWebView, id),
+						"color"/*	*/ => new HTMLColorInputElement/*	*/(coreWebView, id),
+						"checkbox"/*	*/ => new HTMLCheckboxInputElement/*	*/(coreWebView, id),
+						"radio"/*	*/ => new HTMLRadioButtonInputElement/*	*/(coreWebView, id),
+						"file"/*	*/ => new HTMLFileUploadInputElement/*	*/(coreWebView, id),
+						"submit"/*	*/ => new HTMLSubmitInputElement/*	*/(coreWebView, id),
+						"image"/*	*/ => new HTMLImageInputElement/*	*/(coreWebView, id),
+						"reset"/*	*/ => new HTMLResetInputElement/*	*/(coreWebView, id),
+						"button"/*	*/ => new HTMLButtonInputElement/*	*/(coreWebView, id),
+						_ => throw new InvalidOperationException($"HTMLInputElement of type {type} not found in C#"),
+					},
+				(_, __) => throw new InvalidOperationException()
+				);
 
 		public void Remove(string id)
 		{

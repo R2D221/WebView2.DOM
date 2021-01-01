@@ -27,13 +27,13 @@ namespace WebView2.DOM.Microsyntaxes
 				(OffsetPattern.CreateWithInvariantCulture("Z+HHmm"), _ => false),
 			};
 
-		private static readonly YearMonthPattern monthPattern = YearMonthPattern.Iso;
+		internal static readonly YearMonthPattern monthPattern = YearMonthPattern.Iso;
 
-		private static readonly LocalDatePattern datePattern = LocalDatePattern.Iso;
+		internal static readonly LocalDatePattern datePattern = LocalDatePattern.Iso;
 
-		private static readonly AnnualDatePattern yearlessDatePattern = AnnualDatePattern.Iso;
+		internal static readonly AnnualDatePattern yearlessDatePattern = AnnualDatePattern.Iso;
 
-		private static readonly IPattern<LocalTime> timePattern =
+		internal static readonly IPattern<LocalTime> timePattern =
 			((Func<IPattern<LocalTime>>)(() =>
 			{
 				var timePatternBuilder = new CompositePatternBuilder<LocalTime>();
@@ -46,7 +46,7 @@ namespace WebView2.DOM.Microsyntaxes
 				return timePatternBuilder.Build();
 			}))();
 
-		private static readonly IPattern<LocalDateTime> localDateAndTimePattern =
+		internal static readonly IPattern<LocalDateTime> localDateAndTimePattern =
 			((Func<IPattern<LocalDateTime>>)(() =>
 			{
 				var localDateAndTimePatterns =
@@ -67,7 +67,7 @@ namespace WebView2.DOM.Microsyntaxes
 				return localDateAndTimePatternBuilder.Build();
 			}))();
 
-		private static readonly IPattern<Offset> timeZoneOffsetPattern =
+		internal static readonly IPattern<Offset> timeZoneOffsetPattern =
 			((Func<IPattern<Offset>>)(() =>
 			{
 				var timeZoneOffsetPatternBuilder = new CompositePatternBuilder<Offset>();
@@ -80,7 +80,7 @@ namespace WebView2.DOM.Microsyntaxes
 				return timeZoneOffsetPatternBuilder.Build();
 			}))();
 
-		private static readonly IPattern<OffsetDateTime> globalDateAndTimePattern =
+		internal static readonly IPattern<OffsetDateTime> globalDateAndTimePattern =
 			((Func<IPattern<OffsetDateTime>>)(() =>
 			{
 				var globalDateAndTimePatterns =
@@ -102,11 +102,11 @@ namespace WebView2.DOM.Microsyntaxes
 				return globalDateAndTimePatternBuilder.Build();
 			}))();
 
-		private static readonly IsoWeekPattern weekPattern = new IsoWeekPattern();
+		internal static readonly IsoWeekPattern weekPattern = new IsoWeekPattern();
 
-		private static readonly YearPattern yearPattern = new YearPattern();
+		internal static readonly YearPattern yearPattern = new YearPattern();
 
-		private static readonly IPattern<Period> durationPattern =
+		internal static readonly IPattern<Period> durationPattern =
 			new CompositePatternBuilder<Period>
 			{
 				{ PeriodPattern.NormalizingIso, _ => true },
@@ -114,7 +114,7 @@ namespace WebView2.DOM.Microsyntaxes
 			}
 			.Build();
 
-		private static readonly NullPattern nullPattern = new NullPattern();
+		internal static readonly NullPattern nullPattern = new NullPattern();
 
 		static DatesAndTimes()
 		{

@@ -93,7 +93,7 @@ namespace WebView2.DOM
 		public static readonly HTMLElementTag<HTMLElement/*	*/> i/*	*/= new HTMLElementTag();
 		public static readonly HTMLElementTag<HTMLIFrameElement/*	*/> iframe/*	*/= new HTMLElementTag();
 		public static readonly HTMLElementTag<HTMLImageElement/*	*/> img/*	*/= new HTMLElementTag();
-		public static readonly HTMLElementTag<HTMLInputElement/*	*/> input/*	*/= new HTMLElementTag();
+		//public static readonly HTMLElementTag<HTMLInputElement/*	*/> input/*	*/= new HTMLElementTag();
 		public static readonly HTMLElementTag<HTMLModElement/*	*/> ins/*	*/= new HTMLElementTag();
 		public static readonly HTMLElementTag<HTMLElement/*	*/> kbd/*	*/= new HTMLElementTag();
 		public static readonly HTMLElementTag<HTMLLabelElement/*	*/> label/*	*/= new HTMLElementTag();

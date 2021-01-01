@@ -73,7 +73,15 @@ namespace WebView2.DOM
 
 						const newId = Guid().NewGuid();
 
-						References().{nameof(DOM.References.Add)}(newId, obj.constructor.name);
+						if (obj instanceof HTMLInputElement)
+						{{
+							References().{nameof(DOM.References.AddHTMLInputElement)}(newId, obj.type);
+						}}
+						else
+						{{
+							References().{nameof(DOM.References.Add)}(newId, obj.constructor.name);
+						}}
+
 						objToId.set(obj, newId);
 						idToObj[newId] = new WeakRef(obj);
 						registry.register(obj, newId);

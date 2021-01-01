@@ -6,8 +6,7 @@ namespace WebView2.DOM
 
 	public partial class DocumentFragment : Node
 	{
-		protected internal DocumentFragment(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal DocumentFragment(CoreWebView2 coreWebView, string referenceId)
+			: base(coreWebView, referenceId) { }
 	}
 }

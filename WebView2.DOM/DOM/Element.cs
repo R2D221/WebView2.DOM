@@ -99,8 +99,8 @@ namespace WebView2.DOM
 		public HTMLSlotElement? assignedSlot => Get<HTMLSlotElement?>();
 
 		// DOM Parsing and Serialization
-		public string innerHTML { get => Get<string>(); /*set => Set(value);*/ }
-		public string outerHTML { get => Get<string>(); /*set => Set(value);*/ }
+		public string innerHTML { get => Get<string>(); set => Set(value); }
+		public string outerHTML { get => Get<string>(); set => Set(value); }
 		//public void insertAdjacentHTML(string position, HTMLString text)
 		//  => Method().Invoke(position, text);
 

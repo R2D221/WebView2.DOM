@@ -341,7 +341,34 @@ namespace WebView2.DOM.Tests
 		[TestMethod]
 		public void Forms()
 		{
-			var f = new HTMLFormElement();
+			throw new NotImplementedException();
+			//var f = new HTMLFormElement();
+			//var elements = f.elements;
+			//foreach (var element in elements)
+			//{
+
+			//}
+
+			//var a = f.elements["a"];
+			//var b = f.elements["b"];
+			//var c = f.elements["c"];
+
+			//var label = new HTMLLabelElement();
+			//var control = label.control;
+		}
+
+		[TestMethod]
+		public async Task Inputs()
+		{
+			await wpfSyncContext;
+
+			await webView.InvokeInBrowserContextAsync(window =>
+			{
+				var document = window.document;
+				var myButton = document.createHTMLInputElement(InputType.button);
+				var xxx = myButton.outerHTML;
+				throw new NotImplementedException();
+			});
 		}
 	}
 }

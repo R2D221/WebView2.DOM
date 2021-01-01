@@ -60,28 +60,16 @@ namespace WebView2.DOM
 		public string innerText { get => Get<string>(); /*set => Set(value);*/ }
 		public string outerText { get => Get<string>(); /*set => Set(value);*/ }
 
-		public sealed class OneOf<T0, T1> : HTMLElement
+		public interface OneOf<T0, T1>
 			where T0 : HTMLElement
 			where T1 : HTMLElement
 		{
-			private readonly HTMLElement value;
-
-			private OneOf(HTMLElement value)
-				: base(value.coreWebView, value.referenceId)
-			{
-				this.value = value;
-				events = value.events;
-			}
-
-			public static implicit operator OneOf<T0, T1>(T0 value) => new OneOf<T0, T1>(value);
-			public static implicit operator OneOf<T0, T1>(T1 value) => new OneOf<T0, T1>(value);
-
 			public void Switch
 				(/**/Action<T0> f0
 				,/**/Action<T1> f1
 				)
 			{
-				switch (value)
+				switch (this)
 				{
 				case T0 value0: f0(value0); break;
 				case T1 value1: f1(value1); break;
@@ -94,10 +82,127 @@ namespace WebView2.DOM
 				,/**/Func<T1, TResult> f1
 				)
 			{
-				return value switch
+				return this switch
 				{
 					T0 value0 => f0(value0),
 					T1 value1 => f1(value1),
+					_ => throw new InvalidOperationException(),
+				};
+			}
+		}
+
+		public interface OneOf<T0, T1, T2, T3, T4, T5, T6>
+			where T0 : HTMLElement
+			where T1 : HTMLElement
+			where T2 : HTMLElement
+			where T3 : HTMLElement
+			where T4 : HTMLElement
+			where T5 : HTMLElement
+			where T6 : HTMLElement
+		{
+			public void Switch
+				(/**/Action<T0> f0
+				,/**/Action<T1> f1
+				,/**/Action<T2> f2
+				,/**/Action<T3> f3
+				,/**/Action<T4> f4
+				,/**/Action<T5> f5
+				,/**/Action<T6> f6
+				)
+			{
+				switch (this)
+				{
+				case T0 value0: f0(value0); break;
+				case T1 value1: f1(value1); break;
+				case T2 value2: f2(value2); break;
+				case T3 value3: f3(value3); break;
+				case T4 value4: f4(value4); break;
+				case T5 value5: f5(value5); break;
+				case T6 value6: f6(value6); break;
+				default: throw new InvalidOperationException();
+				}
+			}
+
+			public TResult Match<TResult>
+				(/**/Func<T0, TResult> f0
+				,/**/Func<T1, TResult> f1
+				,/**/Func<T2, TResult> f2
+				,/**/Func<T3, TResult> f3
+				,/**/Func<T4, TResult> f4
+				,/**/Func<T5, TResult> f5
+				,/**/Func<T6, TResult> f6
+				)
+			{
+				return this switch
+				{
+					T0 value0 => f0(value0),
+					T1 value1 => f1(value1),
+					T2 value2 => f2(value2),
+					T3 value3 => f3(value3),
+					T4 value4 => f4(value4),
+					T5 value5 => f5(value5),
+					T6 value6 => f6(value6),
+					_ => throw new InvalidOperationException(),
+				};
+			}
+		}
+
+		public interface OneOf<T0, T1, T2, T3, T4, T5, T6, T7>
+			where T0 : HTMLElement
+			where T1 : HTMLElement
+			where T2 : HTMLElement
+			where T3 : HTMLElement
+			where T4 : HTMLElement
+			where T5 : HTMLElement
+			where T6 : HTMLElement
+			where T7 : HTMLElement
+		{
+			public void Switch
+				(/**/Action<T0> f0
+				,/**/Action<T1> f1
+				,/**/Action<T2> f2
+				,/**/Action<T3> f3
+				,/**/Action<T4> f4
+				,/**/Action<T5> f5
+				,/**/Action<T6> f6
+				,/**/Action<T7> f7
+				)
+			{
+				switch (this)
+				{
+				case T0 value0: f0(value0); break;
+				case T1 value1: f1(value1); break;
+				case T2 value2: f2(value2); break;
+				case T3 value3: f3(value3); break;
+				case T4 value4: f4(value4); break;
+				case T5 value5: f5(value5); break;
+				case T6 value6: f6(value6); break;
+				case T7 value7: f7(value7); break;
+				default: throw new InvalidOperationException();
+				}
+			}
+
+			public TResult Match<TResult>
+				(/**/Func<T0, TResult> f0
+				,/**/Func<T1, TResult> f1
+				,/**/Func<T2, TResult> f2
+				,/**/Func<T3, TResult> f3
+				,/**/Func<T4, TResult> f4
+				,/**/Func<T5, TResult> f5
+				,/**/Func<T6, TResult> f6
+				,/**/Func<T7, TResult> f7
+				)
+			{
+				return this switch
+				{
+					T0 value0 => f0(value0),
+					T1 value1 => f1(value1),
+					T2 value2 => f2(value2),
+					T3 value3 => f3(value3),
+					T4 value4 => f4(value4),
+					T5 value5 => f5(value5),
+					T6 value6 => f6(value6),
+					T7 value7 => f7(value7),
 					_ => throw new InvalidOperationException(),
 				};
 			}

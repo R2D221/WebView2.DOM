@@ -6,9 +6,8 @@ namespace WebView2.DOM
 
 	public class ValidityState : JsObject
 	{
-		protected internal ValidityState(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal ValidityState(CoreWebView2 coreWebView, string referenceId)
+			: base(coreWebView, referenceId) { }
 
 		public bool valueMissing	=> Get<bool>();
 		public bool typeMismatch	=> Get<bool>();

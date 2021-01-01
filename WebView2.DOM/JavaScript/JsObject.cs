@@ -79,7 +79,7 @@ namespace WebView2.DOM
 			private readonly JsObject @this;
 			private readonly string method;
 
-			public void Invoke(params object?[] args) =>
+			public @void Invoke(params object?[] args) =>
 				@this.coreWebView.Coordinator().Call<string?>(new()
 				{
 					referenceId = @this.referenceId,

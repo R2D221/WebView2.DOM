@@ -6,9 +6,8 @@ namespace WebView2.DOM
 
 	public class SubmitEvent : Event
 	{
-		protected internal SubmitEvent(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal SubmitEvent(CoreWebView2 coreWebView, string referenceId)
+			: base(coreWebView, referenceId) { }
 
 		public HTMLElement? submitter => Get<HTMLElement?>();
 	}

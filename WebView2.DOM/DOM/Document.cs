@@ -14,9 +14,8 @@ namespace WebView2.DOM
 
 	public partial class Document : Node
 	{
-		protected internal Document(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal Document(CoreWebView2 coreWebView, string referenceId)
+			: base(coreWebView, referenceId) { }
 
 		#region url
 		public DOMImplementation implementation => _implementation ??= Get<DOMImplementation>();
@@ -114,8 +113,8 @@ namespace WebView2.DOM
 		private HTMLCollection<HTMLEmbedElement>? _embeds;
 		public HTMLCollection<HTMLEmbedElement> plugins => _plugins ??= Get<HTMLCollection<HTMLEmbedElement>>();
 		private HTMLCollection<HTMLEmbedElement>? _plugins;
-		public HTMLCollection<HTMLElement.OneOf<HTMLAnchorElement, HTMLAreaElement>> links => _links ??= Get<HTMLCollection<HTMLElement.OneOf<HTMLAnchorElement, HTMLAreaElement>>>();
-		private HTMLCollection<HTMLElement.OneOf<HTMLAnchorElement, HTMLAreaElement>>? _links;
+		public HTMLCollection<HTMLHyperlinkElementUtils> links => _links ??= Get<HTMLCollection<HTMLHyperlinkElementUtils>>();
+		private HTMLCollection<HTMLHyperlinkElementUtils>? _links;
 		public HTMLCollection<HTMLFormElement> forms => _forms ??= Get<HTMLCollection<HTMLFormElement>>();
 		private HTMLCollection<HTMLFormElement>? _forms;
 		public HTMLCollection<HTMLScriptElement> scripts => _scripts ??= Get<HTMLCollection<HTMLScriptElement>>();

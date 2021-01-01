@@ -25,7 +25,12 @@ namespace WebView2.DOM.Helpers
 		where TEnum : struct, Enum
 	{
 		private static readonly EnumFormat enumFormat =
-			Enums.RegisterCustomEnumFormat(x => x.AsString() == "_" ? "" : x.AsString().Replace("_", "-"));
+			Enums.RegisterCustomEnumFormat(x => x.AsString() == "_" ? "" :
+				x.AsString()
+				.Replace("_", "-")
+				.Replace("̵ˑ", "-")
+				.Replace("̸ˑ", "/")
+			);
 
 		public override TEnum Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
 			Enums.Parse<TEnum>(reader.GetString() ?? throw new NullReferenceException(), ignoreCase: false, enumFormat);

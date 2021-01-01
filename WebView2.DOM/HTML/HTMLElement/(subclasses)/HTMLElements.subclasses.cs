@@ -31,7 +31,7 @@ namespace WebView2.DOM
 		unsafe_url,
 	}
 
-	public sealed class HTMLAnchorElement : HTMLElement
+	public sealed class HTMLAnchorElement : HTMLElement, HTMLHyperlinkElementUtils
 	{
 		internal HTMLAnchorElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
 		{
@@ -70,7 +70,7 @@ namespace WebView2.DOM
 
 	public enum Shape { _, circle, @default, poly, rect }
 
-	public sealed class HTMLAreaElement : HTMLElement
+	public sealed class HTMLAreaElement : HTMLElement, HTMLHyperlinkElementUtils
 	{
 		internal HTMLAreaElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
 		{
@@ -381,21 +381,6 @@ namespace WebView2.DOM
 		public string content { get => Get<string>(); set => Set(value); }
 	}
 
-	public class HTMLMeterElement : HTMLElement
-	{
-		protected internal HTMLMeterElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
-
-		public double value { get => Get<double>(); set => Set(value); }
-		public double min { get => Get<double>(); set => Set(value); }
-		public double max { get => Get<double>(); set => Set(value); }
-		public double low { get => Get<double>(); set => Set(value); }
-		public double high { get => Get<double>(); set => Set(value); }
-		public double optimum { get => Get<double>(); set => Set(value); }
-		public NodeList<HTMLLabelElement> labels => Get<NodeList<HTMLLabelElement>>();
-	}
-
 	public class HTMLModElement : HTMLElement
 	{
 		protected internal HTMLModElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
@@ -415,14 +400,14 @@ namespace WebView2.DOM
 		}
 	}
 
-	public class HTMLObjectElement : HTMLElement
+	public class HTMLObjectElement : HTMLElement, IFormControl
 	{
-		protected internal HTMLObjectElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal HTMLObjectElement(CoreWebView2 coreWebView, string referenceId)
+			: base(coreWebView, referenceId) { }
 
 		public Uri data { get => Get<Uri>(); set => Set(value); }
 		public string type { get => Get<string>(); set => Set(value); }
+		FormControlType IFormControl.type => Get<FormControlType>();
 		public string name { get => Get<string>(); set => Set(value); }
 		public string useMap { get => Get<string>(); set => Set(value); }
 		public HTMLFormElement? form => Get<HTMLFormElement?>();
@@ -480,18 +465,6 @@ namespace WebView2.DOM
 		protected internal HTMLPreElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
 		{
 		}
-	}
-
-	public class HTMLProgressElement : HTMLElement
-	{
-		protected internal HTMLProgressElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
-
-		public double value { get => Get<double>(); set => Set(value); }
-		public double max { get => Get<double>(); set => Set(value); }
-		public double position => Get<double>();
-		public NodeList<HTMLLabelElement> labels => Get<NodeList<HTMLLabelElement>>();
 	}
 
 	public class HTMLQuoteElement : HTMLElement
@@ -704,9 +677,8 @@ namespace WebView2.DOM
 
 	public class HTMLTemplateElement : HTMLElement
 	{
-		protected internal HTMLTemplateElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal HTMLTemplateElement(CoreWebView2 coreWebView, string referenceId)
+			: base(coreWebView, referenceId) { }
 
 		public DocumentFragment content => Get<DocumentFragment>();
 		// readonly attribute ShadowRoot? shadowRoot;

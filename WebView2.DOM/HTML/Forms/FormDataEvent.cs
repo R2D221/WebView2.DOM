@@ -6,9 +6,8 @@ namespace WebView2.DOM
 
 	public class FormDataEvent : Event
 	{
-		protected internal FormDataEvent(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal FormDataEvent(CoreWebView2 coreWebView, string referenceId)
+			: base(coreWebView, referenceId) { }
 
 		public FormData formData => Get<FormData>();
 	}
