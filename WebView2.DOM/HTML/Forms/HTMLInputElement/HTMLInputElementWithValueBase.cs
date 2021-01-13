@@ -15,16 +15,32 @@ namespace WebView2.DOM
 		public string autocomplete { get => Get<string>(); set => Set(value); }
 		public HTMLDataListElement? list => Get<HTMLDataListElement?>();
 
-		new public T defaultValue
+		new public T? defaultValue
 		{
-			get => Pattern.Parse(base.defaultValue).Value;
-			set => base.defaultValue = Pattern.Format(value);
+			get => Get<string>() switch
+			{
+				null or "" => null,
+				string value => Pattern.Parse(value).Value,
+			};
+			set => Set(value switch
+			{
+				null => "",
+				T x => Pattern.Format(x),
+			});
 		}
 
-		new public T value
+		new public T? value
 		{
-			get => Pattern.Parse(base.value).Value;
-			set => base.value = Pattern.Format(value);
+			get => Get<string>() switch
+			{
+				null or "" => null,
+				string value => Pattern.Parse(value).Value,
+			};
+			set => Set(value switch
+			{
+				null => "",
+				T x => Pattern.Format(x),
+			});
 		}
 
 		public T? min

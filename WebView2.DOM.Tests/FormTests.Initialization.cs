@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -8,7 +9,7 @@ namespace WebView2.DOM.Tests
 {
 	using WebView2 = Microsoft.Web.WebView2.Wpf.WebView2;
 
-	public partial class UnitTests
+	public partial class FormTests
 	{
 		private static Task windowTask = default!;
 		private static Application application = default!;

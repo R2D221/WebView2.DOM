@@ -41,12 +41,18 @@ namespace WebView2.DOM.Helpers
 
 	internal sealed class JsObjectJsonConverterFactory : JsonConverterFactory
 	{
-		public override bool CanConvert(Type typeToConvert) =>
-			typeof(JsObject).IsAssignableFrom(typeToConvert)
+		public override bool CanConvert(Type typeToConvert) => false
+			|| typeof(JsObject).IsAssignableFrom(typeToConvert)
+			|| typeof(IFormControl).IsAssignableFrom(typeToConvert)
+			|| typeof(ILabelableElement).IsAssignableFrom(typeToConvert)
+			|| typeof(HTMLHyperlinkElementUtils).IsAssignableFrom(typeToConvert)
 			;
 
 		public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options) =>
-			(JsonConverter)Activator.CreateInstance(typeof(JsObjectJsonConverter<>).MakeGenericType(typeToConvert))!;
+			typeof(JsObject).IsAssignableFrom(typeToConvert)
+			? (JsonConverter)Activator.CreateInstance(typeof(JsObjectJsonConverter<>).MakeGenericType(typeToConvert))!
+			: (JsonConverter)Activator.CreateInstance(typeof(JsObjectInterfaceJsonConverter<>).MakeGenericType(typeToConvert))!
+			;
 	}
 
 	internal sealed class JsObjectJsonConverter<TJsObject> : JsonConverter<TJsObject?>
@@ -84,6 +90,47 @@ namespace WebView2.DOM.Helpers
 
 			writer.WriteStartObject();
 			writer.WriteString("referenceId", value.referenceId);
+			writer.WriteEndObject();
+		}
+	}
+
+	internal sealed class JsObjectInterfaceJsonConverter<I> : JsonConverter<I?>
+		where I : class //interface
+	{
+		public override I? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			if (reader.TokenType == JsonTokenType.Null)
+			{
+				return null;
+			}
+
+			if (true
+			&& reader.TokenType == JsonTokenType.StartObject
+			&& reader.Read()
+			&& reader.TokenType == JsonTokenType.PropertyName
+			&& reader.GetString() == "referenceId"
+			&& reader.Read()
+			&& reader.GetString() is string referenceId
+			&& reader.Read()
+			&& reader.TokenType == JsonTokenType.EndObject
+			)
+			{
+				return (I?)(object?)References.GetNullable<JsObject>(referenceId);
+			}
+			else
+			{
+				throw new InvalidOperationException();
+			}
+		}
+
+		public override void Write(Utf8JsonWriter writer, I? value, JsonSerializerOptions options)
+		{
+			if (value is null) { writer.WriteNullValue(); return; }
+
+			if (value is not JsObject obj) { throw new InvalidOperationException(); }
+
+			writer.WriteStartObject();
+			writer.WriteString("referenceId", obj.referenceId);
 			writer.WriteEndObject();
 		}
 	}

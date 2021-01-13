@@ -6,7 +6,7 @@ namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/html/forms/html_form_controls_collection.idl
 
-	public class HTMLFormControlsCollection : HTMLCollection<HTMLElement>
+	public class HTMLFormControlsCollection : HTMLCollection<IFormControl>
 	{
 		protected internal HTMLFormControlsCollection(CoreWebView2 coreWebView, string referenceId)
 			: base(coreWebView, referenceId) { }
