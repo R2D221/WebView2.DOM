@@ -1,9 +1,7 @@
 ﻿using Microsoft.Web.WebView2.Core;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 
 namespace WebView2.DOM
 {

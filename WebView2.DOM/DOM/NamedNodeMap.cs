@@ -3,18 +3,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 
 namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/dom/named_node_map.idl
 
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
-	public class NamedNodeMap : JsObject, ICollection<Attr>, IReadOnlyCollection<Attr>
+	public class NamedNodeMap : JsObject, IReadOnlyCollection<Attr>
 	{
-		protected internal NamedNodeMap(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal NamedNodeMap(CoreWebView2 coreWebView, string referenceId)
+			: base(coreWebView, referenceId) { }
 
 		public Attr this[uint index] =>
 			IndexerGet<Attr?>(index) ?? throw new ArgumentOutOfRangeException(nameof(index));
@@ -33,13 +31,6 @@ namespace WebView2.DOM
 			SymbolMethod<Iterator<Attr>>("iterator").Invoke();
 
 		int IReadOnlyCollection<Attr>.Count => (int)length;
-		int ICollection<Attr>.Count => (int)length;
-		bool ICollection<Attr>.IsReadOnly => true;
-		void ICollection<Attr>.Add(Attr item) => throw new NotSupportedException();
-		void ICollection<Attr>.Clear() => throw new NotSupportedException();
-		bool ICollection<Attr>.Contains(Attr item) => this.Any(x => x == item);
-		void ICollection<Attr>.CopyTo(Attr[] array, int arrayIndex) => this.ToArray().CopyTo(array, arrayIndex);
-		bool ICollection<Attr>.Remove(Attr item) => throw new NotSupportedException();
 		IEnumerator<Attr> IEnumerable<Attr>.GetEnumerator() => GetEnumerator();
 		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 	}

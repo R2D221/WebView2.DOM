@@ -3,18 +3,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 
 namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/css/css_style_declaration.idl
 
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
-	public class CSSStyleDeclaration : JsObject, ICollection<KeyValuePair<string, string>>, IReadOnlyCollection<KeyValuePair<string, string>>
+	public class CSSStyleDeclaration : JsObject, IReadOnlyCollection<KeyValuePair<string, string>>
 	{
-		protected internal CSSStyleDeclaration(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal CSSStyleDeclaration(CoreWebView2 coreWebView, string referenceId)
+			: base(coreWebView, referenceId) { }
 
 		public string cssText { get => Get<string>(); set => Set(value); }
 		public string this[uint index] =>
@@ -46,13 +44,6 @@ namespace WebView2.DOM
 
 		#region ICollection
 		int IReadOnlyCollection<KeyValuePair<string, string>>.Count => (int)length;
-		int ICollection<KeyValuePair<string, string>>.Count => (int)length;
-		bool ICollection<KeyValuePair<string, string>>.IsReadOnly => true;
-		void ICollection<KeyValuePair<string, string>>.Add(KeyValuePair<string, string> item) => throw new NotSupportedException();
-		void ICollection<KeyValuePair<string, string>>.Clear() => throw new NotSupportedException();
-		bool ICollection<KeyValuePair<string, string>>.Contains(KeyValuePair<string, string> item) => this.Any(x => x.Equals(item));
-		void ICollection<KeyValuePair<string, string>>.CopyTo(KeyValuePair<string, string>[] array, int arrayIndex) => this.ToArray().CopyTo(array, arrayIndex);
-		bool ICollection<KeyValuePair<string, string>>.Remove(KeyValuePair<string, string> item) => throw new NotSupportedException();
 		IEnumerator<KeyValuePair<string, string>> IEnumerable<KeyValuePair<string, string>>.GetEnumerator() => GetEnumerator();
 		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 		#endregion
