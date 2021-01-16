@@ -6,9 +6,8 @@ namespace WebView2.DOM
 
 	public class Attr : Node
 	{
-		protected internal Attr(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal Attr(CoreWebView2 coreWebView, string referenceId)
+			: base(coreWebView, referenceId) { }
 
 		public string? namespaceURI => Get<string?>();
 		public string? prefix => Get<string?>();

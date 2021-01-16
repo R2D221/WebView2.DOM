@@ -220,9 +220,15 @@ namespace WebView2.DOM.Tests
 			await webView.InvokeInBrowserContextAsync(window =>
 			{
 				var body = window.document.body;
+
 				var styleMap = body.computedStyleMap();
-				var styleMapEnumerableCount = styleMap.Count();
-				Assert.AreEqual(styleMap.size, (uint)styleMapEnumerableCount);
+				var styleMapCopy = styleMap.ToImmutableDictionary();
+				Assert.AreEqual(styleMap.Count, styleMapCopy.Count);
+
+				var styleMapKeys = styleMap.Keys.ToImmutableHashSet();
+				var styleMapCopyKeys = styleMapCopy.Keys.ToImmutableHashSet();
+
+				Assert.IsTrue(styleMapKeys.SetEquals(styleMapCopyKeys));
 			});
 		}
 
@@ -241,7 +247,7 @@ namespace WebView2.DOM.Tests
 			Assert.ThrowsException<InvalidOperationException>(() =>
 			{
 				// You can't construct a new JS object
-				// if you're not in the JS thread
+				// if you're not in the browser context
 				var styleSheet = new CSSStyleSheet();
 			});
 		}
@@ -275,7 +281,7 @@ namespace WebView2.DOM.Tests
 				var myDiv = document.createHTMLElement(div);
 				myDiv.setAttribute("style", "width: calc(42px + var(--foo, 15em) + var(--bar, var(--far) + 15px))");
 
-				var width = myDiv.attributeStyleMap.get("width")!;
+				var width = myDiv.attributeStyleMap["width"][0];
 				Assert.IsNotNull(width);
 				Assert.That.IsInstanceOfType(width, out CSSUnparsedValue unparsedWidth);
 

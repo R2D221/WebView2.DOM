@@ -9,9 +9,8 @@ namespace WebView2.DOM
 
 	public partial class Element : Node
 	{
-		protected internal Element(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal Element(CoreWebView2 coreWebView, string referenceId)
+			: base(coreWebView, referenceId) { }
 
 		public string? namespaceURI => Get<string?>();
 		public string? prefix => Get<string?>();

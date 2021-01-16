@@ -6,11 +6,20 @@ namespace WebView2.DOM
 {
 	internal class JsCollectionProxy
 	{
-		private readonly IEnumerable jsCollection;
+		private readonly ICollection jsCollection;
 
-		public JsCollectionProxy(IEnumerable jsCollection)
+		public JsCollectionProxy(ICollection jsCollection)
 		{
 			this.jsCollection = jsCollection;
+		}
+
+		public int Count
+		{
+			get
+			{
+				Debugger.NotifyOfCrossThreadDependency();
+				return jsCollection.Count;
+			}
 		}
 
 		public object?[] Results_View
