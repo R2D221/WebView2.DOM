@@ -8,9 +8,8 @@ namespace WebView2.DOM
 {
 	public sealed class Iterator : JsObject
 	{
-		internal Iterator(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		internal Iterator(CoreWebView2 coreWebView, string referenceId)
+			: base(coreWebView, referenceId) { }
 	}
 
 	public sealed class Iterator<T> : JsObject, IEnumerator<T>

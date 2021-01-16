@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Collections;
 
 namespace WebView2.DOM.Collections
 {
-	public interface ICollection<T> : System.Collections.Generic.ICollection<T>, IReadOnlyCollection<T>
+	public interface ICollection<T> :
+		System.Collections.Generic.ICollection<T>,
+		IReadOnlyCollection<T>
 	{
 		new int Count { get; }
 

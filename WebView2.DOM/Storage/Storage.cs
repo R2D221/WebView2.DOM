@@ -8,7 +8,7 @@ namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/modules/storage/storage.idl
 
-	public class Storage : JsObject, IDictionary<string, string>, Collections.ICollection<KeyValuePair<string, string>>
+	public class Storage : JsObject, WebView2.DOM.Collections.IDictionary<string, string>
 	{
 		protected internal Storage(CoreWebView2 coreWebView, string referenceId)
 			: base(coreWebView, referenceId) { }

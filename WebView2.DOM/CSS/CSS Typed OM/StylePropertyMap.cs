@@ -9,32 +9,43 @@ namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/css/cssom/style_property_map_read_only.idl
 
-	public class StylePropertyMapReadOnly : JsObject, IEnumerable<KeyValuePair<string, IReadOnlyList<CSSStyleValue>>>
+	public class StylePropertyMapReadOnly : JsObject
+		//, IEnumerable<KeyValuePair<string, IReadOnlyList<CSSStyleValue>>>
+		, WebView2.DOM.Collections.IReadOnlyDictionary<string, IReadOnlyList<CSSStyleValue>>
 	{
-		protected internal StylePropertyMapReadOnly(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal StylePropertyMapReadOnly(CoreWebView2 coreWebView, string referenceId)
+			: base(coreWebView, referenceId) { }
 
-		public CSSStyleValue? get(string property) => Method<CSSStyleValue?>().Invoke(property);
-		public IReadOnlyList<CSSStyleValue> getAll(string property) =>
-			Method<ImmutableList<CSSStyleValue>>().Invoke(property);
-		public bool has(string property) => Method<bool>().Invoke(property);
-		public uint size => Get<uint>();
+		public int Count => Get<int>("size");
 
-		public Iterator<KeyValuePair<string, IReadOnlyList<CSSStyleValue>>> GetEnumerator() =>
+		public IReadOnlyList<CSSStyleValue> this[string property] =>
+			Method<ImmutableList<CSSStyleValue>>("getAll").Invoke(property);
+
+		public IEnumerable<string> Keys =>
+			this.Select(x => x.Key);
+
+		public IEnumerable<IReadOnlyList<CSSStyleValue>> Values =>
+			this.Select(x => x.Value);
+
+		public bool ContainsKey(string property) =>
+			Method<bool>("has").Invoke(property);
+
+		public IEnumerator<KeyValuePair<string, IReadOnlyList<CSSStyleValue>>> GetEnumerator() =>
 			SymbolMethod<Iterator<KeyValuePair<string, IReadOnlyList<CSSStyleValue>>>>("iterator").Invoke();
 
-		IEnumerator<KeyValuePair<string, IReadOnlyList<CSSStyleValue>>> IEnumerable<KeyValuePair<string, IReadOnlyList<CSSStyleValue>>>.GetEnumerator() => GetEnumerator();
-		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+		public bool TryGetValue(string property, out IReadOnlyList<CSSStyleValue> value)
+		{
+			value = this[property];
+			return ContainsKey(property);
+		}
 	}
 
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/css/cssom/style_property_map.idl
 
 	public class StylePropertyMap : StylePropertyMapReadOnly
 	{
-		protected internal StylePropertyMap(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal StylePropertyMap(CoreWebView2 coreWebView, string referenceId)
+			: base(coreWebView, referenceId) { }
 
 		public void set(string property, params OneOf<CSSStyleValue, string>[] values) =>
 			Method().Invoke(args: values.Select(x => x.Value).Prepend(property).ToArray());

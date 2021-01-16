@@ -2,7 +2,9 @@
 
 namespace WebView2.DOM.Collections
 {
-	public interface IReadOnlyCollection<T> : System.Collections.Generic.IReadOnlyCollection<T>, System.Collections.ICollection
+	public interface IReadOnlyCollection<out T> :
+		System.Collections.Generic.IReadOnlyCollection<T>,
+		System.Collections.ICollection
 	{
 		new int Count { get; }
 		new System.Collections.Generic.IEnumerator<T> GetEnumerator();
