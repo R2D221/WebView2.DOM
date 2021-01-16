@@ -1,6 +1,5 @@
 ﻿using Microsoft.Web.WebView2.Core;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -15,7 +14,7 @@ namespace WebView2.DOM
 	}
 
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
-	public class HTMLCollection<TElement> : JsObject, IReadOnlyCollection<TElement>
+	public class HTMLCollection<TElement> : JsObject, WebView2.DOM.Collections.IReadOnlyCollection<TElement>
 	{
 		protected internal HTMLCollection(CoreWebView2 coreWebView, string referenceId)
 			: base(coreWebView, referenceId) { }
@@ -34,10 +33,7 @@ namespace WebView2.DOM
 
 		public int Count => Get<int>("length");
 
-		public Iterator<TElement> GetEnumerator() =>
+		public IEnumerator<TElement> GetEnumerator() =>
 			SymbolMethod<Iterator<TElement>>("iterator").Invoke();
-
-		IEnumerator<TElement> IEnumerable<TElement>.GetEnumerator() => GetEnumerator();
-		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 	}
 }

@@ -4,11 +4,12 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using WebView2.DOM.Microsyntaxes;
+using static WebView2.DOM.Tests.Global;
 
 namespace WebView2.DOM.Tests
 {
 	[TestClass]
-	public partial class FormTests
+	public class FormTests
 	{
 		[TestMethod]
 		public async Task FormElementsAreCastToTheCorrectType()

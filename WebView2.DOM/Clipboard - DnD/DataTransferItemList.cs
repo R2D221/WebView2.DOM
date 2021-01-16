@@ -1,6 +1,5 @@
 ﻿using Microsoft.Web.WebView2.Core;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
@@ -11,11 +10,10 @@ namespace WebView2.DOM
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/clipboard/data_transfer_item_list.idl
 
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
-	public class DataTransferItemList : JsObject, ICollection<DataTransferItem>, IReadOnlyCollection<DataTransferItem>
+	public class DataTransferItemList : JsObject, Collections.ICollection<DataTransferItem>
 	{
-		protected internal DataTransferItemList(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal DataTransferItemList(CoreWebView2 coreWebView, string referenceId)
+			: base(coreWebView, referenceId) { }
 
 		public DataTransferItem this[uint index] =>
 			IndexerGet<DataTransferItem?>(index) ?? throw new ArgumentOutOfRangeException(nameof(index));
@@ -43,18 +41,13 @@ namespace WebView2.DOM
 			return itemsToRemove.Count;
 		}
 
-		public Iterator<DataTransferItem> GetEnumerator() =>
+		public IEnumerator<DataTransferItem> GetEnumerator() =>
 			SymbolMethod<Iterator<DataTransferItem>>("iterator").Invoke();
 
-		int IReadOnlyCollection<DataTransferItem>.Count => (int)length;
-		int ICollection<DataTransferItem>.Count => (int)length;
-		bool ICollection<DataTransferItem>.IsReadOnly => false;
+		public int Count => (int)length;
 		void ICollection<DataTransferItem>.Add(DataTransferItem item) => throw new NotSupportedException();
 		void ICollection<DataTransferItem>.Clear() => clear();
 		bool ICollection<DataTransferItem>.Contains(DataTransferItem item) => throw new NotSupportedException();
-		void ICollection<DataTransferItem>.CopyTo(DataTransferItem[] array, int arrayIndex) => this.ToArray().CopyTo(array, arrayIndex);
 		bool ICollection<DataTransferItem>.Remove(DataTransferItem item) => throw new NotSupportedException();
-		IEnumerator<DataTransferItem> IEnumerable<DataTransferItem>.GetEnumerator() => GetEnumerator();
-		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 	}
 }

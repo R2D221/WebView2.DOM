@@ -62,7 +62,7 @@ namespace WebView2.DOM
 
 		#region Explicit implementations
 		bool ICollection<HTMLOptionElement>.IsReadOnly => false;
-		bool ICollection<HTMLOptionElement>.Contains(HTMLOptionElement item) => this.Contains(item);
+		bool ICollection<HTMLOptionElement>.Contains(HTMLOptionElement item) => this.Any(x => x == item);
 		void ICollection<HTMLOptionElement>.CopyTo(HTMLOptionElement[] array, int arrayIndex) => this.ToArray().CopyTo(array, arrayIndex);
 		#endregion
 	}

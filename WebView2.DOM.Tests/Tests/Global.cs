@@ -8,16 +8,17 @@ namespace WebView2.DOM.Tests
 {
 	using WebView2 = Microsoft.Web.WebView2.Wpf.WebView2;
 
-	public partial class UnitTests
+	[TestClass]
+	public static class Global
 	{
-		private static Task windowTask = default!;
-		private static Application application = default!;
-		private static System.Windows.Window mainWindow = default!;
-		private static WebView2 webView = default!;
-		private static SynchronizationContext wpfSyncContext = default!;
+		internal static Task windowTask = default!;
+		internal static Application application = default!;
+		internal static System.Windows.Window mainWindow = default!;
+		internal static WebView2 webView = default!;
+		internal static SynchronizationContext wpfSyncContext = default!;
 
-		[ClassInitialize]
-		public static async Task ClassInitialize(TestContext context)
+		[AssemblyInitialize]
+		public static async Task AssemblyInitialize(TestContext context)
 		{
 			var tcs = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
 			windowTask = Helpers.RunSTATask(() =>
@@ -50,8 +51,8 @@ namespace WebView2.DOM.Tests
 			await tcs.Task;
 		}
 
-		[ClassCleanup]
-		public static async Task ClassCleanup()
+		[AssemblyCleanup]
+		public static async Task AssemblyCleanup()
 		{
 			await mainWindow.Dispatcher.InvokeAsync(() =>
 			{

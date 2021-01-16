@@ -14,7 +14,7 @@ namespace WebView2.DOM
 	}
 
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
-	public class NodeList<TNode> : JsObject, IReadOnlyCollection<TNode>
+	public class NodeList<TNode> : JsObject, WebView2.DOM.Collections.IReadOnlyCollection<TNode>
 		where TNode : Node
 	{
 		protected internal NodeList(CoreWebView2 coreWebView, string referenceId)
@@ -31,10 +31,7 @@ namespace WebView2.DOM
 
 		public int Count => Get<int>("length");
 
-		public Iterator<TNode> GetEnumerator() =>
+		public IEnumerator<TNode> GetEnumerator() =>
 			SymbolMethod<Iterator<TNode>>("iterator").Invoke();
-
-		IEnumerator<TNode> IEnumerable<TNode>.GetEnumerator() => GetEnumerator();
-		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 	}
 }

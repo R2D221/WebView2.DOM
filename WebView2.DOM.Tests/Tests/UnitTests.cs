@@ -4,11 +4,12 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using static WebView2.DOM.HTMLElementTag;
+using static WebView2.DOM.Tests.Global;
 
 namespace WebView2.DOM.Tests
 {
 	[TestClass]
-	public partial class UnitTests
+	public class UnitTests
 	{
 		[TestMethod]
 		public async Task RunsNormally()
@@ -276,36 +277,21 @@ namespace WebView2.DOM.Tests
 
 				var width = myDiv.attributeStyleMap.get("width")!;
 				Assert.IsNotNull(width);
-				Assert.IsInstanceOfType(width, typeof(CSSUnparsedValue));
+				Assert.That.IsInstanceOfType(width, out CSSUnparsedValue unparsedWidth);
 
-				var unparsedWidth = (CSSUnparsedValue)width;
+				Assert.AreEqual(5, unparsedWidth.Count);
 
-				Assert.AreEqual<uint>(5, unparsedWidth.length);
-
-				unparsedWidth[0].Switch(
-					(string/*	*/ x) => Assert.IsInstanceOfType(x, typeof(string)),
-					(CSSVariableReferenceValue/*	*/ x) => Assert.IsInstanceOfType(x, typeof(string))
-				);
-
-				unparsedWidth[1].Switch(
-					(string/*	*/ x) => Assert.IsInstanceOfType(x, typeof(CSSVariableReferenceValue)),
-					(CSSVariableReferenceValue/*	*/ x) => Assert.IsInstanceOfType(x, typeof(CSSVariableReferenceValue))
-				);
-
-				unparsedWidth[2].Switch(
-					(string/*	*/ x) => Assert.IsInstanceOfType(x, typeof(string)),
-					(CSSVariableReferenceValue/*	*/ x) => Assert.IsInstanceOfType(x, typeof(string))
-				);
-
-				unparsedWidth[3].Switch(
-					(string/*	*/ x) => Assert.IsInstanceOfType(x, typeof(CSSVariableReferenceValue)),
-					(CSSVariableReferenceValue/*	*/ x) => Assert.IsInstanceOfType(x, typeof(CSSVariableReferenceValue))
-				);
-
-				unparsedWidth[4].Switch(
-					(string/*	*/ x) => Assert.IsInstanceOfType(x, typeof(string)),
-					(CSSVariableReferenceValue/*	*/ x) => Assert.IsInstanceOfType(x, typeof(string))
-				);
+				foreach (var (item, index) in unparsedWidth.Select((x, i) => (x, i)))
+				{
+					switch (index)
+					{
+					case 0: Assert.IsInstanceOfType(item.Value, typeof(string/*	*/)); break;
+					case 1: Assert.IsInstanceOfType(item.Value, typeof(CSSVariableReferenceValue/*	*/)); break;
+					case 2: Assert.IsInstanceOfType(item.Value, typeof(string/*	*/)); break;
+					case 3: Assert.IsInstanceOfType(item.Value, typeof(CSSVariableReferenceValue/*	*/)); break;
+					case 4: Assert.IsInstanceOfType(item.Value, typeof(string/*	*/)); break;
+					}
+				}
 			});
 		}
 

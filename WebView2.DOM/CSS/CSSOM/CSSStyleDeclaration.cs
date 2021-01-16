@@ -1,6 +1,4 @@
 ﻿using Microsoft.Web.WebView2.Core;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -9,15 +7,17 @@ namespace WebView2.DOM
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/css/css_style_declaration.idl
 
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
-	public class CSSStyleDeclaration : JsObject, IReadOnlyCollection<KeyValuePair<string, string>>
+	public class CSSStyleDeclaration : JsObject, WebView2.DOM.Collections.IReadOnlyCollection<KeyValuePair<string, string>>
 	{
 		protected internal CSSStyleDeclaration(CoreWebView2 coreWebView, string referenceId)
 			: base(coreWebView, referenceId) { }
 
+		public int Count => Get<int>("length");
+
 		public string cssText { get => Get<string>(); set => Set(value); }
-		public string this[uint index] =>
-			IndexerGet<string?>(index) ?? throw new ArgumentOutOfRangeException(nameof(index));
-		public uint length => Get<uint>();
+		//public string this[uint index] =>
+		//	IndexerGet<string?>(index) ?? throw new ArgumentOutOfRangeException(nameof(index));
+		//public uint length => Get<uint>();
 		public string getPropertyValue(string property) => Method<string>().Invoke(property);
 		public string getPropertyPriority(string property) => Method<string>().Invoke(property);
 		public void setProperty(string property, string value, string priority = "") =>
@@ -41,12 +41,6 @@ namespace WebView2.DOM
 				yield return KeyValuePair.Create(current, this[current]);
 			}
 		}
-
-		#region ICollection
-		int IReadOnlyCollection<KeyValuePair<string, string>>.Count => (int)length;
-		IEnumerator<KeyValuePair<string, string>> IEnumerable<KeyValuePair<string, string>>.GetEnumerator() => GetEnumerator();
-		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-		#endregion
 
 		public string alignContent { get => Get<string>(); set => Set(value); }
 		public string alignItems { get => Get<string>(); set => Set(value); }
