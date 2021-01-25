@@ -8,9 +8,8 @@ namespace WebView2.DOM
 
 	public class CSSUnitValue : CSSNumericValue
 	{
-		protected internal CSSUnitValue(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal CSSUnitValue(CoreWebView2 coreWebView, string referenceId)
+			: base(coreWebView, referenceId) { }
 
 		public CSSUnitValue(double value, string unit)
 			: this(window.Instance.coreWebView, System.Guid.NewGuid().ToString()) =>

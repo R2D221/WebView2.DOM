@@ -1,12 +1,16 @@
-﻿using Require;
+﻿using OneOf;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace OneOf
 {
 	[DebuggerDisplay("{Value}")]
 	public struct OneOf<T0, T1, T2> : IEquatable<OneOf<T0, T1, T2>>
+		where T0 : notnull
+		where T1 : notnull
+		where T2 : notnull
 	{
 		private readonly int index;
 		private readonly T0 value0;
@@ -21,9 +25,9 @@ namespace OneOf
 			value2 = default!;
 		}
 
-		OneOf(T0 value) : this(false) => (index, value0) = (0, value);
-		OneOf(T1 value) : this(false) => (index, value1) = (1, value);
-		OneOf(T2 value) : this(false) => (index, value2) = (2, value);
+		OneOf(T0 value) : this(false) => (index, value0) = (0, value ?? throw new ArgumentNullException(nameof(value)));
+		OneOf(T1 value) : this(false) => (index, value1) = (1, value ?? throw new ArgumentNullException(nameof(value)));
+		OneOf(T2 value) : this(false) => (index, value2) = (2, value ?? throw new ArgumentNullException(nameof(value)));
 
 		public static implicit operator OneOf<T0, T1, T2>(T0 t) => new OneOf<T0, T1, T2>(t);
 		public static implicit operator OneOf<T0, T1, T2>(T1 t) => new OneOf<T0, T1, T2>(t);
@@ -37,13 +41,9 @@ namespace OneOf
 			_ => throw new InvalidOperationException(),
 		};
 
-		public bool Is<T>(Type<T0> _ = default!) where T : T0 => index == 0;
-		public bool Is<T>(Type<T1> _ = default!) where T : T1 => index == 1;
-		public bool Is<T>(Type<T2> _ = default!) where T : T2 => index == 2;
-
-		public T0 As<T>(Type<T0> _ = default!) where T : T0 => value0;
-		public T1 As<T>(Type<T1> _ = default!) where T : T1 => value1;
-		public T2 As<T>(Type<T2> _ = default!) where T : T2 => value2;
+		public bool Is([MaybeNullWhen(false)] out T0 value) { value = value0; return index == 0; }
+		public bool Is([MaybeNullWhen(false)] out T1 value) { value = value1; return index == 1; }
+		public bool Is([MaybeNullWhen(false)] out T2 value) { value = value2; return index == 2; }
 
 		public void Switch
 			(/**/Action<T0> f0
@@ -74,14 +74,6 @@ namespace OneOf
 				_ => throw new InvalidOperationException(),
 			};
 		}
-
-		public OneOf<MapT0, T1, T2> Map<T, MapT0>(Func<T, MapT0> mapFunc, Type<T0> _ = default!) where T : T0 => Match<OneOf<MapT0, T1, T2>>(_0 => mapFunc((T)_0!), _1 => _1, _2 => _2);
-		public OneOf<T0, MapT1, T2> Map<T, MapT1>(Func<T, MapT1> mapFunc, Type<T1> _ = default!) where T : T1 => Match<OneOf<T0, MapT1, T2>>(_0 => _0, _1 => mapFunc((T)_1!), _2 => _2);
-		public OneOf<T0, T1, MapT2> Map<T, MapT2>(Func<T, MapT2> mapFunc, Type<T2> _ = default!) where T : T2 => Match<OneOf<T0, T1, MapT2>>(_0 => _0, _1 => _1, _2 => mapFunc((T)_2!));
-
-		public bool TryPick<T>(out T value, out OneOf<T1, T2> remainder, Type<T0> _ = default!) where T : T0 { var @is = Is<T0>(); value = @is ? (T)As<T0>()! : default!; remainder = @is ? default! : Match<OneOf<T1, T2>>(_0 => throw new InvalidOperationException(), _1 => _1, _2 => _2); return @is; }
-		public bool TryPick<T>(out T value, out OneOf<T0, T2> remainder, Type<T1> _ = default!) where T : T1 { var @is = Is<T1>(); value = @is ? (T)As<T1>()! : default!; remainder = @is ? default! : Match<OneOf<T0, T2>>(_0 => _0, _1 => throw new InvalidOperationException(), _2 => _2); return @is; }
-		public bool TryPick<T>(out T value, out OneOf<T0, T1> remainder, Type<T2> _ = default!) where T : T2 { var @is = Is<T2>(); value = @is ? (T)As<T2>()! : default!; remainder = @is ? default! : Match<OneOf<T0, T1>>(_0 => _0, _1 => _1, _2 => throw new InvalidOperationException()); return @is; }
 
 		public override string ToString() => index switch
 		{
@@ -126,5 +118,74 @@ namespace OneOf
 		public static bool operator !=(OneOf<T0, T1, T2> x, OneOf<T0, T1, T2> y) =>
 			!default(EqualityComparer).Equals(x, y);
 		#endregion
+	}
+}
+
+public static partial class OneOfExtensions
+{
+	public static void Switch<T0, T1, T2>
+		(this OneOf<T0, T1, T2>? @this
+		,/**/Action<T0> f0
+		,/**/Action<T1> f1
+		,/**/Action<T2> f2
+		,/**/Action<object?> fNull
+		)
+		where T0 : notnull
+		where T1 : notnull
+		where T2 : notnull
+	{
+		switch (@this)
+		{
+		case null: fNull(null); break;
+		case OneOf<T0, T1, T2> x:
+			x.Switch(f0, f1, f2);
+			break;
+		}
+	}
+
+	public static TResult Match<T0, T1, T2, TResult>
+		(this OneOf<T0, T1, T2>? @this
+		,/**/Func<T0, TResult> f0
+		,/**/Func<T1, TResult> f1
+		,/**/Func<T2, TResult> f2
+		,/**/Func<object?, TResult> fNull
+		)
+		where T0 : notnull
+		where T1 : notnull
+		where T2 : notnull
+	{
+		return @this switch
+		{
+			null => fNull(null),
+			OneOf<T0, T1, T2> x =>
+				x.Match(f0, f1, f2),
+		};
+	}
+
+	public static bool Is<T0, T1, T2>(this OneOf<T0, T1, T2>? @this, [MaybeNullWhen(false)] out T0 value)
+		where T0 : notnull
+		where T1 : notnull
+		where T2 : notnull
+	{
+		if (@this is null) { value = default!; return false; }
+		return @this.Value.Is(out value);
+	}
+
+	public static bool Is<T0, T1, T2>(this OneOf<T0, T1, T2>? @this, [MaybeNullWhen(false)] out T1 value)
+		where T0 : notnull
+		where T1 : notnull
+		where T2 : notnull
+	{
+		if (@this is null) { value = default!; return false; }
+		return @this.Value.Is(out value);
+	}
+
+	public static bool Is<T0, T1, T2>(this OneOf<T0, T1, T2>? @this, [MaybeNullWhen(false)] out T2 value)
+		where T0 : notnull
+		where T1 : notnull
+		where T2 : notnull
+	{
+		if (@this is null) { value = default!; return false; }
+		return @this.Value.Is(out value);
 	}
 }

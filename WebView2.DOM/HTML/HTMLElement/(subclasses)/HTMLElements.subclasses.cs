@@ -1,7 +1,6 @@
 ﻿using Microsoft.Web.WebView2.Core;
 using NodaTime;
 using OneOf;
-using OneOf.Types;
 using SmartAnalyzers.CSharpExtensions.Annotations;
 using System;
 using System.Collections.Generic;
@@ -383,20 +382,19 @@ namespace WebView2.DOM
 
 	public class HTMLModElement : HTMLElement
 	{
-		protected internal HTMLModElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal HTMLModElement(CoreWebView2 coreWebView, string referenceId)
+			: base(coreWebView, referenceId) { }
 
 		public Uri cite { get => Get<Uri>(); set => Set(value); }
-		public string dateTime
+		private string _dateTime
 		{
-			get => Get<string>();
-			set => Set(value);
+			get => Get<string>("dateTime");
+			set => Set(value, "dateTime");
 		}
-		public OneOf<LocalDate, LocalTime, OffsetDateTime, Null> dateTimeValue
+		public OneOf<LocalDate, LocalTime, OffsetDateTime>? dateTime
 		{
-			get => DatesAndTimes.HTMLModElement_dateTime_Parse(dateTime);
-			set => dateTime = DatesAndTimes.HTMLModElement_dateTime_Format(value);
+			get => DatesAndTimes.HTMLModElement_dateTime_Parse(_dateTime);
+			set => _dateTime = DatesAndTimes.HTMLModElement_dateTime_Format(value);
 		}
 	}
 
@@ -686,17 +684,16 @@ namespace WebView2.DOM
 
 	public class HTMLTimeElement : HTMLElement
 	{
-		protected internal HTMLTimeElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		protected internal HTMLTimeElement(CoreWebView2 coreWebView, string referenceId)
+			: base(coreWebView, referenceId) { }
+
+		private string _dateTime
 		{
+			get => Get<string>("dateTime");
+			set => Set(value, "dateTime");
 		}
 
-		public string dateTime
-		{
-			get => Get<string>();
-			set => Set(value);
-		}
-
-		public OneOf<YearMonth, LocalDate, AnnualDate, LocalTime, LocalDateTime, Offset, OffsetDateTime, IsoWeek, Year, Period, Null> dateTimeValue
+		public OneOf<YearMonth, LocalDate, AnnualDate, LocalTime, LocalDateTime, Offset, OffsetDateTime, IsoWeek, Year, Period>? dateTime
 		{
 			get => DatesAndTimes.HTMLTimeElement_dateTime_Parse(
 					Get<string>("dateTime") is string dateTime && !string.IsNullOrEmpty(dateTime)
@@ -708,7 +705,7 @@ namespace WebView2.DOM
 			{
 				var formatted = DatesAndTimes.HTMLTimeElement_dateTime_Format(value);
 
-				bool isDateTimeEmpty = string.IsNullOrEmpty(dateTime);
+				bool isDateTimeEmpty = string.IsNullOrEmpty(_dateTime);
 				bool isInnerTextEmpty = string.IsNullOrEmpty(innerText);
 
 				if (isDateTimeEmpty && !isInnerTextEmpty)

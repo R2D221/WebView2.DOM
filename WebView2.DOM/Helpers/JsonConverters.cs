@@ -2,6 +2,7 @@
 using OneOf;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -308,32 +309,294 @@ namespace WebView2.DOM.Helpers
 
 	internal sealed class OneOfJsonConverterFactory : JsonConverterFactory
 	{
+		private static readonly ImmutableDictionary<Type, Type> converters =
+			ImmutableDictionary<Type, Type>.Empty
+			.Add(typeof(OneOf<,>), typeof(OneOfJsonConverter<,>))
+			.Add(typeof(OneOf<,,>), typeof(OneOfJsonConverter<,,>))
+			.Add(typeof(OneOf<,,,>), typeof(OneOfJsonConverter<,,,>))
+			.Add(typeof(OneOf<,,,,>), typeof(OneOfJsonConverter<,,,,>))
+			.Add(typeof(OneOf<,,,,,>), typeof(OneOfJsonConverter<,,,,,>))
+			.Add(typeof(OneOf<,,,,,,>), typeof(OneOfJsonConverter<,,,,,,>))
+			.Add(typeof(OneOf<,,,,,,,>), typeof(OneOfJsonConverter<,,,,,,,>))
+			.Add(typeof(OneOf<,,,,,,,,>), typeof(OneOfJsonConverter<,,,,,,,,>))
+			.Add(typeof(OneOf<,,,,,,,,,>), typeof(OneOfJsonConverter<,,,,,,,,,>))
+			.Add(typeof(OneOf<,,,,,,,,,,>), typeof(OneOfJsonConverter<,,,,,,,,,,>))
+			;
+
 		public override bool CanConvert(Type typeToConvert) =>
-			typeToConvert.IsGenericType && typeToConvert.GetGenericTypeDefinition() == typeof(OneOf<,>);
+			typeToConvert.IsGenericType && converters.ContainsKey(typeToConvert.GetGenericTypeDefinition());
 
 		public override JsonConverter? CreateConverter(Type typeToConvert, JsonSerializerOptions options) =>
-			(JsonConverter)Activator.CreateInstance(typeof(OneOfJsonConverter<,>).MakeGenericType(typeToConvert.GetGenericArguments()))!;
+			(JsonConverter)Activator.CreateInstance(converters[typeToConvert.GetGenericTypeDefinition()].MakeGenericType(typeToConvert.GetGenericArguments()))!;
 	}
 
 	internal sealed class OneOfJsonConverter<T0, T1> : JsonConverter<OneOf<T0, T1>>
+		where T0 : notnull
+		where T1 : notnull
 	{
 		public override OneOf<T0, T1> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
 			var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
 
-			try
-			{
-				return JsonSerializer.Deserialize<T0>(element.GetRawText(), options)!;
-			}
-			catch
-			{
-				return JsonSerializer.Deserialize<T1>(element.GetRawText(), options)!;
-			}
+			try { return JsonSerializer.Deserialize<T0>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T1>(element.GetRawText(), options)!; } catch { }
+
+			return JsonSerializer.Deserialize<T0>("null")!;
 		}
 
-		public override void Write(Utf8JsonWriter writer, OneOf<T0, T1> value, JsonSerializerOptions options)
-		{
+		public override void Write(Utf8JsonWriter writer, OneOf<T0, T1> value, JsonSerializerOptions options) =>
 			JsonSerializer.Serialize(writer, value.Value, options);
+	}
+
+	internal sealed class OneOfJsonConverter<T0, T1, T2> : JsonConverter<OneOf<T0, T1, T2>>
+		where T0 : notnull
+		where T1 : notnull
+		where T2 : notnull
+	{
+		public override OneOf<T0, T1, T2> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+
+			try { return JsonSerializer.Deserialize<T0>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T1>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T2>(element.GetRawText(), options)!; } catch { }
+
+			return JsonSerializer.Deserialize<T0>("null")!;
 		}
+
+		public override void Write(Utf8JsonWriter writer, OneOf<T0, T1, T2> value, JsonSerializerOptions options) =>
+			JsonSerializer.Serialize(writer, value.Value, options);
+	}
+
+	internal sealed class OneOfJsonConverter<T0, T1, T2, T3> : JsonConverter<OneOf<T0, T1, T2, T3>>
+		where T0 : notnull
+		where T1 : notnull
+		where T2 : notnull
+		where T3 : notnull
+	{
+		public override OneOf<T0, T1, T2, T3> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+
+			try { return JsonSerializer.Deserialize<T0>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T1>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T2>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T3>(element.GetRawText(), options)!; } catch { }
+
+			return JsonSerializer.Deserialize<T0>("null")!;
+		}
+
+		public override void Write(Utf8JsonWriter writer, OneOf<T0, T1, T2, T3> value, JsonSerializerOptions options) =>
+			JsonSerializer.Serialize(writer, value.Value, options);
+	}
+
+	internal sealed class OneOfJsonConverter<T0, T1, T2, T3, T4> : JsonConverter<OneOf<T0, T1, T2, T3, T4>>
+		where T0 : notnull
+		where T1 : notnull
+		where T2 : notnull
+		where T3 : notnull
+		where T4 : notnull
+	{
+		public override OneOf<T0, T1, T2, T3, T4> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+
+			try { return JsonSerializer.Deserialize<T0>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T1>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T2>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T3>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T4>(element.GetRawText(), options)!; } catch { }
+
+			return JsonSerializer.Deserialize<T0>("null")!;
+		}
+
+		public override void Write(Utf8JsonWriter writer, OneOf<T0, T1, T2, T3, T4> value, JsonSerializerOptions options) =>
+			JsonSerializer.Serialize(writer, value.Value, options);
+	}
+
+	internal sealed class OneOfJsonConverter<T0, T1, T2, T3, T4, T5> : JsonConverter<OneOf<T0, T1, T2, T3, T4, T5>>
+		where T0 : notnull
+		where T1 : notnull
+		where T2 : notnull
+		where T3 : notnull
+		where T4 : notnull
+		where T5 : notnull
+	{
+		public override OneOf<T0, T1, T2, T3, T4, T5> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+
+			try { return JsonSerializer.Deserialize<T0>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T1>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T2>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T3>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T4>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T5>(element.GetRawText(), options)!; } catch { }
+
+			return JsonSerializer.Deserialize<T0>("null")!;
+		}
+
+		public override void Write(Utf8JsonWriter writer, OneOf<T0, T1, T2, T3, T4, T5> value, JsonSerializerOptions options) =>
+			JsonSerializer.Serialize(writer, value.Value, options);
+	}
+
+	internal sealed class OneOfJsonConverter<T0, T1, T2, T3, T4, T5, T6> : JsonConverter<OneOf<T0, T1, T2, T3, T4, T5, T6>>
+		where T0 : notnull
+		where T1 : notnull
+		where T2 : notnull
+		where T3 : notnull
+		where T4 : notnull
+		where T5 : notnull
+		where T6 : notnull
+	{
+		public override OneOf<T0, T1, T2, T3, T4, T5, T6> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+
+			try { return JsonSerializer.Deserialize<T0>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T1>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T2>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T3>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T4>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T5>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T6>(element.GetRawText(), options)!; } catch { }
+
+			return JsonSerializer.Deserialize<T0>("null")!;
+		}
+
+		public override void Write(Utf8JsonWriter writer, OneOf<T0, T1, T2, T3, T4, T5, T6> value, JsonSerializerOptions options) =>
+			JsonSerializer.Serialize(writer, value.Value, options);
+	}
+
+	internal sealed class OneOfJsonConverter<T0, T1, T2, T3, T4, T5, T6, T7> : JsonConverter<OneOf<T0, T1, T2, T3, T4, T5, T6, T7>>
+		where T0 : notnull
+		where T1 : notnull
+		where T2 : notnull
+		where T3 : notnull
+		where T4 : notnull
+		where T5 : notnull
+		where T6 : notnull
+		where T7 : notnull
+	{
+		public override OneOf<T0, T1, T2, T3, T4, T5, T6, T7> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+
+			try { return JsonSerializer.Deserialize<T0>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T1>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T2>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T3>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T4>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T5>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T6>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T7>(element.GetRawText(), options)!; } catch { }
+
+			return JsonSerializer.Deserialize<T0>("null")!;
+		}
+
+		public override void Write(Utf8JsonWriter writer, OneOf<T0, T1, T2, T3, T4, T5, T6, T7> value, JsonSerializerOptions options) =>
+			JsonSerializer.Serialize(writer, value.Value, options);
+	}
+
+	internal sealed class OneOfJsonConverter<T0, T1, T2, T3, T4, T5, T6, T7, T8> : JsonConverter<OneOf<T0, T1, T2, T3, T4, T5, T6, T7, T8>>
+		where T0 : notnull
+		where T1 : notnull
+		where T2 : notnull
+		where T3 : notnull
+		where T4 : notnull
+		where T5 : notnull
+		where T6 : notnull
+		where T7 : notnull
+		where T8 : notnull
+	{
+		public override OneOf<T0, T1, T2, T3, T4, T5, T6, T7, T8> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+
+			try { return JsonSerializer.Deserialize<T0>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T1>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T2>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T3>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T4>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T5>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T6>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T7>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T8>(element.GetRawText(), options)!; } catch { }
+
+			return JsonSerializer.Deserialize<T0>("null")!;
+		}
+
+		public override void Write(Utf8JsonWriter writer, OneOf<T0, T1, T2, T3, T4, T5, T6, T7, T8> value, JsonSerializerOptions options) =>
+			JsonSerializer.Serialize(writer, value.Value, options);
+	}
+
+	internal sealed class OneOfJsonConverter<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9> : JsonConverter<OneOf<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9>>
+		where T0 : notnull
+		where T1 : notnull
+		where T2 : notnull
+		where T3 : notnull
+		where T4 : notnull
+		where T5 : notnull
+		where T6 : notnull
+		where T7 : notnull
+		where T8 : notnull
+		where T9 : notnull
+	{
+		public override OneOf<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+
+			try { return JsonSerializer.Deserialize<T0>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T1>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T2>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T3>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T4>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T5>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T6>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T7>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T8>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T9>(element.GetRawText(), options)!; } catch { }
+
+			return JsonSerializer.Deserialize<T0>("null")!;
+		}
+
+		public override void Write(Utf8JsonWriter writer, OneOf<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9> value, JsonSerializerOptions options) =>
+			JsonSerializer.Serialize(writer, value.Value, options);
+	}
+
+	internal sealed class OneOfJsonConverter<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> : JsonConverter<OneOf<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>>
+		where T0 : notnull
+		where T1 : notnull
+		where T2 : notnull
+		where T3 : notnull
+		where T4 : notnull
+		where T5 : notnull
+		where T6 : notnull
+		where T7 : notnull
+		where T8 : notnull
+		where T9 : notnull
+		where T10 : notnull
+	{
+		public override OneOf<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+
+			try { return JsonSerializer.Deserialize<T0>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T1>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T2>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T3>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T4>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T5>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T6>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T7>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T8>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T9>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T10>(element.GetRawText(), options)!; } catch { }
+
+			return JsonSerializer.Deserialize<T0>("null")!;
+		}
+
+		public override void Write(Utf8JsonWriter writer, OneOf<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> value, JsonSerializerOptions options) =>
+			JsonSerializer.Serialize(writer, value.Value, options);
 	}
 }

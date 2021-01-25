@@ -2,7 +2,6 @@
 using NodaTime.Calendars;
 using NodaTime.Text;
 using OneOf;
-using OneOf.Types;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -114,8 +113,6 @@ namespace WebView2.DOM.Microsyntaxes
 			}
 			.Build();
 
-		internal static readonly NullPattern nullPattern = new NullPattern();
-
 		static DatesAndTimes()
 		{
 			PatternDict<YearMonth>.value = monthPattern;
@@ -128,20 +125,31 @@ namespace WebView2.DOM.Microsyntaxes
 			PatternDict<IsoWeek>.value = weekPattern;
 			PatternDict<Year>.value = yearPattern;
 			PatternDict<Period>.value = durationPattern;
-			PatternDict<Null>.value = nullPattern;
 		}
 
-		public static OneOf<LocalDate, LocalTime, OffsetDateTime, Null> HTMLModElement_dateTime_Parse(string text) =>
-			OneOfPattern<LocalDate, LocalTime, OffsetDateTime, Null>.Instance.Parse(text).Value;
+		public static OneOf<LocalDate, LocalTime, OffsetDateTime>? HTMLModElement_dateTime_Parse(string text) =>
+			OneOfPattern<LocalDate, LocalTime, OffsetDateTime>.Instance.Parse(text).TryGetValue(default, out var result)
+			? result
+			: default(OneOf<LocalDate, LocalTime, OffsetDateTime>?);
 
-		public static string HTMLModElement_dateTime_Format(OneOf<LocalDate, LocalTime, OffsetDateTime, Null> value) =>
-			OneOfPattern<LocalDate, LocalTime, OffsetDateTime, Null>.Instance.Format(value);
+		public static string HTMLModElement_dateTime_Format(OneOf<LocalDate, LocalTime, OffsetDateTime>? value) =>
+			value switch
+			{
+				null => "",
+				{ } x => OneOfPattern<LocalDate, LocalTime, OffsetDateTime>.Instance.Format(x),
+			};
 
-		public static OneOf<YearMonth, LocalDate, AnnualDate, LocalTime, LocalDateTime, Offset, OffsetDateTime, IsoWeek, Year, Period, Null> HTMLTimeElement_dateTime_Parse(string text) =>
-			OneOfPattern<YearMonth, LocalDate, AnnualDate, LocalTime, LocalDateTime, Offset, OffsetDateTime, IsoWeek, Year, Period, Null>.Instance.Parse(text).Value;
+		public static OneOf<YearMonth, LocalDate, AnnualDate, LocalTime, LocalDateTime, Offset, OffsetDateTime, IsoWeek, Year, Period>? HTMLTimeElement_dateTime_Parse(string text) =>
+			OneOfPattern<YearMonth, LocalDate, AnnualDate, LocalTime, LocalDateTime, Offset, OffsetDateTime, IsoWeek, Year, Period>.Instance.Parse(text).TryGetValue(default, out var result)
+			? result
+			: default(OneOf<YearMonth, LocalDate, AnnualDate, LocalTime, LocalDateTime, Offset, OffsetDateTime, IsoWeek, Year, Period>?);
 
-		public static string HTMLTimeElement_dateTime_Format(OneOf<YearMonth, LocalDate, AnnualDate, LocalTime, LocalDateTime, Offset, OffsetDateTime, IsoWeek, Year, Period, Null> value) =>
-			OneOfPattern<YearMonth, LocalDate, AnnualDate, LocalTime, LocalDateTime, Offset, OffsetDateTime, IsoWeek, Year, Period, Null>.Instance.Format(value);
+		public static string HTMLTimeElement_dateTime_Format(OneOf<YearMonth, LocalDate, AnnualDate, LocalTime, LocalDateTime, Offset, OffsetDateTime, IsoWeek, Year, Period>? value) =>
+			value switch
+			{
+				null => "",
+				{ } x => OneOfPattern<YearMonth, LocalDate, AnnualDate, LocalTime, LocalDateTime, Offset, OffsetDateTime, IsoWeek, Year, Period>.Instance.Format(x),
+			};
 	}
 
 	public struct Year
@@ -200,15 +208,11 @@ namespace WebView2.DOM.Microsyntaxes
 	{
 		private static IPattern<Period> innerPattern = PeriodPattern.NormalizingIso;
 
-		public StringBuilder AppendFormat(Period value, StringBuilder builder)
-		{
-			throw new NotImplementedException();
-		}
+		public StringBuilder AppendFormat(Period value, StringBuilder builder) =>
+			innerPattern.AppendFormat(value, builder);
 
-		public string Format(Period value)
-		{
-			throw new NotImplementedException();
-		}
+		public string Format(Period value) =>
+			innerPattern.Format(value);
 
 		public ParseResult<Period> Parse(string text)
 		{
@@ -237,14 +241,5 @@ namespace WebView2.DOM.Microsyntaxes
 				return ParseResult<Period>.ForException(() => ex);
 			}
 		}
-	}
-
-	internal struct NullPattern : IPattern<Null>
-	{
-		public StringBuilder AppendFormat(Null value, StringBuilder builder) => builder;
-
-		public string Format(Null value) => "";
-
-		public ParseResult<Null> Parse(string text) => ParseResult<Null>.ForValue(default);
 	}
 }

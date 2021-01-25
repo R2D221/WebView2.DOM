@@ -318,12 +318,6 @@ namespace WebView2.DOM.Tests
 		}
 
 		[TestMethod]
-		public void FormData()
-		{
-			var fd = new FormData();
-		}
-
-		[TestMethod]
 		public void TypedArrays()
 		{
 			var a1 = new Float32Array();

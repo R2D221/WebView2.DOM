@@ -1,6 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NodaTime;
 using System;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using WebView2.DOM.Microsyntaxes;
@@ -11,7 +12,7 @@ namespace WebView2.DOM.Tests
 	[TestClass]
 	public class FormTests
 	{
-		[TestMethod]
+		[TestMethod("Form elements are cast to the correct type")]
 		public async Task FormElementsAreCastToTheCorrectType()
 		{
 			await wpfSyncContext;
@@ -62,7 +63,7 @@ namespace WebView2.DOM.Tests
 			//var control = label.control;
 		}
 
-		[TestMethod]
+		[TestMethod("Form elements can be accessed by name")]
 		public async Task FormElementsCanBeAccessedByName()
 		{
 			await wpfSyncContext;
@@ -106,6 +107,51 @@ namespace WebView2.DOM.Tests
 				{
 					body.innerHTML = "";
 				}
+			});
+		}
+
+		[TestMethod("FormData items are cast to the correct type")]
+		public async Task FormData()
+		{
+			await wpfSyncContext;
+			await webView.InvokeInBrowserContextAsync(window =>
+			{
+				var fd = new FormData();
+				fd.append("one", "1.1");
+				fd.append("one", "1.2");
+				fd.append("two", "2");
+
+				var one = fd.getAll("one");
+				Assert.AreEqual(2, one.Count);
+
+				var two = fd.get("two");
+
+				two.Switch(
+					(File f)/*	*/=> Assert.IsInstanceOfType(f, typeof(string)),
+					(string s)/*	*/=> Assert.IsInstanceOfType(s, typeof(string)),
+					@null/*	*/=> Assert.IsInstanceOfType(@null, typeof(string))
+					);
+
+				var three = fd.get("three");
+
+				three.Switch(
+					(File f)/*	*/=> Assert.IsNull(f),
+					(string s)/*	*/=> Assert.IsNull(s),
+					@null/*	*/=> Assert.IsNull(@null)
+					);
+
+				var list = fd.ToImmutableList();
+
+				Assert.AreEqual(3, list.Count);
+
+				Assert.AreEqual("one", list[0].Key);
+				Assert.AreEqual("1.1", list[0].Value.Value);
+
+				Assert.AreEqual("one", list[1].Key);
+				Assert.AreEqual("1.2", list[1].Value.Value);
+
+				Assert.AreEqual("two", list[2].Key);
+				Assert.AreEqual("2", list[2].Value.Value);
 			});
 		}
 

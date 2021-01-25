@@ -1,16 +1,51 @@
 ﻿using Microsoft.Web.WebView2.Core;
-using System;
+using OneOf;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace WebView2.DOM
 {
-	public class FormData : JsObject
+	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/html/forms/form_data.idl
+
+	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
+	public class FormData : JsObject, IEnumerable<KeyValuePair<string, OneOf<File, string>>>
 	{
 		protected internal FormData(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId)
-		{
-			throw new NotImplementedException();
-		}
+			: base(coreWebView, referenceId) { }
 
-		public FormData() : this(null!, null!) { }
+		public FormData()
+			: this(window.Instance.coreWebView, System.Guid.NewGuid().ToString()) =>
+			Construct();
+
+		public FormData(HTMLFormElement form)
+			: this(window.Instance.coreWebView, System.Guid.NewGuid().ToString()) =>
+			Construct(form);
+
+		public void append(string name, string value) =>
+			Method().Invoke(name, value);
+		public void append(string name, Blob value) =>
+			Method().Invoke(name, value);
+		public void append(string name, Blob value, string filename) =>
+			Method().Invoke(name, value, filename);
+		public void delete(string name) =>
+			Method().Invoke(name);
+		public OneOf<File, string>? get(string name) =>
+			Method<OneOf<File, string>?>().Invoke(name);
+		public IReadOnlyList<OneOf<File, string>> getAll(string name) =>
+			Method<IReadOnlyList<OneOf<File, string>>>().Invoke(name);
+		public bool has(string name) =>
+			Method<bool>().Invoke(name);
+		public void set(string name, string value) =>
+			Method().Invoke(name, value);
+		public void set(string name, Blob value) =>
+			Method().Invoke(name, value);
+		public void set(string name, Blob value, string filename) =>
+			Method().Invoke(name, value, filename);
+
+		public IEnumerator<KeyValuePair<string, OneOf<File, string>>> GetEnumerator() =>
+			SymbolMethod<Iterator<KeyValuePair<string, OneOf<File, string>>>>("iterator").Invoke();
+
+		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 	}
 }
