@@ -1,6 +1,6 @@
 ﻿using Microsoft.Web.WebView2.Core;
+using NodaTime;
 using Savage.Range;
-using System;
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -18,10 +18,10 @@ namespace WebView2.DOM
 		public double start(uint index) => Method<double>().Invoke(index);
 		public double end(uint index) => Method<double>().Invoke(index);
 
-		public ImmutableList<Range<TimeSpan>> ToImmutableList() =>
+		public ImmutableList<Range<Duration>> ToImmutableList() =>
 			Enumerable.Range(0, (int)length)
 			.Select(i => (uint)i)
-			.Select(i => new Range<TimeSpan>(TimeSpan.FromSeconds(start(i)), TimeSpan.FromSeconds(end(i))))
+			.Select(i => new Range<Duration>(Duration.FromSeconds(start(i)), Duration.FromSeconds(end(i))))
 			.ToImmutableList();
 	}
 }

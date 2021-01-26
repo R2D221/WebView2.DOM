@@ -1,4 +1,5 @@
 ﻿using Microsoft.Web.WebView2.Core;
+using NodaTime;
 using Savage.Range;
 using System;
 using System.Collections.Immutable;
@@ -44,7 +45,7 @@ namespace WebView2.DOM
 		public CrossOrigin? crossOrigin { get => Get<CrossOrigin?>(); set => Set(value); }
 		public NetworkState networkState => Get<NetworkState>();
 		public Preload preload { get => Get<Preload>(); set => Set(value); }
-		public ImmutableList<Range<TimeSpan>> buffered => Get<TimeRanges>().ToImmutableList();
+		public ImmutableList<Range<Duration>> buffered => Get<TimeRanges>().ToImmutableList();
 
 		public void load() => Method().Invoke();
 		public CanPlayTypeResult canPlayType(string type) => Method<CanPlayTypeResult>().Invoke(type);
@@ -54,19 +55,19 @@ namespace WebView2.DOM
 		public bool seeking => Get<bool>();
 
 		// playback state
-		public TimeSpan currentTime { get => TimeSpan.FromSeconds(Get<double>()); set => Set(value.TotalSeconds); }
-		public TimeSpan? duration =>
+		public Duration currentTime { get => Duration.FromSeconds(Get<double>()); set => Set(value.TotalSeconds); }
+		public Duration? duration =>
 			!(Get<double>() is double ddd) ? throw new InvalidOperationException() :
-			double.IsNaN(ddd) ? default(TimeSpan?) :
-			double.IsPositiveInfinity(ddd) ? TimeSpan.MaxValue :
-			TimeSpan.FromSeconds(ddd)
+			double.IsNaN(ddd) ? default(Duration?) :
+			double.IsPositiveInfinity(ddd) ? Duration.MaxValue :
+			Duration.FromSeconds(ddd)
 			;
 
 		public bool paused => Get<bool>();
 		public double defaultPlaybackRate { get => Get<double>(); set => Set(value); }
 		public double playbackRate { get => Get<double>(); set => Set(value); }
-		public ImmutableList<Range<TimeSpan>> played => Get<TimeRanges>().ToImmutableList();
-		public ImmutableList<Range<TimeSpan>> seekable => Get<TimeRanges>().ToImmutableList();
+		public ImmutableList<Range<Duration>> played => Get<TimeRanges>().ToImmutableList();
+		public ImmutableList<Range<Duration>> seekable => Get<TimeRanges>().ToImmutableList();
 		public bool ended => Get<bool>();
 		public bool autoplay { get => Get<bool>(); set => Set(value); }
 		public bool loop { get => Get<bool>(); set => Set(value); }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NodaTime;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -66,6 +67,10 @@ namespace WebView2.DOM
 			=> Instance.Method().Invoke(message);
 		public static void blur()
 			=> Instance.Method().Invoke();
+		public static void cancelAnimationFrame(AnimationFrameID handle)
+			=> Instance.Method().Invoke(handle);
+		public static void cancelIdleCallback(IdleCallbackID id)
+			=> Instance.Method().Invoke(id);
 		public static void close()
 			=> Instance.Method().Invoke();
 		public static bool confirm(string message = "")
@@ -102,6 +107,14 @@ namespace WebView2.DOM
 			=> Instance.Method().Invoke();
 		public static string? prompt(string message = "", string defaultValue = "")
 			=> Instance.Method<string?>().Invoke(message, defaultValue);
+		public static void queueMicrotask(Action callback)
+			=> Instance.Method().Invoke(callback);
+		public static AnimationFrameID requestAnimationFrame(Action<Duration> callback)
+			=> Instance.Method<AnimationFrameID>().Invoke(new Action<double>((highResTime) => callback(Duration.FromNanoseconds(Math.Round(highResTime * 1000) * 1000))));
+		public static IdleCallbackID requestIdleCallback(Action<IdleDeadline> callback)
+			=> Instance.Method<IdleCallbackID>().Invoke(callback);
+		public static IdleCallbackID requestIdleCallback(Action<IdleDeadline> callback, IdleRequestOptions options)
+			=> Instance.Method<IdleCallbackID>().Invoke(callback, options);
 		public static void resizeBy(int x, int y)
 			=> Instance.Method().Invoke(x, y);
 		public static void resizeTo(int x, int y)
@@ -235,6 +248,81 @@ namespace WebView2.DOM
 		#endregion
 
 		#region WindowOrWorkerGlobalScope
+		public static TimeoutID setTimeout(Action handler, Duration timeout) =>
+			Instance.Method<TimeoutID>().Invoke(handler, timeout.TotalMilliseconds);
+		public static TimeoutID setTimeout<T1>(Action<T1> handler, Duration timeout, T1 arg1) =>
+			Instance.Method<TimeoutID>().Invoke(handler, timeout.TotalMilliseconds, arg1);
+		public static TimeoutID setTimeout<T1, T2>(Action<T1, T2> handler, Duration timeout, T1 arg1, T2 arg2) =>
+			Instance.Method<TimeoutID>().Invoke(handler, timeout.TotalMilliseconds, arg1, arg2);
+		public static TimeoutID setTimeout<T1, T2, T3>(Action<T1, T2, T3> handler, Duration timeout, T1 arg1, T2 arg2, T3 arg3) =>
+			Instance.Method<TimeoutID>().Invoke(handler, timeout.TotalMilliseconds, arg1, arg2, arg3);
+		public static TimeoutID setTimeout<T1, T2, T3, T4>(Action<T1, T2, T3, T4> handler, Duration timeout, T1 arg1, T2 arg2, T3 arg3, T4 arg4) =>
+			Instance.Method<TimeoutID>().Invoke(handler, timeout.TotalMilliseconds, arg1, arg2, arg3, arg4);
+		public static TimeoutID setTimeout<T1, T2, T3, T4, T5>(Action<T1, T2, T3, T4, T5> handler, Duration timeout, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) =>
+			Instance.Method<TimeoutID>().Invoke(handler, timeout.TotalMilliseconds, arg1, arg2, arg3, arg4, arg5);
+		public static TimeoutID setTimeout<T1, T2, T3, T4, T5, T6>(Action<T1, T2, T3, T4, T5, T6> handler, Duration timeout, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6) =>
+			Instance.Method<TimeoutID>().Invoke(handler, timeout.TotalMilliseconds, arg1, arg2, arg3, arg4, arg5, arg6);
+		public static TimeoutID setTimeout<T1, T2, T3, T4, T5, T6, T7>(Action<T1, T2, T3, T4, T5, T6, T7> handler, Duration timeout, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7) =>
+			Instance.Method<TimeoutID>().Invoke(handler, timeout.TotalMilliseconds, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+		public static TimeoutID setTimeout<T1, T2, T3, T4, T5, T6, T7, T8>(Action<T1, T2, T3, T4, T5, T6, T7, T8> handler, Duration timeout, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8) =>
+			Instance.Method<TimeoutID>().Invoke(handler, timeout.TotalMilliseconds, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+		public static TimeoutID setTimeout<T1, T2, T3, T4, T5, T6, T7, T8, T9>(Action<T1, T2, T3, T4, T5, T6, T7, T8, T9> handler, Duration timeout, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9) =>
+			Instance.Method<TimeoutID>().Invoke(handler, timeout.TotalMilliseconds, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
+		public static TimeoutID setTimeout<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> handler, Duration timeout, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10) =>
+			Instance.Method<TimeoutID>().Invoke(handler, timeout.TotalMilliseconds, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10);
+		public static TimeoutID setTimeout<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>(Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> handler, Duration timeout, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11) =>
+			Instance.Method<TimeoutID>().Invoke(handler, timeout.TotalMilliseconds, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11);
+		public static TimeoutID setTimeout<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>(Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> handler, Duration timeout, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12) =>
+			Instance.Method<TimeoutID>().Invoke(handler, timeout.TotalMilliseconds, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12);
+		public static TimeoutID setTimeout<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>(Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13> handler, Duration timeout, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12, T13 arg13) =>
+			Instance.Method<TimeoutID>().Invoke(handler, timeout.TotalMilliseconds, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13);
+		public static TimeoutID setTimeout<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>(Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14> handler, Duration timeout, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12, T13 arg13, T14 arg14) =>
+			Instance.Method<TimeoutID>().Invoke(handler, timeout.TotalMilliseconds, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14);
+		public static TimeoutID setTimeout<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>(Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15> handler, Duration timeout, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12, T13 arg13, T14 arg14, T15 arg15) =>
+			Instance.Method<TimeoutID>().Invoke(handler, timeout.TotalMilliseconds, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15);
+		public static TimeoutID setTimeout<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16>(Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16> handler, Duration timeout, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12, T13 arg13, T14 arg14, T15 arg15, T16 arg16) =>
+			Instance.Method<TimeoutID>().Invoke(handler, timeout.TotalMilliseconds, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16);
+
+		public static void clearTimeout(TimeoutID id) =>
+			Instance.Method().Invoke(id);
+
+		public static IntervalID setInterval(Action handler, Duration timeout) =>
+			Instance.Method<IntervalID>().Invoke(handler, timeout.TotalMilliseconds);
+		public static IntervalID setInterval<T1>(Action<T1> handler, Duration timeout, T1 arg1) =>
+			Instance.Method<IntervalID>().Invoke(handler, timeout.TotalMilliseconds, arg1);
+		public static IntervalID setInterval<T1, T2>(Action<T1, T2> handler, Duration timeout, T1 arg1, T2 arg2) =>
+			Instance.Method<IntervalID>().Invoke(handler, timeout.TotalMilliseconds, arg1, arg2);
+		public static IntervalID setInterval<T1, T2, T3>(Action<T1, T2, T3> handler, Duration timeout, T1 arg1, T2 arg2, T3 arg3) =>
+			Instance.Method<IntervalID>().Invoke(handler, timeout.TotalMilliseconds, arg1, arg2, arg3);
+		public static IntervalID setInterval<T1, T2, T3, T4>(Action<T1, T2, T3, T4> handler, Duration timeout, T1 arg1, T2 arg2, T3 arg3, T4 arg4) =>
+			Instance.Method<IntervalID>().Invoke(handler, timeout.TotalMilliseconds, arg1, arg2, arg3, arg4);
+		public static IntervalID setInterval<T1, T2, T3, T4, T5>(Action<T1, T2, T3, T4, T5> handler, Duration timeout, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) =>
+			Instance.Method<IntervalID>().Invoke(handler, timeout.TotalMilliseconds, arg1, arg2, arg3, arg4, arg5);
+		public static IntervalID setInterval<T1, T2, T3, T4, T5, T6>(Action<T1, T2, T3, T4, T5, T6> handler, Duration timeout, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6) =>
+			Instance.Method<IntervalID>().Invoke(handler, timeout.TotalMilliseconds, arg1, arg2, arg3, arg4, arg5, arg6);
+		public static IntervalID setInterval<T1, T2, T3, T4, T5, T6, T7>(Action<T1, T2, T3, T4, T5, T6, T7> handler, Duration timeout, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7) =>
+			Instance.Method<IntervalID>().Invoke(handler, timeout.TotalMilliseconds, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+		public static IntervalID setInterval<T1, T2, T3, T4, T5, T6, T7, T8>(Action<T1, T2, T3, T4, T5, T6, T7, T8> handler, Duration timeout, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8) =>
+			Instance.Method<IntervalID>().Invoke(handler, timeout.TotalMilliseconds, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+		public static IntervalID setInterval<T1, T2, T3, T4, T5, T6, T7, T8, T9>(Action<T1, T2, T3, T4, T5, T6, T7, T8, T9> handler, Duration timeout, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9) =>
+			Instance.Method<IntervalID>().Invoke(handler, timeout.TotalMilliseconds, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
+		public static IntervalID setInterval<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> handler, Duration timeout, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10) =>
+			Instance.Method<IntervalID>().Invoke(handler, timeout.TotalMilliseconds, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10);
+		public static IntervalID setInterval<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>(Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> handler, Duration timeout, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11) =>
+			Instance.Method<IntervalID>().Invoke(handler, timeout.TotalMilliseconds, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11);
+		public static IntervalID setInterval<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>(Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> handler, Duration timeout, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12) =>
+			Instance.Method<IntervalID>().Invoke(handler, timeout.TotalMilliseconds, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12);
+		public static IntervalID setInterval<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>(Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13> handler, Duration timeout, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12, T13 arg13) =>
+			Instance.Method<IntervalID>().Invoke(handler, timeout.TotalMilliseconds, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13);
+		public static IntervalID setInterval<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>(Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14> handler, Duration timeout, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12, T13 arg13, T14 arg14) =>
+			Instance.Method<IntervalID>().Invoke(handler, timeout.TotalMilliseconds, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14);
+		public static IntervalID setInterval<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>(Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15> handler, Duration timeout, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12, T13 arg13, T14 arg14, T15 arg15) =>
+			Instance.Method<IntervalID>().Invoke(handler, timeout.TotalMilliseconds, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15);
+		public static IntervalID setInterval<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16>(Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16> handler, Duration timeout, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12, T13 arg13, T14 arg14, T15 arg15, T16 arg16) =>
+			Instance.Method<IntervalID>().Invoke(handler, timeout.TotalMilliseconds, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16);
+
+		public static void clearInterval(IntervalID id) =>
+			Instance.Method().Invoke(id);
 		#endregion
 	}
 }

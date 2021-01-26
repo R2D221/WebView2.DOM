@@ -1,4 +1,5 @@
 ﻿using Microsoft.Web.WebView2.Core;
+using NodaTime;
 using System;
 using System.Collections.Generic;
 
@@ -15,9 +16,8 @@ namespace WebView2.DOM
 
 	public partial class Window : EventTarget
 	{
-		protected internal Window(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal Window(CoreWebView2 coreWebView, string referenceId)
+			: base(coreWebView, referenceId) { }
 
 		//public Window window => Get<Window>();
 		public Window self => Get<Window>();
@@ -93,16 +93,16 @@ namespace WebView2.DOM
 
 		// WindowOrWorkerGlobalScope mixin
 		public string origin => Get<string>();
-		//public void queueMicrotask(VoidFunction callback)
-		//	=> Method().Invoke(callback);
+		public void queueMicrotask(Action callback)
+			=> Method().Invoke(callback);
 		//public FrozenArray<string> originPolicyIds => _originPolicyIds ??= Get<FrozenArray<string>>();
 		//private FrozenArray<string>? _originPolicyIds;
 
 		// AnimationFrameProvider mixin
-		//public int requestAnimationFrame(FrameRequestCallback callback)
-		//	=> ReturnPrimitive<int>().Invoke(callback);
-		//public void cancelAnimationFrame(int handle)
-		//	=> Method().Invoke(handle);
+		public AnimationFrameID requestAnimationFrame(Action<Duration> callback)
+			=> Method<AnimationFrameID>().Invoke(new Action<double>((highResTime) => callback(Duration.FromNanoseconds(Math.Round(highResTime * 1000) * 1000))));
+		public void cancelAnimationFrame(AnimationFrameID handle)
+			=> Method().Invoke(handle);
 
 		// HTML obsolete features
 		//public void captureEvents()
@@ -114,10 +114,12 @@ namespace WebView2.DOM
 		//private External? _external;
 
 		// Cooperative Scheduling of Background Tasks
-		//public int requestIdleCallback(IdleRequestCallback callback, IdleRequestOptions options = default)
-		//	=> ReturnPrimitive<int>().Invoke(callback, options);
-		//public void cancelIdleCallback(int handle)
-		//	=> Method().Invoke(handle);
+		public IdleCallbackID requestIdleCallback(Action<IdleDeadline> callback)
+			=> Method<IdleCallbackID>().Invoke(callback);
+		public IdleCallbackID requestIdleCallback(Action<IdleDeadline> callback, IdleRequestOptions options)
+			=> Method<IdleCallbackID>().Invoke(callback, options);
+		public void cancelIdleCallback(IdleCallbackID id)
+			=> Method().Invoke(id);
 
 		// CSS Object Model (CSSOM)
 		public CSSStyleDeclaration getComputedStyle(Element elt, string? pseudoElt = null)

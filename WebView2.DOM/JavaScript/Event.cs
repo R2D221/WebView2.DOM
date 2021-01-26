@@ -18,9 +18,8 @@ namespace WebView2.DOM
 
 	public class Event : JsObject
 	{
-		protected internal Event(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal Event(CoreWebView2 coreWebView, string referenceId)
+			: base(coreWebView, referenceId) { }
 
 		public string type => Get<string>();
 		public EventTarget? target => Get<EventTarget?>();

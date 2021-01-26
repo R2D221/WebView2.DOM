@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NodaTime;
 using System;
 using System.Collections.Immutable;
 using System.Linq;
@@ -273,7 +274,6 @@ namespace WebView2.DOM.Tests
 		public async Task CSSUnparsedSegments()
 		{
 			await wpfSyncContext;
-
 			await webView.InvokeInBrowserContextAsync(window =>
 			{
 				var document = window.document;
@@ -322,6 +322,34 @@ namespace WebView2.DOM.Tests
 		{
 			var a1 = new Float32Array();
 			var a2 = new Float64Array();
+		}
+
+		[TestMethod]
+		public async Task WindowSetTimeout()
+		{
+			await wpfSyncContext;
+			await webView.InvokeInBrowserContextAsync(async window =>
+			{
+				var tcs = new TaskCompletionSource<int>();
+				var id = window.setTimeout(() => tcs.SetResult(5), Duration.Zero);
+				var result = await tcs.Task;
+				Assert.AreEqual(5, result);
+
+				var tcs2 = new TaskCompletionSource();
+				var id2 = window.setTimeout(str =>
+				{
+					try
+					{
+						Assert.AreEqual("test", str);
+						tcs2.SetResult();
+					}
+					catch (Exception ex)
+					{
+						tcs2.SetException(ex);
+					}
+				}, Duration.Zero, "test");
+				await tcs2.Task;
+			});
 		}
 	}
 }

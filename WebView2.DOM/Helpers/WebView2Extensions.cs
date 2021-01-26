@@ -126,6 +126,7 @@ namespace WebView2.DOM
 					new EnumJsonConverterFactory(),
 					new JsObjectJsonConverterFactory(),
 					new TaskJsonConverterFactory(),
+					new ActionJsonConverter(),
 					new ActionJsonConverterFactory(),
 					new anyJsonConverter(),
 					//new LocalDateTimeJsonConverter(),

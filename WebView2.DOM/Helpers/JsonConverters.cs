@@ -222,21 +222,345 @@ namespace WebView2.DOM.Helpers
 
 	internal sealed class ActionJsonConverterFactory : JsonConverterFactory
 	{
-		public override bool CanConvert(Type typeToConvert) =>
-			typeToConvert.IsGenericType && typeToConvert.GetGenericTypeDefinition() == typeof(Action<>);
+		private static readonly ImmutableDictionary<Type, Type> converters =
+			ImmutableDictionary<Type, Type>.Empty
+			.Add(typeof(Action<>/*	*/), typeof(ActionJsonConverter<>/*	*/))
+			.Add(typeof(Action<,>/*	*/), typeof(ActionJsonConverter<,>/*	*/))
+			.Add(typeof(Action<,,>/*	*/), typeof(ActionJsonConverter<,,>/*	*/))
+			.Add(typeof(Action<,,,>/*	*/), typeof(ActionJsonConverter<,,,>/*	*/))
+			.Add(typeof(Action<,,,,>/*	*/), typeof(ActionJsonConverter<,,,,>/*	*/))
+			.Add(typeof(Action<,,,,,>/*	*/), typeof(ActionJsonConverter<,,,,,>/*	*/))
+			.Add(typeof(Action<,,,,,,>/*	*/), typeof(ActionJsonConverter<,,,,,,>/*	*/))
+			.Add(typeof(Action<,,,,,,,>/*	*/), typeof(ActionJsonConverter<,,,,,,,>/*	*/))
+			.Add(typeof(Action<,,,,,,,,>/*	*/), typeof(ActionJsonConverter<,,,,,,,,>/*	*/))
+			.Add(typeof(Action<,,,,,,,,,>/*	*/), typeof(ActionJsonConverter<,,,,,,,,,>/*	*/))
+			.Add(typeof(Action<,,,,,,,,,,>/*	*/), typeof(ActionJsonConverter<,,,,,,,,,,>/*	*/))
+			.Add(typeof(Action<,,,,,,,,,,,>/*	*/), typeof(ActionJsonConverter<,,,,,,,,,,,>/*	*/))
+			.Add(typeof(Action<,,,,,,,,,,,,>/*	*/), typeof(ActionJsonConverter<,,,,,,,,,,,,>/*	*/))
+			.Add(typeof(Action<,,,,,,,,,,,,,>/*	*/), typeof(ActionJsonConverter<,,,,,,,,,,,,,>/*	*/))
+			.Add(typeof(Action<,,,,,,,,,,,,,,>/*	*/), typeof(ActionJsonConverter<,,,,,,,,,,,,,,>/*	*/))
+			.Add(typeof(Action<,,,,,,,,,,,,,,,>/*	*/), typeof(ActionJsonConverter<,,,,,,,,,,,,,,,>/*	*/))
+			;
 
-		public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options) =>
-			(JsonConverter)Activator.CreateInstance(typeof(ActionJsonConverter<>).MakeGenericType(typeToConvert.GetGenericArguments()))!;
+		public override bool CanConvert(Type typeToConvert) =>
+			typeToConvert.IsGenericType && converters.ContainsKey(typeToConvert.GetGenericTypeDefinition());
+
+		public override JsonConverter? CreateConverter(Type typeToConvert, JsonSerializerOptions options) =>
+			(JsonConverter)Activator.CreateInstance(converters[typeToConvert.GetGenericTypeDefinition()].MakeGenericType(typeToConvert.GetGenericArguments()))!;
 	}
 
-	internal sealed class ActionJsonConverter<T> : JsonConverter<Action<T>?>
+	internal sealed class ActionJsonConverter : JsonConverter<Action?>
 	{
-		public override Action<T>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		public override Action? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
 			throw new NotImplementedException();
 		}
 
-		public override void Write(Utf8JsonWriter writer, Action<T>? value, JsonSerializerOptions options)
+		public override void Write(Utf8JsonWriter writer, Action? value, JsonSerializerOptions options)
+		{
+			if (value is null) { writer.WriteNullValue(); return; }
+
+			var callbackId = References.AddCallback(value);
+
+			writer.WriteStartObject();
+			writer.WriteString("callbackId", callbackId);
+			writer.WriteEndObject();
+		}
+	}
+
+	internal sealed class ActionJsonConverter<T1> : JsonConverter<Action<T1>?>
+	{
+		public override Action<T1>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override void Write(Utf8JsonWriter writer, Action<T1>? value, JsonSerializerOptions options)
+		{
+			if (value is null) { writer.WriteNullValue(); return; }
+
+			var callbackId = References.AddCallback(value);
+
+			writer.WriteStartObject();
+			writer.WriteString("callbackId", callbackId);
+			writer.WriteEndObject();
+		}
+	}
+
+	internal sealed class ActionJsonConverter<T1, T2> : JsonConverter<Action<T1, T2>?>
+	{
+		public override Action<T1, T2>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override void Write(Utf8JsonWriter writer, Action<T1, T2>? value, JsonSerializerOptions options)
+		{
+			if (value is null) { writer.WriteNullValue(); return; }
+
+			var callbackId = References.AddCallback(value);
+
+			writer.WriteStartObject();
+			writer.WriteString("callbackId", callbackId);
+			writer.WriteEndObject();
+		}
+	}
+
+	internal sealed class ActionJsonConverter<T1, T2, T3> : JsonConverter<Action<T1, T2, T3>?>
+	{
+		public override Action<T1, T2, T3>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override void Write(Utf8JsonWriter writer, Action<T1, T2, T3>? value, JsonSerializerOptions options)
+		{
+			if (value is null) { writer.WriteNullValue(); return; }
+
+			var callbackId = References.AddCallback(value);
+
+			writer.WriteStartObject();
+			writer.WriteString("callbackId", callbackId);
+			writer.WriteEndObject();
+		}
+	}
+
+	internal sealed class ActionJsonConverter<T1, T2, T3, T4> : JsonConverter<Action<T1, T2, T3, T4>?>
+	{
+		public override Action<T1, T2, T3, T4>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override void Write(Utf8JsonWriter writer, Action<T1, T2, T3, T4>? value, JsonSerializerOptions options)
+		{
+			if (value is null) { writer.WriteNullValue(); return; }
+
+			var callbackId = References.AddCallback(value);
+
+			writer.WriteStartObject();
+			writer.WriteString("callbackId", callbackId);
+			writer.WriteEndObject();
+		}
+	}
+
+	internal sealed class ActionJsonConverter<T1, T2, T3, T4, T5> : JsonConverter<Action<T1, T2, T3, T4, T5>?>
+	{
+		public override Action<T1, T2, T3, T4, T5>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override void Write(Utf8JsonWriter writer, Action<T1, T2, T3, T4, T5>? value, JsonSerializerOptions options)
+		{
+			if (value is null) { writer.WriteNullValue(); return; }
+
+			var callbackId = References.AddCallback(value);
+
+			writer.WriteStartObject();
+			writer.WriteString("callbackId", callbackId);
+			writer.WriteEndObject();
+		}
+	}
+
+	internal sealed class ActionJsonConverter<T1, T2, T3, T4, T5, T6> : JsonConverter<Action<T1, T2, T3, T4, T5, T6>?>
+	{
+		public override Action<T1, T2, T3, T4, T5, T6>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override void Write(Utf8JsonWriter writer, Action<T1, T2, T3, T4, T5, T6>? value, JsonSerializerOptions options)
+		{
+			if (value is null) { writer.WriteNullValue(); return; }
+
+			var callbackId = References.AddCallback(value);
+
+			writer.WriteStartObject();
+			writer.WriteString("callbackId", callbackId);
+			writer.WriteEndObject();
+		}
+	}
+
+	internal sealed class ActionJsonConverter<T1, T2, T3, T4, T5, T6, T7> : JsonConverter<Action<T1, T2, T3, T4, T5, T6, T7>?>
+	{
+		public override Action<T1, T2, T3, T4, T5, T6, T7>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override void Write(Utf8JsonWriter writer, Action<T1, T2, T3, T4, T5, T6, T7>? value, JsonSerializerOptions options)
+		{
+			if (value is null) { writer.WriteNullValue(); return; }
+
+			var callbackId = References.AddCallback(value);
+
+			writer.WriteStartObject();
+			writer.WriteString("callbackId", callbackId);
+			writer.WriteEndObject();
+		}
+	}
+
+	internal sealed class ActionJsonConverter<T1, T2, T3, T4, T5, T6, T7, T8> : JsonConverter<Action<T1, T2, T3, T4, T5, T6, T7, T8>?>
+	{
+		public override Action<T1, T2, T3, T4, T5, T6, T7, T8>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override void Write(Utf8JsonWriter writer, Action<T1, T2, T3, T4, T5, T6, T7, T8>? value, JsonSerializerOptions options)
+		{
+			if (value is null) { writer.WriteNullValue(); return; }
+
+			var callbackId = References.AddCallback(value);
+
+			writer.WriteStartObject();
+			writer.WriteString("callbackId", callbackId);
+			writer.WriteEndObject();
+		}
+	}
+
+	internal sealed class ActionJsonConverter<T1, T2, T3, T4, T5, T6, T7, T8, T9> : JsonConverter<Action<T1, T2, T3, T4, T5, T6, T7, T8, T9>?>
+	{
+		public override Action<T1, T2, T3, T4, T5, T6, T7, T8, T9>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override void Write(Utf8JsonWriter writer, Action<T1, T2, T3, T4, T5, T6, T7, T8, T9>? value, JsonSerializerOptions options)
+		{
+			if (value is null) { writer.WriteNullValue(); return; }
+
+			var callbackId = References.AddCallback(value);
+
+			writer.WriteStartObject();
+			writer.WriteString("callbackId", callbackId);
+			writer.WriteEndObject();
+		}
+	}
+
+	internal sealed class ActionJsonConverter<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> : JsonConverter<Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>?>
+	{
+		public override Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override void Write(Utf8JsonWriter writer, Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>? value, JsonSerializerOptions options)
+		{
+			if (value is null) { writer.WriteNullValue(); return; }
+
+			var callbackId = References.AddCallback(value);
+
+			writer.WriteStartObject();
+			writer.WriteString("callbackId", callbackId);
+			writer.WriteEndObject();
+		}
+	}
+
+	internal sealed class ActionJsonConverter<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> : JsonConverter<Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>?>
+	{
+		public override Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override void Write(Utf8JsonWriter writer, Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>? value, JsonSerializerOptions options)
+		{
+			if (value is null) { writer.WriteNullValue(); return; }
+
+			var callbackId = References.AddCallback(value);
+
+			writer.WriteStartObject();
+			writer.WriteString("callbackId", callbackId);
+			writer.WriteEndObject();
+		}
+	}
+
+	internal sealed class ActionJsonConverter<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> : JsonConverter<Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>?>
+	{
+		public override Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override void Write(Utf8JsonWriter writer, Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>? value, JsonSerializerOptions options)
+		{
+			if (value is null) { writer.WriteNullValue(); return; }
+
+			var callbackId = References.AddCallback(value);
+
+			writer.WriteStartObject();
+			writer.WriteString("callbackId", callbackId);
+			writer.WriteEndObject();
+		}
+	}
+
+	internal sealed class ActionJsonConverter<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13> : JsonConverter<Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>?>
+	{
+		public override Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override void Write(Utf8JsonWriter writer, Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>? value, JsonSerializerOptions options)
+		{
+			if (value is null) { writer.WriteNullValue(); return; }
+
+			var callbackId = References.AddCallback(value);
+
+			writer.WriteStartObject();
+			writer.WriteString("callbackId", callbackId);
+			writer.WriteEndObject();
+		}
+	}
+
+	internal sealed class ActionJsonConverter<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14> : JsonConverter<Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>?>
+	{
+		public override Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override void Write(Utf8JsonWriter writer, Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>? value, JsonSerializerOptions options)
+		{
+			if (value is null) { writer.WriteNullValue(); return; }
+
+			var callbackId = References.AddCallback(value);
+
+			writer.WriteStartObject();
+			writer.WriteString("callbackId", callbackId);
+			writer.WriteEndObject();
+		}
+	}
+
+	internal sealed class ActionJsonConverter<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15> : JsonConverter<Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>?>
+	{
+		public override Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override void Write(Utf8JsonWriter writer, Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>? value, JsonSerializerOptions options)
+		{
+			if (value is null) { writer.WriteNullValue(); return; }
+
+			var callbackId = References.AddCallback(value);
+
+			writer.WriteStartObject();
+			writer.WriteString("callbackId", callbackId);
+			writer.WriteEndObject();
+		}
+	}
+
+	internal sealed class ActionJsonConverter<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16> : JsonConverter<Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16>?>
+	{
+		public override Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override void Write(Utf8JsonWriter writer, Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16>? value, JsonSerializerOptions options)
 		{
 			if (value is null) { writer.WriteNullValue(); return; }
 
