@@ -17,9 +17,8 @@ namespace WebView2.DOM
 
 	public partial class HTMLElement : Element
 	{
-		protected internal HTMLElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal HTMLElement(CoreWebView2 coreWebView, string referenceId)
+			: base(coreWebView, referenceId) { }
 
 		// metadata attributes
 		public string title { get => Get<string>(); set => Set(value); }
@@ -57,8 +56,8 @@ namespace WebView2.DOM
 		// CSS Object Model (CSSOM)
 		public CSSStyleDeclaration style => _style ??= Get<CSSStyleDeclaration>();
 		private CSSStyleDeclaration? _style;
-		public string innerText { get => Get<string>(); /*set => Set(value);*/ }
-		public string outerText { get => Get<string>(); /*set => Set(value);*/ }
+		public string innerText { get => Get<string>(); set => Set(value); }
+		public string outerText { get => Get<string>(); set => Set(value); }
 
 		public interface OneOf<T0, T1>
 			where T0 : HTMLElement

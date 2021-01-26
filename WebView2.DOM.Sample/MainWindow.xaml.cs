@@ -1,7 +1,11 @@
-﻿using System.Windows;
+﻿using NodaTime;
+using NodaTime.Extensions;
+using System.Collections.Generic;
+using System.Windows;
 
 namespace WebView2.DOM.Sample
 {
+	using Duration = NodaTime.Duration;
 	using Window = System.Windows.Window;
 
 	/// <summary>
@@ -25,6 +29,8 @@ namespace WebView2.DOM.Sample
 			};
 			webView.NavigateToString(@"
 				<h1>Welcome to C# DOM</h1>
+				<p>The current time is <span id='current-time'></span></p>
+				<p>requestAnimationFrame FPS (called from C#) is <span id='fps'></span></p>
 				<p>
 					<button id='jsAlertButton'>Call JS function</button>
 					<br />
@@ -40,6 +46,18 @@ namespace WebView2.DOM.Sample
 
 			jsAlertButton.onclick += JsAlertButton_onclick;
 			csAlertButton.onclick += CsAlertButton_onclick;
+
+			var currentTime_span = (HTMLElement)window.document.getElementById("current-time");
+			var fps = (HTMLElement)window.document.getElementById("fps");
+
+			callback(Duration.Zero);
+			void callback(Duration timestamp)
+			{
+				currentTime_span.innerText = GetCurrentDateTime();
+				fps.innerText = $"{calculateFps(timestamp)}";
+
+				window.requestAnimationFrame(callback);
+			}
 		}
 
 		private void JsAlertButton_onclick(object sender, MouseEvent e)
@@ -53,6 +71,27 @@ namespace WebView2.DOM.Sample
 			{
 				MessageBox.Show("Hello! You invoked MessageBox.Show()");
 			});
+		}
+
+		private static string GetCurrentDateTime() =>
+			SystemClock.Instance
+			.InTzdbSystemDefaultZone()
+			.GetCurrentLocalDateTime()
+			.ToString();
+
+		private static readonly Queue<Duration> timestamps =
+			new Queue<Duration>();
+
+		private static int calculateFps(Duration timestamp)
+		{
+			while (timestamps.TryPeek(out var first) && first <= timestamp - Duration.FromSeconds(1))
+			{
+				timestamps.Dequeue();
+			}
+
+			timestamps.Enqueue(timestamp);
+
+			return timestamps.Count;
 		}
 	}
 }
