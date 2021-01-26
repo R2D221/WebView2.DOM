@@ -5,7 +5,7 @@
     <UseWPF>true</UseWPF>
     <UseWindowsForms>True</UseWindowsForms>
     <Nullable>enable</Nullable>
-    <Version>0.0.8</Version>
+    <Version>0.1.0</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/R2D221/WebView2.DOM</PackageProjectUrl>
     <Description>C# DOM bindings to be used with WebView2</Description>
@@ -21,11 +21,11 @@
 
   <ItemGroup>
     <PackageReference Include="Enums.NET" Version="3.0.3" />
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.664.37" />
-    <PackageReference Include="NodaTime" Version="3.0.3" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.705.50" />
+    <PackageReference Include="NodaTime" Version="3.0.5" />
     <PackageReference Include="Range" Version="3.0.6" />
-    <PackageReference Include="SmartAnalyzers.CSharpExtensions.Annotations" Version="3.1.76" />
-    <PackageReference Include="System.Text.Json" Version="5.0.0" />
+    <PackageReference Include="SmartAnalyzers.CSharpExtensions.Annotations" Version="3.3.0" />
+    <PackageReference Include="System.Text.Json" Version="5.0.1" />
     <PackageReference Include="TypeConvert" Version="2.1.6" />
   </ItemGroup>
 
