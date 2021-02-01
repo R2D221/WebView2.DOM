@@ -1,22 +1,18 @@
 ﻿using Microsoft.Web.WebView2.Core;
 using System;
-using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 
 namespace WebView2.DOM
 {
 	public class EventTarget : JsObject
 	{
-		protected internal EventTarget(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
-
-		internal ConcurrentDictionary<string, Delegate?> events { get; set; } =
-			new ConcurrentDictionary<string, Delegate?>();
+		protected internal EventTarget(CoreWebView2 coreWebView, string referenceId)
+			: base(coreWebView, referenceId) { }
 
 		internal void AddEvent<T>(EventHandler<T>? value, [CallerMemberName] string @event = "")
 			where T : Event
 		{
+			var events = References.events.GetOrAdd(referenceId, _ => new());
 			events.AddOrUpdate(@event,
 				addValueFactory: _ =>
 				{
@@ -36,6 +32,7 @@ namespace WebView2.DOM
 
 		internal void RaiseEvent(string @event, Event args)
 		{
+			var events = References.events.GetOrAdd(referenceId, _ => new());
 			events.TryGetValue(@event, out var value);
 			if (value != null)
 			{
@@ -46,6 +43,7 @@ namespace WebView2.DOM
 		internal void RemoveEvent<T>(EventHandler<T>? value, [CallerMemberName] string @event = "")
 			where T : Event
 		{
+			var events = References.events.GetOrAdd(referenceId, _ => new());
 			events.AddOrUpdate(@event,
 				addValueFactory: _ =>
 				{

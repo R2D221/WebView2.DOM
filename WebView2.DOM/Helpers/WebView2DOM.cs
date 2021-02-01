@@ -34,13 +34,12 @@ namespace WebView2.DOM
 					const idToObj = {{}};
 					const registry = new FinalizationRegistry(id =>
 					{{
-						delete idToObj[id];
-						References().{nameof(DOM.References.Remove)}(id);
+						References().{nameof(References.Remove)}(id);
 					}});
 
 					const callbackRegistry = new FinalizationRegistry(id =>
 					{{
-						References().{nameof(DOM.References.RemoveCallback)}(id);
+						References().{nameof(References.RemoveCallback)}(id);
 					}});
 
 					const x = {{}};
@@ -53,7 +52,7 @@ namespace WebView2.DOM
 						}}
 
 						objToId.set(obj, newId);
-						idToObj[newId] = new WeakRef(obj);
+						idToObj[newId] = obj;
 						registry.register(obj, newId);
 					}};
 
@@ -68,6 +67,7 @@ namespace WebView2.DOM
 
 						if (existingId != null)
 						{{
+							idToObj[existingId] = obj;
 							return existingId;
 						}}
 
@@ -75,15 +75,15 @@ namespace WebView2.DOM
 
 						if (obj instanceof HTMLInputElement)
 						{{
-							References().{nameof(DOM.References.AddHTMLInputElement)}(newId, obj.type);
+							References().{nameof(References.AddHTMLInputElement)}(newId, obj.type);
 						}}
 						else
 						{{
-							References().{nameof(DOM.References.Add)}(newId, obj.constructor.name);
+							References().{nameof(References.Add)}(newId, obj.constructor.name);
 						}}
 
 						objToId.set(obj, newId);
-						idToObj[newId] = new WeakRef(obj);
+						idToObj[newId] = obj;
 						registry.register(obj, newId);
 						return newId;
 					}};
@@ -92,18 +92,24 @@ namespace WebView2.DOM
 					{{
 						if (id == null) {{ return null; }}
 						if (idToObj[id] == null) {{ return null; }}
-						return idToObj[id].deref();
+						return idToObj[id];
+					}};
+
+					x.RemoveId = function (id)
+					{{
+						var obj = idToObj[id];
+						delete idToObj[id];
 					}};
 
 					x.GetPromiseId = function (promise)
 					{{
 						let isComplete = true;
 						const promiseId = Guid().NewGuid();
-						References().{nameof(DOM.References.AddTask)}(promiseId);
+						References().{nameof(References.AddTask)}(promiseId);
 						promise.then(
 							value =>
 							{{
-								Coordinator().{nameof(DOM.Coordinator.FulfillPromise)}(
+								Coordinator().{nameof(Coordinator.FulfillPromise)}(
 									WebView2DOM.GetId(window),
 									promiseId,
 									JSON.stringify(WebView2DOM.pre_stringify(value)),
@@ -131,7 +137,7 @@ namespace WebView2.DOM
 										}});
 								}}
 
-								Coordinator().{nameof(DOM.Coordinator.RejectPromise)}(
+								Coordinator().{nameof(Coordinator.RejectPromise)}(
 									WebView2DOM.GetId(window),
 									promiseId,
 									exJson,
@@ -198,7 +204,7 @@ namespace WebView2.DOM
 						else if (obj != null && typeof obj === 'object' && typeof obj.callbackId === 'string')
 						{{
 							const callback = (...parameters) => {{
-								Coordinator().{nameof(DOM.Coordinator.OnCallback)}(
+								Coordinator().{nameof(Coordinator.OnCallback)}(
 									WebView2DOM.GetId(window),
 									obj.callbackId,
 									JSON.stringify(WebView2DOM.pre_stringify(parameters)));
@@ -221,11 +227,11 @@ namespace WebView2.DOM
 
 						const windowId = WebView2DOM.GetId(window);
 
-						while (Coordinator().{nameof(DOM.Coordinator.MoveNext)}(windowId))
+						while (Coordinator().{nameof(Coordinator.MoveNext)}(windowId))
 						{{
 							try
 							{{
-								const current = JSON.parse(Coordinator().{nameof(DOM.Coordinator.Current)}(windowId));
+								const current = JSON.parse(Coordinator().{nameof(Coordinator.Current)}(windowId));
 
 								//if (WebView2DOM.GetId(window) !== current.nameof(CoordinatorCall.windowId))
 								//{{
@@ -241,13 +247,13 @@ namespace WebView2.DOM
 									(() => {{
 										const result = new window[memberName](...WebView2DOM.post_parse(current.{nameof(CoordinatorCall.parameters)}));
 										WebView2DOM.SetId(result, current.{nameof(CoordinatorCall.referenceId)});
-										Coordinator().{nameof(DOM.Coordinator.ReturnVoid)}(windowId);
+										Coordinator().{nameof(Coordinator.ReturnVoid)}(windowId);
 									}})();
 									break;
 									case 'getter':
 									(() => {{
 										const result = reference[memberName];
-										Coordinator().{nameof(DOM.Coordinator.ReturnValue)}(
+										Coordinator().{nameof(Coordinator.ReturnValue)}(
 											windowId,
 											JSON.stringify(WebView2DOM.pre_stringify(result))
 										);
@@ -256,7 +262,7 @@ namespace WebView2.DOM
 									case 'setter':
 									(() => {{
 										reference[memberName] = WebView2DOM.post_parse(current.{nameof(CoordinatorCall.parameters)})[0];
-										Coordinator().{nameof(DOM.Coordinator.ReturnVoid)}(windowId);
+										Coordinator().{nameof(Coordinator.ReturnVoid)}(windowId);
 									}})();
 									break;
 									case 'indexerGetter':
@@ -264,7 +270,7 @@ namespace WebView2.DOM
 										const parameters = WebView2DOM.post_parse(current.{nameof(CoordinatorCall.parameters)});
 										const index = parameters[0];
 										const result = reference[index];
-										Coordinator().{nameof(DOM.Coordinator.ReturnValue)}(
+										Coordinator().{nameof(Coordinator.ReturnValue)}(
 											windowId,
 											JSON.stringify(WebView2DOM.pre_stringify(result))
 										);
@@ -276,7 +282,7 @@ namespace WebView2.DOM
 										const index = parameters[0];
 										const value = parameters[1];
 										reference[index] = value;
-										Coordinator().{nameof(DOM.Coordinator.ReturnVoid)}(windowId);
+										Coordinator().{nameof(Coordinator.ReturnVoid)}(windowId);
 									}})();
 									break;
 									case 'indexerDeleter':
@@ -284,13 +290,13 @@ namespace WebView2.DOM
 										const parameters = WebView2DOM.post_parse(current.{nameof(CoordinatorCall.parameters)});
 										const index = parameters[0];
 										delete reference[index];
-										Coordinator().{nameof(DOM.Coordinator.ReturnVoid)}(windowId);
+										Coordinator().{nameof(Coordinator.ReturnVoid)}(windowId);
 									}})();
 									break;
 									case 'invoke':
 									(() => {{
 										const result = reference[memberName](...WebView2DOM.post_parse(current.{nameof(CoordinatorCall.parameters)}));
-										Coordinator().{nameof(DOM.Coordinator.ReturnValue)}(
+										Coordinator().{nameof(Coordinator.ReturnValue)}(
 											windowId,
 											JSON.stringify(WebView2DOM.pre_stringify(result))
 										);
@@ -299,7 +305,7 @@ namespace WebView2.DOM
 									case 'invokeSymbol':
 									(() => {{
 										const result = reference[Symbol[memberName]](...WebView2DOM.post_parse(current.{nameof(CoordinatorCall.parameters)}));
-										Coordinator().{nameof(DOM.Coordinator.ReturnValue)}(
+										Coordinator().{nameof(Coordinator.ReturnValue)}(
 											windowId,
 											JSON.stringify(WebView2DOM.pre_stringify(result))
 										);
@@ -311,25 +317,25 @@ namespace WebView2.DOM
 										const _memberName = memberName;
 										_reference[_memberName] = event =>
 										{{
-											Coordinator().{nameof(DOM.Coordinator.RaiseEvent)}(
+											Coordinator().{nameof(Coordinator.RaiseEvent)}(
 												WebView2DOM.GetId(window),
 												WebView2DOM.GetId(_reference),
 												_memberName,
 												WebView2DOM.GetId(event));
 											WebView2DOM.EventLoop();
 										}};
-										Coordinator().{nameof(DOM.Coordinator.ReturnVoid)}(windowId);
+										Coordinator().{nameof(Coordinator.ReturnVoid)}(windowId);
 									}})();
 									break;
 									case 'removeevent':
 									(() => {{
 										reference[memberName] = null;
-										Coordinator().{nameof(DOM.Coordinator.ReturnVoid)}(windowId);
+										Coordinator().{nameof(Coordinator.ReturnVoid)}(windowId);
 									}})();
 									break;
 									default:
 									(() => {{
-										Coordinator().{nameof(DOM.Coordinator.Throw)}(
+										Coordinator().{nameof(Coordinator.Throw)}(
 											windowId,
 											JSON.stringify({{
 												constructor_name: 'SyntaxError',
@@ -362,7 +368,7 @@ namespace WebView2.DOM
 										}});
 								}}
 
-								Coordinator().{nameof(DOM.Coordinator.Throw)}(windowId, exJson);
+								Coordinator().{nameof(Coordinator.Throw)}(windowId, exJson);
 							}}
 						}}
 

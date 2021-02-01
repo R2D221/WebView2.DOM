@@ -3,6 +3,7 @@ using NodaTime;
 using System;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using static WebView2.DOM.HTMLElementTag;
 using static WebView2.DOM.Tests.Global;
@@ -167,6 +168,48 @@ namespace WebView2.DOM.Tests
 				});
 
 				Assert.AreEqual(400, width);
+			});
+		}
+
+		[TestMethod("Object persistent in JS doesn't kill C# reference")]
+		public async Task ObjectPersistentInJsDoesntKillCsharpReference()
+		{
+			await wpfSyncContext;
+			await webView.InvokeInBrowserContextAsync(async window =>
+			{
+				var weakReference = getWeakReference();
+				WeakReference<Document> getWeakReference()
+				{
+					return new WeakReference<Document>(window.document);
+				}
+				
+				GC.Collect(0, GCCollectionMode.Forced);
+				GC.WaitForPendingFinalizers();
+
+				await Task.Yield();
+
+				var document = window.document;
+				Assert.IsInstanceOfType(document, typeof(HTMLDocument));
+				
+				var body = document.body;
+				Assert.IsInstanceOfType(body, typeof(HTMLBodyElement));
+			});
+		}
+
+		[TestMethod("Object persistent in C# doesn't kill JS reference")]
+		public async Task ObjectPersistentInCsharpDoesntKillJsReference()
+		{
+			await wpfSyncContext;
+			await webView.InvokeInBrowserContextAsync(async window =>
+			{
+				var myDiv = window.document.createHTMLElement(div);
+
+				await webView.InvokeInWpfContextAsync(async () =>
+				{
+					await webView.CoreWebView2.CallDevToolsProtocolMethodAsync("HeapProfiler.collectGarbage", JsonSerializer.Serialize(new { }));
+				});
+
+				Assert.AreEqual(window.document, myDiv.ownerDocument);
 			});
 		}
 

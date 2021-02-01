@@ -10,97 +10,99 @@ namespace WebView2.DOM
 {
 	public sealed class References
 	{
-		private static readonly ConcurrentDictionary<string, TaskCompletionSource<string>> tcsRefs =
-			new ConcurrentDictionary<string, TaskCompletionSource<string>>();
+		private static readonly ConcurrentDictionary<string, TaskCompletionSource<string>>
+			tcsRefs = new();
+		
+		private static readonly ConcurrentDictionary<string, Task<string>>
+			taskRefs = new();
+		
+		private static readonly ConcurrentDictionary<string, (Func<string, JsObject> constructor, WeakReference<JsObject> @ref)>
+			objRefs = new();
+		
+		private static readonly ConcurrentDictionary<string, Delegate>
+			callbackRefs = new();
 
-		private static readonly ConcurrentDictionary<string, Task<string>> taskRefs =
-			new ConcurrentDictionary<string, Task<string>>();
-
-		private static readonly ConcurrentDictionary<string, JsObject> objRefs =
-			new ConcurrentDictionary<string, JsObject>();
-
-		private static readonly ConcurrentDictionary<string, Delegate> callbackRefs =
-			new ConcurrentDictionary<string, Delegate>();
+		internal static readonly ConcurrentDictionary<string, ConcurrentDictionary<string, Delegate?>>
+			events = new();
 
 		private readonly Dictionary<string, Func<string, JsObject>> types;
-		private readonly CoreWebView2 coreWebView;
 
 		internal References(CoreWebView2 coreWebView)
 		{
-			this.coreWebView = coreWebView;
-			types =
+			var t1 =
 				typeof(Window).Assembly
 				.GetTypes()
 				.Where(x => x.IsClass && typeof(JsObject).IsAssignableFrom(x))
-				.ToDictionary<Type, string, Func<string, JsObject>>(
+				.ToDictionary(
 					type => type.Name switch
 					{
 						"JsObject" => "Object",
 						_ => type.Name,
 					},
-					type => (id) =>
-						 (JsObject)Activator.CreateInstance(
+					type => (Func<string, JsObject>)
+					(
+						(id) =>
+							(JsObject)Activator.CreateInstance(
 							type: type,
 							bindingAttr: BindingFlags.NonPublic | BindingFlags.Instance,
 							binder: null,
 							args: new object?[] { coreWebView, id },
 							culture: null)!
+					)
 				);
+
+			var t2 = new Dictionary<string, Func<string, JsObject>>
+			{
+				["hidden"/*	*/] = (id) => new HTMLHiddenInputElement/*	*/(coreWebView, id),
+				["text"/*	*/] = (id) => new HTMLTextInputElement/*	*/(coreWebView, id),
+				["search"/*	*/] = (id) => new HTMLSearchInputElement/*	*/(coreWebView, id),
+				["tel"/*	*/] = (id) => new HTMLTelephoneInputElement/*	*/(coreWebView, id),
+				["url"/*	*/] = (id) => new HTMLURLInputElement/*	*/(coreWebView, id),
+				["email"/*	*/] = (id) => new HTMLEmailInputElement/*	*/(coreWebView, id),
+				["password"/*	*/] = (id) => new HTMLPasswordInputElement/*	*/(coreWebView, id),
+				["date"/*	*/] = (id) => new HTMLDateInputElement/*	*/(coreWebView, id),
+				["month"/*	*/] = (id) => new HTMLMonthInputElement/*	*/(coreWebView, id),
+				["week"/*	*/] = (id) => new HTMLWeekInputElement/*	*/(coreWebView, id),
+				["time"/*	*/] = (id) => new HTMLTimeInputElement/*	*/(coreWebView, id),
+				["datetime-local"/*	*/] = (id) => new HTMLLocalDateTimeInputElement/*	*/(coreWebView, id),
+				["number"/*	*/] = (id) => new HTMLNumberInputElement/*	*/(coreWebView, id),
+				["range"/*	*/] = (id) => new HTMLRangeInputElement/*	*/(coreWebView, id),
+				["color"/*	*/] = (id) => new HTMLColorInputElement/*	*/(coreWebView, id),
+				["checkbox"/*	*/] = (id) => new HTMLCheckboxInputElement/*	*/(coreWebView, id),
+				["radio"/*	*/] = (id) => new HTMLRadioButtonInputElement/*	*/(coreWebView, id),
+				["file"/*	*/] = (id) => new HTMLFileUploadInputElement/*	*/(coreWebView, id),
+				["submit"/*	*/] = (id) => new HTMLSubmitInputElement/*	*/(coreWebView, id),
+				["image"/*	*/] = (id) => new HTMLImageInputElement/*	*/(coreWebView, id),
+				["reset"/*	*/] = (id) => new HTMLResetInputElement/*	*/(coreWebView, id),
+				["button"/*	*/] = (id) => new HTMLButtonInputElement/*	*/(coreWebView, id),
+			};
+
+			types = new Dictionary<string, Func<string, JsObject>>(t1.Concat(t2));
 		}
 
 		#region Called from JavaScript
 		public void Add(string id, string type)
 		{
 			objRefs.AddOrUpdate(id,
-				_ =>
-				{
-					if (types.TryGetValue(type, out var constructor))
-					{
-						return constructor(id);
-					}
-					else
-					{
-						throw new InvalidOperationException($"JavaScript type {type} not found in C#");
-					}
-				},
+				_ => types.TryGetValue(type, out var constructor)
+					? (constructor, new WeakReference<JsObject>(constructor(id)))
+					: throw new InvalidOperationException($"JavaScript type {type} not found in C#"),
 				(_, __) => throw new InvalidOperationException()
 				);
 		}
 
 		public void AddHTMLInputElement(string id, string type) =>
 			objRefs.AddOrUpdate(id,
-				_ => type switch
-					{
-						"hidden"/*	*/ => new HTMLHiddenInputElement/*	*/(coreWebView, id),
-						"text"/*	*/ => new HTMLTextInputElement/*	*/(coreWebView, id),
-						"search"/*	*/ => new HTMLSearchInputElement/*	*/(coreWebView, id),
-						"tel"/*	*/ => new HTMLTelephoneInputElement/*	*/(coreWebView, id),
-						"url"/*	*/ => new HTMLURLInputElement/*	*/(coreWebView, id),
-						"email"/*	*/ => new HTMLEmailInputElement/*	*/(coreWebView, id),
-						"password"/*	*/ => new HTMLPasswordInputElement/*	*/(coreWebView, id),
-						"date"/*	*/ => new HTMLDateInputElement/*	*/(coreWebView, id),
-						"month"/*	*/ => new HTMLMonthInputElement/*	*/(coreWebView, id),
-						"week"/*	*/ => new HTMLWeekInputElement/*	*/(coreWebView, id),
-						"time"/*	*/ => new HTMLTimeInputElement/*	*/(coreWebView, id),
-						"datetime-local"/*	*/ => new HTMLLocalDateTimeInputElement/*	*/(coreWebView, id),
-						"number"/*	*/ => new HTMLNumberInputElement/*	*/(coreWebView, id),
-						"range"/*	*/ => new HTMLRangeInputElement/*	*/(coreWebView, id),
-						"color"/*	*/ => new HTMLColorInputElement/*	*/(coreWebView, id),
-						"checkbox"/*	*/ => new HTMLCheckboxInputElement/*	*/(coreWebView, id),
-						"radio"/*	*/ => new HTMLRadioButtonInputElement/*	*/(coreWebView, id),
-						"file"/*	*/ => new HTMLFileUploadInputElement/*	*/(coreWebView, id),
-						"submit"/*	*/ => new HTMLSubmitInputElement/*	*/(coreWebView, id),
-						"image"/*	*/ => new HTMLImageInputElement/*	*/(coreWebView, id),
-						"reset"/*	*/ => new HTMLResetInputElement/*	*/(coreWebView, id),
-						"button"/*	*/ => new HTMLButtonInputElement/*	*/(coreWebView, id),
-						_ => throw new InvalidOperationException($"HTMLInputElement of type {type} not found in C#"),
-					},
+				_ => types.TryGetValue(type, out var constructor)
+					? (constructor, new WeakReference<JsObject>(constructor(id)))
+					: throw new InvalidOperationException($"HTMLInputElement of type {type} not found in C#"),
 				(_, __) => throw new InvalidOperationException()
 				);
 
 		public void Remove(string id)
 		{
 			objRefs.TryRemove(id, out _);
+			events.TryRemove(id, out _);
 		}
 
 		public void AddTask(string id)
@@ -125,7 +127,7 @@ namespace WebView2.DOM
 		internal void Add(JsObject jsObject)
 		{
 			objRefs.AddOrUpdate(jsObject.referenceId,
-				jsObject,
+				(types[jsObject.GetType().Name], new WeakReference<JsObject>(jsObject)),
 				(_, __) => throw new InvalidOperationException()
 				);
 		}
@@ -135,9 +137,17 @@ namespace WebView2.DOM
 		{
 			if (id == null) { return null; }
 
+			var (constructor, @ref) = objRefs.GetOrAdd(id, _ => throw new ObjectDisposedException(id));
+			
+			if (!@ref.TryGetTarget(out var obj))
+			{
+				obj = constructor(id);
+				@ref.SetTarget(obj);
+			}
+
 			return (T)TypeConvert.Convert
 			(
-				value: objRefs.GetOrAdd(id, _ => throw new ObjectDisposedException(id)),
+				value: obj,
 				toType: typeof(T)
 			);
 		}
@@ -173,7 +183,7 @@ namespace WebView2.DOM
 		{
 			objRefs.AddOrUpdate(target.referenceId,
 				_ => throw new ObjectDisposedException(target.referenceId),
-				(_, __) => target
+				(_, x) => (x.constructor, new WeakReference<JsObject>(target))
 				);
 		}
 

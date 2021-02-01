@@ -1,7 +1,7 @@
 ﻿using Microsoft.Web.WebView2.Core;
 using System;
 using System.Runtime.CompilerServices;
-using System.Text.Json;
+using System.Threading;
 
 namespace WebView2.DOM
 {
@@ -14,6 +14,42 @@ namespace WebView2.DOM
 		{
 			this.coreWebView = coreWebView;
 			this.referenceId = referenceId;
+		}
+
+		~JsObject()
+		{
+			try
+			{
+				var syncContext = coreWebView.GetSynchronizationContext();
+				if (syncContext == SynchronizationContext.Current)
+				{
+					f();
+				}
+				else
+				{
+					syncContext.Post(_ => f(), null);
+				}
+
+				async void f()
+				{
+					try
+					{
+						await coreWebView.ExecuteScriptAsync($@"
+							(() => {{
+								WebView2DOM.RemoveId('{referenceId}');
+							}})()
+						");
+					}
+					catch
+					{
+						// Don't want bad things to happen
+					}
+				}
+			}
+			catch
+			{
+				// Don't want bad things to happen
+			}
 		}
 
 		internal @void Construct(params object?[] args)
