@@ -50,7 +50,7 @@ namespace WebView2.DOM.Tests
 
 				Assert.IsTrue(readonlyList.IsReadOnly);
 				Assert.IsFalse(list.IsReadOnly);
-				
+
 				Assert.AreEqual(1, list[0].x);
 				Assert.AreEqual(2, list[0].y);
 				Assert.AreEqual(3, list[1].x);
