@@ -1,6 +1,8 @@
 ﻿using Microsoft.Web.WebView2.Core;
 using System;
+using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.ExceptionServices;
 
 namespace WebView2.DOM
 {
@@ -36,7 +38,18 @@ namespace WebView2.DOM
 			events.TryGetValue(@event, out var value);
 			if (value != null)
 			{
-				value.DynamicInvoke(this, args);
+				try
+				{
+					value.DynamicInvoke(this, args);
+				}
+				catch (TargetInvocationException ex)
+				{
+					ExceptionDispatchInfo
+						.Capture(ex.InnerException!)
+						.Throw();
+
+					throw;
+				}
 			}
 		}
 

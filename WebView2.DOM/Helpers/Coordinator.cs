@@ -6,9 +6,10 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.ExceptionServices;
 using System.Text.Json;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace WebView2.DOM
 {
@@ -38,6 +39,7 @@ namespace WebView2.DOM
 		private readonly CoreWebView2 coreWebView;
 		private CancellationTokenSource cts;
 		private readonly AsyncLocal<CancellationTokenSource?> asyncLocalCts = new AsyncLocal<CancellationTokenSource?>();
+		private readonly WebViewThread webViewThread;
 
 		private CancellationToken CancellationToken =>
 			asyncLocalCts.Value?.Token ?? throw new OperationCanceledException();
@@ -54,6 +56,9 @@ namespace WebView2.DOM
 			//enumerator = calls.GetConsumingEnumerable().GetEnumerator();
 			cts = new CancellationTokenSource();
 			this.coreWebView = coreWebView;
+			webViewThread = new WebViewThread(
+				WebViewSynchronizationContext.For(coreWebView),
+				coreWebView.GetSynchronizationContext());
 		}
 
 		internal void CancelRunningThreads()
@@ -69,9 +74,8 @@ namespace WebView2.DOM
 		public void RaiseEvent(string windowId, string eventTargetId, string eventName, string eventId)
 		{
 			Reset(windowId);
-			Task.Run(() =>
+			webViewThread.QueueUserWorkItem(() =>
 			{
-				SynchronizationContext.SetSynchronizationContext(WebViewSynchronizationContext.For(coreWebView));
 				try
 				{
 					asyncLocalCts.Value = cts;
@@ -118,9 +122,8 @@ namespace WebView2.DOM
 
 			_onRun.TryAdd(runId, windowId =>
 			{
-				Task.Run(() =>
+				webViewThread.QueueUserWorkItem(() =>
 				{
-					SynchronizationContext.SetSynchronizationContext(WebViewSynchronizationContext.For(coreWebView));
 					try
 					{
 						asyncLocalCts.Value = cts;
@@ -164,9 +167,8 @@ namespace WebView2.DOM
 			if (Calls(windowId).IsCompleted)
 			{
 				Reset(windowId);
-				Task.Run(() =>
+				webViewThread.QueueUserWorkItem(() =>
 				{
-					SynchronizationContext.SetSynchronizationContext(WebViewSynchronizationContext.For(coreWebView));
 					try
 					{
 						asyncLocalCts.Value = cts;
@@ -203,7 +205,18 @@ namespace WebView2.DOM
 					(p, i) => JsonSerializer.Deserialize(p.GetRawText(), i.ParameterType, coreWebView.Options()))
 					.ToArray<object?>();
 
-				callback.DynamicInvoke(args: final);
+				try
+				{
+					callback.DynamicInvoke(args: final);
+				}
+				catch (TargetInvocationException ex)
+				{
+					ExceptionDispatchInfo
+						.Capture(ex.InnerException!)
+						.Throw();
+
+					throw;
+				}
 			}
 		}
 		#endregion

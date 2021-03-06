@@ -5,6 +5,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 using static WebView2.DOM.HTMLElementTag;
 using static WebView2.DOM.Tests.Global;
 
@@ -101,6 +102,31 @@ namespace WebView2.DOM.Tests
 			});
 		}
 
+		[TestMethod("Exception from callback is handled by the dispatcher")]
+		public async Task ExceptionFromCallbackIsHandledByTheDispatcher()
+		{
+			await wpfSyncContext;
+			await webView.InvokeInBrowserContextAsync(window =>
+			{
+				window.setTimeout(() => throw new MyException(), Duration.Zero);
+			});
+
+			var tcs = new TaskCompletionSource();
+
+			application.DispatcherUnhandledException += x;
+			void x(object s, DispatcherUnhandledExceptionEventArgs e)
+			{
+				application.DispatcherUnhandledException -= x;
+				e.Handled = true;
+				tcs.SetException(e.Exception);
+			}
+
+			await Assert.ThrowsExceptionAsync<MyException>(async () =>
+			{
+				await tcs.Task;
+			});
+		}
+
 		[TestMethod]
 		public async Task CallsUiContext()
 		{
@@ -182,7 +208,7 @@ namespace WebView2.DOM.Tests
 				{
 					return new WeakReference<Document>(window.document);
 				}
-				
+
 				GC.Collect(0, GCCollectionMode.Forced);
 				GC.WaitForPendingFinalizers();
 
@@ -190,7 +216,7 @@ namespace WebView2.DOM.Tests
 
 				var document = window.document;
 				Assert.IsInstanceOfType(document, typeof(HTMLDocument));
-				
+
 				var body = document.body;
 				Assert.IsInstanceOfType(body, typeof(HTMLBodyElement));
 			});
@@ -342,29 +368,6 @@ namespace WebView2.DOM.Tests
 					}
 				}
 			});
-		}
-
-
-
-
-		[TestMethod]
-		public void FileApi()
-		{
-			var blob = new Blob();
-			var file = new File();
-		}
-
-		[TestMethod]
-		public void FontFaceSet()
-		{
-			var set = new FontFaceSet();
-		}
-
-		[TestMethod]
-		public void TypedArrays()
-		{
-			var a1 = new Float32Array();
-			var a2 = new Float64Array();
 		}
 
 		[TestMethod]
