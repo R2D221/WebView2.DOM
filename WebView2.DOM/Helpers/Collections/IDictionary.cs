@@ -6,6 +6,7 @@ namespace WebView2.DOM.Collections
 		System.Collections.Generic.IDictionary<TKey, TValue>,
 		IReadOnlyDictionary<TKey, TValue>,
 		ICollection<KeyValuePair<TKey, TValue>>
+		where TKey : notnull
 	{
 		new System.Collections.Generic.ICollection<TKey> Keys { get; }
 		new System.Collections.Generic.ICollection<TValue> Values { get; }

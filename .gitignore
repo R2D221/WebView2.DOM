@@ -10,3 +10,5 @@
 *.user
 /WebView2.DOM.Tests/bin
 /WebView2.DOM.Tests/obj
+/WebView2.DOM.Tests.NetCore3_1/bin
+/WebView2.DOM.Tests.NetCore3_1/obj

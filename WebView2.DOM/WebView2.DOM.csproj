@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFrameworks>netcoreapp3.1;net5.0-windows</TargetFrameworks>
+    <LangVersion>9.0</LangVersion>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>True</UseWindowsForms>
     <Nullable>enable</Nullable>
@@ -18,6 +19,11 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <WarningsAsErrors>NU1605;nullable</WarningsAsErrors>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include=".NET Core 3.1\IsExternalInit.cs" />
+    <Compile Include=".NET Core 3.1\TaskCompletionSource.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Enums.NET" Version="3.0.3" />
