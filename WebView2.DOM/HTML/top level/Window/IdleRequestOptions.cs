@@ -11,16 +11,29 @@ namespace WebView2.DOM
 	public record IdleRequestOptions
 	{
 		[JsonIgnore]
-		[InitRequired]
+		[InitOnly]
 		public Duration timeout
 		{
 			get => Duration.FromMilliseconds(_timeout);
-			init => _timeout = (uint)value.TotalMilliseconds;
+#if NET5_0_OR_GREATER
+			init
+#else
+			set
+#endif
+				=> _timeout = (uint)value.TotalMilliseconds;
 		}
 
 		[JsonPropertyName(nameof(timeout))]
 		[EditorBrowsable(EditorBrowsableState.Never)]
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		public uint _timeout { get; init; }
+		public uint _timeout
+		{
+			get;
+#if NET5_0_OR_GREATER
+			init;
+#else
+			set;
+#endif
+		}
 	}
 }

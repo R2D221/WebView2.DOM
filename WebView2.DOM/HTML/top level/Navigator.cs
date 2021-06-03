@@ -11,9 +11,8 @@ namespace WebView2.DOM
 
 	public class Navigator : JsObject
 	{
-		protected internal Navigator(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal Navigator(CoreWebView2 coreWebView, string referenceId)
+			: base(coreWebView, referenceId) { }
 
 		[Obsolete("The value of the Navigator.vendorSub property is always the empty string, in any browser.")]
 		public string vendorSub => Get<string>();
@@ -75,9 +74,8 @@ namespace WebView2.DOM
 
 	public class NavigatorUAData : JsObject
 	{
-		protected internal NavigatorUAData(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal NavigatorUAData(CoreWebView2 coreWebView, string referenceId)
+			: base(coreWebView, referenceId) { }
 
 		public IReadOnlyList<NavigatorUABrandVersion> brands => Get<ImmutableList<NavigatorUABrandVersion>>();
 		public bool mobile => Get<bool>();
@@ -87,22 +85,83 @@ namespace WebView2.DOM
 
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/frame/navigator_ua_brand_version.idl
 
-	[InitRequired]
+	[InitOnly]
 	public record NavigatorUABrandVersion
 	{
-		public string brand { get; init; }
-		public string version { get; init; }
+		public string brand
+		{
+			get;
+#if NET5_0_OR_GREATER
+			init;
+#else
+			set;
+#endif
+		}
+
+		public string version
+		{
+			get;
+#if NET5_0_OR_GREATER
+			init;
+#else
+			set;
+#endif
+		}
 	}
 
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/frame/ua_data_values.idl
 
-	[InitRequired]
+	[InitOnly]
 	public record UADataValues
 	{
-		public string platform { get; init; }
-		public string platformVersion { get; init; }
-		public string architecture { get; init; }
-		public string model { get; init; }
-		public string uaFullVersion { get; init; }
+		public string platform
+		{
+			get;
+#if NET5_0_OR_GREATER
+			init;
+#else
+			set;
+#endif
+		}
+
+		public string platformVersion
+		{
+			get;
+#if NET5_0_OR_GREATER
+			init;
+#else
+			set;
+#endif
+		}
+
+		public string architecture
+		{
+			get;
+#if NET5_0_OR_GREATER
+			init;
+#else
+			set;
+#endif
+		}
+
+		public string model
+		{
+			get;
+#if NET5_0_OR_GREATER
+			init;
+#else
+			set;
+#endif
+		}
+
+		public string uaFullVersion
+		{
+			get;
+#if NET5_0_OR_GREATER
+			init;
+#else
+			set;
+#endif
+		}
 	}
 }

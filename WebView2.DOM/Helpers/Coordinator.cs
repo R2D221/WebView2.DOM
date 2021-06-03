@@ -1,5 +1,4 @@
 ﻿using Microsoft.Web.WebView2.Core;
-using SmartAnalyzers.CSharpExtensions.Annotations;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -15,9 +14,9 @@ namespace WebView2.DOM
 {
 	internal record CoordinatorCall
 	{
-		[InitRequired] public string referenceId { get; init; }
-		[InitRequired] public string memberType { get; init; }
-		[InitRequired] public string memberName { get; init; }
+		/*[InitRequired]*/ public string referenceId { get; init; } = "";
+		/*[InitRequired]*/ public string memberType { get; init; } = "";
+		/*[InitRequired]*/ public string memberName { get; init; } = "";
 		public object?[]? parameters { get; init; }
 	}
 

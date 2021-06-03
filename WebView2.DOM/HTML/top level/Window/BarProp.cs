@@ -1,5 +1,4 @@
 ﻿using Microsoft.Web.WebView2.Core;
-using SmartAnalyzers.CSharpExtensions.Annotations;
 
 namespace WebView2.DOM
 {
@@ -7,9 +6,8 @@ namespace WebView2.DOM
 
 	public class BarProp : JsObject
 	{
-		protected internal BarProp(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal BarProp(CoreWebView2 coreWebView, string referenceId)
+			: base(coreWebView, referenceId) { }
 
 		public bool visible => Get<bool>();
 	}

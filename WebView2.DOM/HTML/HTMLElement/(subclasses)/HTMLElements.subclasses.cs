@@ -495,9 +495,19 @@ namespace WebView2.DOM
 		public string integrity { get => Get<string>(); set => Set(value); }
 	}
 
+	[InitOnly]
 	public record AssignedNodesOptions
 	{
-		public bool flatten { get; init; }
+		public bool flatten
+		{
+			get;
+#if NET5_0_OR_GREATER
+			init;
+#else
+			set;
+#endif
+		}
+			= false;
 	}
 
 	public class HTMLSlotElement : HTMLElement
@@ -521,9 +531,44 @@ namespace WebView2.DOM
 
 	public record SrcSetItem
 	{
-		[InitRequired] public Uri src { get; init; }
-		public int? width { get; init; }
-		public double? density { get; init; }
+		[InitOnly]
+		public Uri src
+		{
+			get;
+#if NET5_0_OR_GREATER
+			init;
+#else
+			set;
+#endif
+		}
+
+#if !NET5_0_OR_GREATER
+		[InitOnlyOptional]
+#endif
+		public int? width
+		{
+			get;
+#if NET5_0_OR_GREATER
+			init;
+#else
+			set;
+#endif
+		}
+			= default;
+
+#if !NET5_0_OR_GREATER
+		[InitOnlyOptional]
+#endif
+		public double? density
+		{
+			get;
+#if NET5_0_OR_GREATER
+			init;
+#else
+			set;
+#endif
+		}
+			= default;
 
 		public static IReadOnlyList<SrcSetItem> Parse(string value) =>
 			value.Split(',')

@@ -1,5 +1,4 @@
-﻿using SmartAnalyzers.CSharpExtensions.Annotations;
-using System;
+﻿using System;
 using System.Linq;
 
 namespace WebView2.DOM
@@ -8,10 +7,10 @@ namespace WebView2.DOM
 
 	internal class ErrorWrapper
 	{
-		[InitOnly] public bool isWrappedException { get; set; }
-		[InitOnly] public string constructor_name { get; set; }
-		[InitOnly] public string name { get; set; }
-		[InitOnly] public string message { get; set; }
+		public bool isWrappedException { get; init; }
+		public string constructor_name { get; init; } = "";
+		public string name { get; init; } = "";
+		public string message { get; init; } = "";
 
 		public JsException GetException() =>
 			constructor_name switch
@@ -168,11 +167,11 @@ namespace WebView2.DOM
 	}
 
 	public class NotSupportedError : DOMException
-		{
-			public NotSupportedError() { }
-			public NotSupportedError(string message) : base(message) { }
-			public NotSupportedError(string message, Exception innerException) : base(message, innerException) { }
-		}
+	{
+		public NotSupportedError() { }
+		public NotSupportedError(string message) : base(message) { }
+		public NotSupportedError(string message, Exception innerException) : base(message, innerException) { }
+	}
 
 	public class InUseAttributeError : DOMException
 	{

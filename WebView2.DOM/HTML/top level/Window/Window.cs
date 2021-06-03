@@ -1,5 +1,6 @@
 ﻿using Microsoft.Web.WebView2.Core;
 using NodaTime;
+using SmartAnalyzers.CSharpExtensions.Annotations;
 using System;
 using System.Collections.Generic;
 
@@ -11,7 +12,18 @@ namespace WebView2.DOM
 
 	public record WindowPostMessageOptions : PostMessageOptions
 	{
-		public string targetOrigin { get; init; } = "/";
+#if !NET5_0_OR_GREATER
+		[InitOnlyOptional]
+#endif
+		public string targetOrigin
+		{
+			get;
+#if NET5_0_OR_GREATER
+			init;
+#else
+			set;
+#endif
+		} = "/";
 	}
 
 	public partial class Window : EventTarget

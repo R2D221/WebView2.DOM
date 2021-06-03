@@ -1,4 +1,6 @@
-﻿namespace WebView2.DOM
+﻿using SmartAnalyzers.CSharpExtensions.Annotations;
+
+namespace WebView2.DOM
 {
 	public enum ScrollBehavior { auto, smooth }
 
@@ -6,18 +8,80 @@
 
 	public record ScrollOptions
 	{
-		public ScrollBehavior behavior { get; init; }
+#if !NET5_0_OR_GREATER
+		[InitOnlyOptional]
+#endif
+		public ScrollBehavior behavior
+		{
+			get;
+#if NET5_0_OR_GREATER
+			init;
+#else
+			set;
+#endif
+		}
+			= ScrollBehavior.auto;
 	}
 
 	public record ScrollIntoViewOptions : ScrollOptions
 	{
-		public ScrollLogicalPosition block { get; init; } = ScrollLogicalPosition.start;
-		public ScrollLogicalPosition inline { get; init; } = ScrollLogicalPosition.nearest;
+#if !NET5_0_OR_GREATER
+		[InitOnlyOptional]
+#endif
+		public ScrollLogicalPosition block
+		{
+			get;
+#if NET5_0_OR_GREATER
+			init;
+#else
+			set;
+#endif
+		}
+			= ScrollLogicalPosition.start;
+
+#if !NET5_0_OR_GREATER
+		[InitOnlyOptional]
+#endif
+		public ScrollLogicalPosition inline
+		{
+			get;
+#if NET5_0_OR_GREATER
+			init;
+#else
+			set;
+#endif
+		}
+			= ScrollLogicalPosition.nearest;
 	}
 
 	public record ScrollToOptions : ScrollOptions
 	{
-		public double left { get; init; }
-		public double top { get; init; }
+#if !NET5_0_OR_GREATER
+		[InitOnlyOptional]
+#endif
+		public double left
+		{
+			get;
+#if NET5_0_OR_GREATER
+			init;
+#else
+			set;
+#endif
+		}
+			= 0;
+
+#if !NET5_0_OR_GREATER
+		[InitOnlyOptional]
+#endif
+		public double top
+		{
+			get;
+#if NET5_0_OR_GREATER
+			init;
+#else
+			set;
+#endif
+		}
+			= 0;
 	}
 }

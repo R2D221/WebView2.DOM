@@ -1,4 +1,5 @@
 ﻿using Microsoft.Web.WebView2.Core;
+using SmartAnalyzers.CSharpExtensions.Annotations;
 using System;
 using System.Collections.Generic;
 
@@ -9,8 +10,33 @@ namespace WebView2.DOM
 
 	public record PostMessageOptions
 	{
-		public IReadOnlyList<Transferable> transfer { get; init; } = Array.Empty<Transferable>();
-		public bool includeUserActivation { get; init; }
+#if !NET5_0_OR_GREATER
+		[InitOnlyOptional]
+#endif
+		public IReadOnlyList<Transferable> transfer
+		{
+			get;
+#if NET5_0_OR_GREATER
+			init;
+#else
+			set;
+#endif
+		}
+			= Array.Empty<Transferable>();
+
+#if !NET5_0_OR_GREATER
+		[InitOnlyOptional]
+#endif
+		public bool includeUserActivation
+		{
+			get;
+#if NET5_0_OR_GREATER
+			init;
+#else
+			set;
+#endif
+		}
+			= false;
 	}
 
 	[Obsolete("not tested")]

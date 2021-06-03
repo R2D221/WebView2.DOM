@@ -1,5 +1,4 @@
 ﻿using Microsoft.Web.WebView2.Core;
-using SmartAnalyzers.CSharpExtensions.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -40,10 +39,10 @@ namespace WebView2.DOM
 		public void Reset() => throw new NotSupportedException();
 	}
 
-	[InitRequired]
+	//[InitRequired]
 	internal sealed record IteratorItem<T>
 	{
-		public T value { get; init; }
+		public T value { get; init; } = default!;
 		public bool done { get; init; }
 	}
 }
