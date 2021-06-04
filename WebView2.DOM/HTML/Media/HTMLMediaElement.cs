@@ -45,7 +45,7 @@ namespace WebView2.DOM
 		public CrossOrigin? crossOrigin { get => Get<CrossOrigin?>(); set => Set(value); }
 		public NetworkState networkState => Get<NetworkState>();
 		public Preload preload { get => Get<Preload>(); set => Set(value); }
-		public ImmutableList<Range<Duration>> buffered => Get<TimeRanges>().ToImmutableList();
+		public ImmutableArray<Range<Duration>> buffered => Get<TimeRanges>().ToImmutableArray();
 
 		public void load() => Method().Invoke();
 		public CanPlayTypeResult canPlayType(string type) => Method<CanPlayTypeResult>().Invoke(type);
@@ -66,8 +66,8 @@ namespace WebView2.DOM
 		public bool paused => Get<bool>();
 		public double defaultPlaybackRate { get => Get<double>(); set => Set(value); }
 		public double playbackRate { get => Get<double>(); set => Set(value); }
-		public ImmutableList<Range<Duration>> played => Get<TimeRanges>().ToImmutableList();
-		public ImmutableList<Range<Duration>> seekable => Get<TimeRanges>().ToImmutableList();
+		public ImmutableArray<Range<Duration>> played => Get<TimeRanges>().ToImmutableArray();
+		public ImmutableArray<Range<Duration>> seekable => Get<TimeRanges>().ToImmutableArray();
 		public bool ended => Get<bool>();
 		public bool autoplay { get => Get<bool>(); set => Set(value); }
 		public bool loop { get => Get<bool>(); set => Set(value); }

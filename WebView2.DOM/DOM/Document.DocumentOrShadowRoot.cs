@@ -14,11 +14,11 @@ namespace WebView2.DOM
 		public Element? fullscreenElement => Get<Element?>();
 		public IReadOnlyList<CSSStyleSheet> adoptedStyleSheets
 		{
-			get => Get<ImmutableList<CSSStyleSheet>>();
+			get => Get<ImmutableArray<CSSStyleSheet>>();
 			set => Set(value);
 		}
 		public Element? elementFromPoint(double x, double y) => Method<Element?>().Invoke(x, y);
-		public IReadOnlyList<Element> elementsFromPoint(double x, double y) => Method<ImmutableList<Element>>().Invoke(x, y);
+		public IReadOnlyList<Element> elementsFromPoint(double x, double y) => Method<ImmutableArray<Element>>().Invoke(x, y);
 		public Selection? getSelection() => Method<Selection?>().Invoke();
 	}
 }

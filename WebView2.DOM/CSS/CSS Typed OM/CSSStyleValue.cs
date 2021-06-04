@@ -19,6 +19,6 @@ namespace WebView2.DOM
 		public static CSSStyleValue parse(string property, string cssText) =>
 			@static.Method<CSSStyleValue>().Invoke(property, cssText);
 		public static IReadOnlyList<CSSStyleValue> parseAll(string property, string cssText) =>
-			@static.Method<ImmutableList<CSSStyleValue>>().Invoke(property, cssText);
+			@static.Method<ImmutableArray<CSSStyleValue>>().Invoke(property, cssText);
 	}
 }

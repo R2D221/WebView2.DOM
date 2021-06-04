@@ -31,14 +31,14 @@ namespace WebView2.DOM
 				this.Select((item, index) => (item, index: (uint)index))
 				.Reverse()
 				.Where(x => match(x.item))
-				.ToImmutableList();
+				.ToImmutableArray();
 
 			foreach (var (item, index) in itemsToRemove)
 			{
 				remove(index);
 			}
 
-			return itemsToRemove.Count;
+			return itemsToRemove.Length;
 		}
 
 		public IEnumerator<DataTransferItem> GetEnumerator() =>

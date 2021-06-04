@@ -8,9 +8,8 @@ namespace WebView2.DOM
 
 	public class InputEvent : UIEvent
 	{
-		protected internal InputEvent(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal InputEvent(CoreWebView2 coreWebView, string referenceId)
+			: base(coreWebView, referenceId) { }
 
 		public string? data => Get<string?>();
 		public bool isComposing => Get<bool>();
@@ -18,6 +17,6 @@ namespace WebView2.DOM
 		// Input Events Level 1
 		public string inputType => Get<string>();
 		public DataTransfer? dataTransfer => Get<DataTransfer?>();
-		public IReadOnlyList<StaticRange> getTargetRanges() => Method<ImmutableList<StaticRange>>().Invoke();
+		public IReadOnlyList<StaticRange> getTargetRanges() => Method<ImmutableArray<StaticRange>>().Invoke();
 	}
 }

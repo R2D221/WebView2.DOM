@@ -20,7 +20,7 @@ namespace WebView2.DOM
 		public int Count => Get<int>("size");
 
 		public IReadOnlyList<CSSStyleValue> this[string property] =>
-			Method<ImmutableList<CSSStyleValue>>("getAll").Invoke(property);
+			Method<ImmutableArray<CSSStyleValue>>("getAll").Invoke(property);
 
 		public IEnumerable<string> Keys =>
 			this.Select(x => x.Key);

@@ -20,7 +20,7 @@ namespace WebView2.DOM
 
 		public void setDragImage(Element image, int x, int y) => Method().Invoke(image, x, y);
 
-		public IReadOnlyList<string> types => Get<ImmutableList<string>>();
+		public IReadOnlyList<string> types => Get<ImmutableArray<string>>();
 		public string getData(string format) => Method<string>().Invoke(format);
 		public void setData(string format, string data) => Method().Invoke(format, data);
 		public void clearData() => Method().Invoke();

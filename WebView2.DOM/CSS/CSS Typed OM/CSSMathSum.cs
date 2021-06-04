@@ -9,14 +9,13 @@ namespace WebView2.DOM
 
 	public class CSSMathSum : CSSMathValue
 	{
-		protected internal CSSMathSum(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal CSSMathSum(CoreWebView2 coreWebView, string referenceId)
+			: base(coreWebView, referenceId) { }
 
 		public CSSMathSum(params CSSNumericValue[] values)
 			: this(window.Instance.coreWebView, System.Guid.NewGuid().ToString()) =>
 			Construct(args: values.ToArray<object?>());
 
-		public IReadOnlyList<CSSNumericValue> values => Get<ImmutableList<CSSNumericValue>>();
+		public IReadOnlyList<CSSNumericValue> values => Get<ImmutableArray<CSSNumericValue>>();
 	}
 }

@@ -10,18 +10,17 @@ namespace WebView2.DOM
 
 	public class TimeRanges : JsObject
 	{
-		protected internal TimeRanges(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal TimeRanges(CoreWebView2 coreWebView, string referenceId)
+			: base(coreWebView, referenceId) { }
 
 		public uint length => Get<uint>();
 		public double start(uint index) => Method<double>().Invoke(index);
 		public double end(uint index) => Method<double>().Invoke(index);
 
-		public ImmutableList<Range<Duration>> ToImmutableList() =>
+		public ImmutableArray<Range<Duration>> ToImmutableArray() =>
 			Enumerable.Range(0, (int)length)
 			.Select(i => (uint)i)
 			.Select(i => new Range<Duration>(Duration.FromSeconds(start(i)), Duration.FromSeconds(end(i))))
-			.ToImmutableList();
+			.ToImmutableArray();
 	}
 }

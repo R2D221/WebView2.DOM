@@ -8,13 +8,12 @@ namespace WebView2.DOM
 
 	public class TouchEvent : UIEvent
 	{
-		protected internal TouchEvent(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal TouchEvent(CoreWebView2 coreWebView, string referenceId)
+			: base(coreWebView, referenceId) { }
 
-		public IReadOnlyList<Touch> touches => Get<ImmutableList<Touch>>();
-		public IReadOnlyList<Touch> targetTouches => Get<ImmutableList<Touch>>();
-		public IReadOnlyList<Touch> changedTouches => Get<ImmutableList<Touch>>();
+		public IReadOnlyList<Touch> touches => Get<ImmutableArray<Touch>>();
+		public IReadOnlyList<Touch> targetTouches => Get<ImmutableArray<Touch>>();
+		public IReadOnlyList<Touch> changedTouches => Get<ImmutableArray<Touch>>();
 		public bool altKey => Get<bool>();
 		public bool metaKey => Get<bool>();
 		public bool ctrlKey => Get<bool>();

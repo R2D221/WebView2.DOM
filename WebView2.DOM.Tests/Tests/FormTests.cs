@@ -140,9 +140,9 @@ namespace WebView2.DOM.Tests
 					@null/*	*/=> Assert.IsNull(@null)
 					);
 
-				var list = fd.ToImmutableList();
+				var list = fd.ToImmutableArray();
 
-				Assert.AreEqual(3, list.Count);
+				Assert.AreEqual(3, list.Length);
 
 				Assert.AreEqual("one", list[0].Key);
 				Assert.AreEqual("1.1", list[0].Value.Value);
