@@ -1,4 +1,5 @@
-﻿using Microsoft.Web.WebView2.Core;
+﻿using deniszykov.TypeConversion;
+using Microsoft.Web.WebView2.Core;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -10,6 +11,8 @@ namespace WebView2.DOM
 {
 	public sealed class References
 	{
+		private static readonly TypeConversionProvider typeConversionProvider = new();
+
 		private static readonly ConcurrentDictionary<string, TaskCompletionSource<string>>
 			tcsRefs = new();
 		
@@ -81,15 +84,13 @@ namespace WebView2.DOM
 		}
 
 		#region Called from JavaScript
-		public void Add(string id, string type)
-		{
+		public void Add(string id, string type) =>
 			objRefs.AddOrUpdate(id,
 				_ => types.TryGetValue(type, out var constructor)
 					? (constructor, new WeakReference<JsObject>(constructor(id)))
 					: throw new InvalidOperationException($"JavaScript type {type} not found in C#"),
 				(_, __) => throw new InvalidOperationException()
 				);
-		}
 
 		public void AddHTMLInputElement(string id, string type) =>
 			objRefs.AddOrUpdate(id,
@@ -101,12 +102,11 @@ namespace WebView2.DOM
 
 		public void Remove(string id)
 		{
-			objRefs.TryRemove(id, out _);
-			events.TryRemove(id, out _);
+			_ = objRefs.TryRemove(id, out _);
+			_ = events.TryRemove(id, out _);
 		}
 
-		public void AddTask(string id)
-		{
+		public void AddTask(string id) =>
 			taskRefs.AddOrUpdate(id,
 				_ =>
 					tcsRefs.AddOrUpdate(id,
@@ -115,18 +115,17 @@ namespace WebView2.DOM
 					).Task,
 				(_, __) => throw new InvalidOperationException()
 				);
-		}
 
 		public void RemoveCallback(string id)
 		{
-			callbackRefs.TryRemove(id, out _);
+			_ = callbackRefs.TryRemove(id, out _);
 		}
 		#endregion
 
 		#region Called from C#
 		internal void Add(JsObject jsObject)
 		{
-			objRefs.AddOrUpdate(jsObject.referenceId,
+			_ = objRefs.AddOrUpdate(jsObject.referenceId,
 				(types[jsObject.GetType().Name], new WeakReference<JsObject>(jsObject)),
 				(_, __) => throw new InvalidOperationException()
 				);
@@ -145,11 +144,8 @@ namespace WebView2.DOM
 				@ref.SetTarget(obj);
 			}
 
-			return (T)TypeConvert.Convert
-			(
-				value: obj,
-				toType: typeof(T)
-			);
+			//return (T)obj;
+			return (T)typeConversionProvider.Convert(fromType: obj.GetType(), toType: typeof(T), fromValue: obj)!;
 		}
 
 		internal static T Get<T>(string id) where T : JsObject
@@ -181,7 +177,7 @@ namespace WebView2.DOM
 
 		internal static void Update(JsObject target)
 		{
-			objRefs.AddOrUpdate(target.referenceId,
+			_ = objRefs.AddOrUpdate(target.referenceId,
 				_ => throw new ObjectDisposedException(target.referenceId),
 				(_, x) => (x.constructor, new WeakReference<JsObject>(target))
 				);
@@ -190,7 +186,7 @@ namespace WebView2.DOM
 		internal static string AddCallback(Delegate callback)
 		{
 			var id = System.Guid.NewGuid().ToString();
-			callbackRefs.AddOrUpdate(id,
+			_ = callbackRefs.AddOrUpdate(id,
 				_ => callback,
 				(_, __) => throw new InvalidOperationException()
 				);

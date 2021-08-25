@@ -26,13 +26,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Enums.NET" Version="3.0.3" />
+    <PackageReference Include="deniszykov.TypeConversion" Version="3.0.1" />
+    <PackageReference Include="Enums.NET" Version="4.0.0" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.705.50" />
     <PackageReference Include="NodaTime" Version="3.0.5" />
     <PackageReference Include="Range" Version="3.0.6" />
-    <PackageReference Include="SmartAnalyzers.CSharpExtensions.Annotations" Version="3.3.0" />
-    <PackageReference Include="System.Text.Json" Version="5.0.1" />
-    <PackageReference Include="TypeConvert" Version="2.1.6" />
+    <PackageReference Include="SmartAnalyzers.CSharpExtensions.Annotations" Version="3.10.0" />
+    <PackageReference Include="System.Text.Json" Version="5.0.2" />
   </ItemGroup>
 
 </Project>
