@@ -180,7 +180,11 @@ namespace WebView2.DOM.Microsyntaxes
 
 		public IsoWeek(int weekYear, int week)
 		{
-			WeekYearRules.Iso.GetLocalDate(weekYear, week, IsoDayOfWeek.Monday);
+			// We call IWeekYearRule.GetLocalDate to leverage
+			// NodaTime's validations to assert that weekYear
+			// and week do indeed refer to a valid ISO week year.
+			_ = WeekYearRules.Iso.GetLocalDate(weekYear, week, IsoDayOfWeek.Monday);
+
 			(WeekYear, Week) = (weekYear, week);
 		}
 

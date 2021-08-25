@@ -74,7 +74,7 @@ namespace WebView2.DOM.Tests
 		{
 			await wpfSyncContext;
 
-			await Assert.ThrowsExceptionAsync<MyException>(async () =>
+			_ = await Assert.ThrowsExceptionAsync<MyException>(async () =>
 			{
 				await webView.InvokeInBrowserContextAsync(window =>
 				{
@@ -92,7 +92,7 @@ namespace WebView2.DOM.Tests
 		{
 			await wpfSyncContext;
 
-			await Assert.ThrowsExceptionAsync<MyException>(async () =>
+			_ = await Assert.ThrowsExceptionAsync<MyException>(async () =>
 			{
 				await webView.InvokeInBrowserContextAsync(async window =>
 				{
@@ -108,7 +108,7 @@ namespace WebView2.DOM.Tests
 			await wpfSyncContext;
 			await webView.InvokeInBrowserContextAsync(window =>
 			{
-				window.setTimeout(() => throw new MyException(), Duration.Zero);
+				_ = window.setTimeout(() => throw new MyException(), Duration.Zero);
 			});
 
 			var tcs = new TaskCompletionSource();
@@ -121,7 +121,7 @@ namespace WebView2.DOM.Tests
 				tcs.SetException(e.Exception);
 			}
 
-			await Assert.ThrowsExceptionAsync<MyException>(async () =>
+			_ = await Assert.ThrowsExceptionAsync<MyException>(async () =>
 			{
 				await tcs.Task;
 			});
@@ -134,7 +134,7 @@ namespace WebView2.DOM.Tests
 
 			await webView.InvokeInBrowserContextAsync(async window =>
 			{
-				Assert.ThrowsException<InvalidOperationException>(() =>
+				_ = Assert.ThrowsException<InvalidOperationException>(() =>
 				{
 					var width = mainWindow.Width;
 				});
@@ -166,7 +166,7 @@ namespace WebView2.DOM.Tests
 
 			await webView.InvokeInBrowserContextAsync(async window =>
 			{
-				await Assert.ThrowsExceptionAsync<InvalidOperationException>(async () =>
+				_ = await Assert.ThrowsExceptionAsync<InvalidOperationException>(async () =>
 				{
 					await Task.Yield();
 					var width = mainWindow.Width;
@@ -232,7 +232,7 @@ namespace WebView2.DOM.Tests
 
 				await webView.InvokeInWpfContextAsync(async () =>
 				{
-					await webView.CoreWebView2.CallDevToolsProtocolMethodAsync("HeapProfiler.collectGarbage", JsonSerializer.Serialize(new { }));
+					_ = await webView.CoreWebView2.CallDevToolsProtocolMethodAsync("HeapProfiler.collectGarbage", JsonSerializer.Serialize(new { }));
 				});
 
 				Assert.AreEqual(window.document, myDiv.ownerDocument);
@@ -265,7 +265,7 @@ namespace WebView2.DOM.Tests
 				var document = window.document;
 
 				var myDiv = document.createHTMLElement(div);
-				document.body.appendChild(myDiv);
+				_ = document.body.appendChild(myDiv);
 
 				myDiv.style.backgroundColor = "red";
 				myDiv.style.width = "10px";
@@ -314,7 +314,7 @@ namespace WebView2.DOM.Tests
 				Assert.IsInstanceOfType(styleSheet.cssRules, typeof(CSSRuleList));
 			});
 
-			Assert.ThrowsException<InvalidOperationException>(() =>
+			_ = Assert.ThrowsException<InvalidOperationException>(() =>
 			{
 				// You can't construct a new JS object
 				// if you're not in the browser context

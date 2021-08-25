@@ -119,7 +119,7 @@ namespace WebView2.DOM
 		{
 			var runId = System.Guid.NewGuid().ToString();
 
-			_onRun.TryAdd(runId, windowId =>
+			_ = _onRun.TryAdd(runId, windowId =>
 			{
 				webViewThread.QueueUserWorkItem(() =>
 				{
@@ -206,7 +206,7 @@ namespace WebView2.DOM
 
 				try
 				{
-					callback.DynamicInvoke(args: final);
+					_ = callback.DynamicInvoke(args: final);
 				}
 				catch (TargetInvocationException ex)
 				{
@@ -246,12 +246,12 @@ namespace WebView2.DOM
 				_ => new BlockingCollection<object>(),
 				(_, __) => new BlockingCollection<object>());
 			//calls = new BlockingCollection<string>();
-			enumeratorDict.AddOrUpdate(windowId,
+			_ = enumeratorDict.AddOrUpdate(windowId,
 				_ => calls.GetConsumingEnumerable().GetEnumerator(),
 				(_, __) => calls.GetConsumingEnumerable().GetEnumerator());
 			//enumerator = calls.GetConsumingEnumerable().GetEnumerator();
 
-			objectsDict.GetOrAdd(windowId,
+			_ = objectsDict.GetOrAdd(windowId,
 				_ => new BlockingCollection<object?>());
 
 			cts = new CancellationTokenSource();

@@ -24,7 +24,7 @@ namespace WebView2.DOM
 		{
 			try
 			{
-				Method("deleteMedium").Invoke(medium);
+				_ = Method("deleteMedium").Invoke(medium);
 				return true;
 			}
 			catch (NotFoundError)
@@ -49,7 +49,7 @@ namespace WebView2.DOM
 			}
 			else
 			{
-				Remove(medium);
+				_ = Remove(medium);
 				return false;
 			}
 		}

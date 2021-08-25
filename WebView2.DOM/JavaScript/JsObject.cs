@@ -34,7 +34,7 @@ namespace WebView2.DOM
 				{
 					try
 					{
-						await coreWebView.ExecuteScriptAsync($@"
+						_ = await coreWebView.ExecuteScriptAsync($@"
 							(() => {{
 								WebView2DOM.RemoveId('{referenceId}');
 							}})()

@@ -15,7 +15,7 @@ namespace WebView2.DOM
 			where T : Event
 		{
 			var events = References.events.GetOrAdd(referenceId, _ => new());
-			events.AddOrUpdate(@event,
+			_ = events.AddOrUpdate(@event,
 				addValueFactory: _ =>
 				{
 					coreWebView.Coordinator().Call(new()
@@ -35,12 +35,12 @@ namespace WebView2.DOM
 		internal void RaiseEvent(string @event, Event args)
 		{
 			var events = References.events.GetOrAdd(referenceId, _ => new());
-			events.TryGetValue(@event, out var value);
+			_ = events.TryGetValue(@event, out var value);
 			if (value != null)
 			{
 				try
 				{
-					value.DynamicInvoke(this, args);
+					_ = value.DynamicInvoke(this, args);
 				}
 				catch (TargetInvocationException ex)
 				{
@@ -57,7 +57,7 @@ namespace WebView2.DOM
 			where T : Event
 		{
 			var events = References.events.GetOrAdd(referenceId, _ => new());
-			events.AddOrUpdate(@event,
+			_ = events.AddOrUpdate(@event,
 				addValueFactory: _ =>
 				{
 					return default(EventHandler<T>?);

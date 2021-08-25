@@ -56,7 +56,7 @@ namespace WebView2.DOM.Sample
 				currentTime_span.innerText = GetCurrentDateTime();
 				fps.innerText = $"{calculateFps(timestamp)}";
 
-				window.requestAnimationFrame(callback);
+				_ = window.requestAnimationFrame(callback);
 			}
 		}
 
@@ -69,7 +69,7 @@ namespace WebView2.DOM.Sample
 		{
 			await webView.InvokeInWpfContextAsync(() =>
 			{
-				MessageBox.Show("Hello! You invoked MessageBox.Show()");
+				_ = MessageBox.Show("Hello! You invoked MessageBox.Show()");
 			});
 		}
 
@@ -86,7 +86,7 @@ namespace WebView2.DOM.Sample
 		{
 			while (timestamps.TryPeek(out var first) && first <= timestamp - Duration.FromSeconds(1))
 			{
-				timestamps.Dequeue();
+				_ = timestamps.Dequeue();
 			}
 
 			timestamps.Enqueue(timestamp);

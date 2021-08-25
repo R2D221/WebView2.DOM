@@ -46,9 +46,9 @@ namespace WebView2.DOM.Tests
 					webView.NavigateToString("<html></html>");
 				};
 				mainWindow.Show();
-				application.Run();
+				_ = application.Run();
 			});
-			await tcs.Task;
+			_ = await tcs.Task;
 		}
 
 		[AssemblyCleanup]

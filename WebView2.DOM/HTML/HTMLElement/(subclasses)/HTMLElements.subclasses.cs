@@ -128,7 +128,9 @@ namespace WebView2.DOM
 		public event EventHandler<Event/*	*/> onbeforeprint/*	*/{ add => AddEvent(value); remove => RemoveEvent(value); }
 		public event EventHandler<HashChangeEvent/*	*/> onhashchange/*	*/{ add => AddEvent(value); remove => RemoveEvent(value); }
 		public event EventHandler<Event/*	*/> onlanguagechange/*	*/{ add => AddEvent(value); remove => RemoveEvent(value); }
+		[Obsolete("not tested")]
 		public event EventHandler<MessageEvent/*	*/> onmessage/*	*/{ add => AddEvent(value); remove => RemoveEvent(value); }
+		[Obsolete("not tested")]
 		public event EventHandler<MessageEvent/*	*/> onmessageerror/*	*/{ add => AddEvent(value); remove => RemoveEvent(value); }
 		public event EventHandler<Event/*	*/> onoffline/*	*/{ add => AddEvent(value); remove => RemoveEvent(value); }
 		public event EventHandler<Event/*	*/> ononline/*	*/{ add => AddEvent(value); remove => RemoveEvent(value); }

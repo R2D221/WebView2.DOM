@@ -1,5 +1,4 @@
 ﻿using Microsoft.Web.WebView2.Core;
-using System;
 using System.Threading.Tasks;
 
 namespace WebView2.DOM
@@ -23,7 +22,7 @@ namespace WebView2.DOM
 				coreWebView.Coordinator().CancelRunningThreads();
 			};
 
-			await coreWebView.AddScriptToExecuteOnDocumentCreatedAsync($@"
+			_ = await coreWebView.AddScriptToExecuteOnDocumentCreatedAsync($@"
 				WebView2DOM = (() =>
 				{{
 					const Guid = () => window.chrome.webview.hostObjects.sync.Guid;
