@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebView2.DOM.Sample", "WebV
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebView2.DOM.Tests", "WebView2.DOM.Tests\WebView2.DOM.Tests.csproj", "{BAA1779D-06D3-49EE-97EF-018E8400C205}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebView2.DOM.Tests.NetCore3_1", "WebView2.DOM.Tests.NetCore3_1\WebView2.DOM.Tests.NetCore3_1.csproj", "{5D40AAE4-6553-4EE4-AFD4-16EC137F1153}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebView2.DOM.Tests.NetCore3_1", "WebView2.DOM.Tests.NetCore3_1\WebView2.DOM.Tests.NetCore3_1.csproj", "{5D40AAE4-6553-4EE4-AFD4-16EC137F1153}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

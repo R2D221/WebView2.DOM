@@ -117,7 +117,7 @@ namespace WebView2.DOM
 
 		public void SyncContextPost(SendOrPostCallback d, object? state)
 		{
-			var runId = System.Guid.NewGuid().ToString();
+			var runId = Guid.NewGuid().ToString();
 
 			_ = _onRun.TryAdd(runId, windowId =>
 			{
@@ -140,8 +140,9 @@ namespace WebView2.DOM
 
 			_ = coreWebView.ExecuteScriptAsync($@"
 				(() => {{
-					const Coordinator = () => window.chrome.webview.hostObjects.sync.Coordinator;
-					Coordinator().{nameof(OnRun)}(WebView2DOM.GetId(window), '{runId}');
+					Coordinator = GetCoordinator();
+
+					Coordinator.{nameof(OnRun)}(WebView2DOM.GetId(window), '{runId}');
 					WebView2DOM.EventLoop();
 				}})()
 			");
@@ -335,6 +336,20 @@ namespace WebView2.DOM
 				throw new InvalidOperationException("The calling thread cannot access this object because a different thread owns it.");
 			}
 		}
+		#endregion
+
+		#region Called from JavaScript: References
+
+		public void References_Add(string id, string type) => coreWebView.References().Add(id, type);
+
+		public void References_AddHTMLInputElement(string id, string type) => coreWebView.References().AddHTMLInputElement(id, type);
+
+		public void References_Remove(string id) => coreWebView.References().Remove(id);
+
+		public void References_AddTask(string id) => coreWebView.References().AddTask(id);
+
+		public void References_RemoveCallback(string id) => coreWebView.References().RemoveCallback(id);
+
 		#endregion
 	}
 }

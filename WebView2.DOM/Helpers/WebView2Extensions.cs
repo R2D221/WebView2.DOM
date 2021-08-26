@@ -41,7 +41,7 @@ namespace WebView2.DOM
 
 		public sealed class WinFormsEvents
 		{
-			private Microsoft.Web.WebView2.WinForms.WebView2 webView;
+			private readonly Microsoft.Web.WebView2.WinForms.WebView2 webView;
 
 			public WinFormsEvents(Microsoft.Web.WebView2.WinForms.WebView2 webView)
 			{
@@ -75,7 +75,7 @@ namespace WebView2.DOM
 
 		public sealed class WpfEvents
 		{
-			private Microsoft.Web.WebView2.Wpf.WebView2 webView;
+			private readonly Microsoft.Web.WebView2.Wpf.WebView2 webView;
 
 			public WpfEvents(Microsoft.Web.WebView2.Wpf.WebView2 webView)
 			{
@@ -415,10 +415,5 @@ namespace WebView2.DOM
 				coreWebView.Coordinator().SyncContextPost(d, state);
 			}
 		}
-	}
-
-	public sealed class Guid
-	{
-		public string NewGuid() => System.Guid.NewGuid().ToString();
 	}
 }

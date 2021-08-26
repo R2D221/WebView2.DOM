@@ -13,8 +13,6 @@ namespace WebView2.DOM
 
 		public static async Task InitAsync(CoreWebView2 coreWebView)
 		{
-			coreWebView.AddHostObjectToScript("Guid", new Guid());
-			coreWebView.AddHostObjectToScript("References", coreWebView.References());
 			coreWebView.AddHostObjectToScript("Coordinator", coreWebView.Coordinator());
 
 			coreWebView.ContentLoading += (_, __) =>
@@ -23,22 +21,39 @@ namespace WebView2.DOM
 			};
 
 			_ = await coreWebView.AddScriptToExecuteOnDocumentCreatedAsync($@"
+
+				const GetCoordinator = () => window.chrome.webview.hostObjects.sync.Coordinator;
+
+				Guid = (() =>
+				{{
+					const x = {{}};
+
+					x.NewGuid = function()
+					{{
+						return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {{  
+							var r = Math.random()*16|0, v = c === 'x' ? r : (r&0x3|0x8);  
+							return v.toString(16);  
+						}});
+					}};
+
+					return x;
+				}})();
+
+				Coordinator = GetCoordinator();
+
 				WebView2DOM = (() =>
 				{{
-					const Guid = () => window.chrome.webview.hostObjects.sync.Guid;
-					const References = () => window.chrome.webview.hostObjects.sync.References;
-					const Coordinator = () => window.chrome.webview.hostObjects.sync.Coordinator;
 
 					const objToId = new WeakMap();
 					const idToObj = {{}};
 					const registry = new FinalizationRegistry(id =>
 					{{
-						References().{nameof(References.Remove)}(id);
+						GetCoordinator().{nameof(Coordinator.References_Remove)}(id);
 					}});
 
 					const callbackRegistry = new FinalizationRegistry(id =>
 					{{
-						References().{nameof(References.RemoveCallback)}(id);
+						GetCoordinator().{nameof(Coordinator.References_RemoveCallback)}(id);
 					}});
 
 					const x = {{}};
@@ -70,15 +85,15 @@ namespace WebView2.DOM
 							return existingId;
 						}}
 
-						const newId = Guid().NewGuid();
+						const newId = Guid.NewGuid();
 
 						if (obj instanceof HTMLInputElement)
 						{{
-							References().{nameof(References.AddHTMLInputElement)}(newId, obj.type);
+							Coordinator.{nameof(Coordinator.References_AddHTMLInputElement)}(newId, obj.type);
 						}}
 						else
 						{{
-							References().{nameof(References.Add)}(newId, obj.constructor.name);
+							Coordinator.{nameof(Coordinator.References_Add)}(newId, obj.constructor.name);
 						}}
 
 						objToId.set(obj, newId);
@@ -103,12 +118,14 @@ namespace WebView2.DOM
 					x.GetPromiseId = function (promise)
 					{{
 						let isComplete = true;
-						const promiseId = Guid().NewGuid();
-						References().{nameof(References.AddTask)}(promiseId);
+						const promiseId = Guid.NewGuid();
+						Coordinator.{nameof(Coordinator.References_AddTask)}(promiseId);
 						promise.then(
 							value =>
 							{{
-								Coordinator().{nameof(Coordinator.FulfillPromise)}(
+								Coordinator = GetCoordinator();
+
+								Coordinator.{nameof(Coordinator.FulfillPromise)}(
 									WebView2DOM.GetId(window),
 									promiseId,
 									JSON.stringify(WebView2DOM.pre_stringify(value)),
@@ -136,7 +153,9 @@ namespace WebView2.DOM
 										}});
 								}}
 
-								Coordinator().{nameof(Coordinator.RejectPromise)}(
+								Coordinator = GetCoordinator();
+
+								Coordinator.{nameof(Coordinator.RejectPromise)}(
 									WebView2DOM.GetId(window),
 									promiseId,
 									exJson,
@@ -203,7 +222,9 @@ namespace WebView2.DOM
 						else if (obj != null && typeof obj === 'object' && typeof obj.callbackId === 'string')
 						{{
 							const callback = (...parameters) => {{
-								Coordinator().{nameof(Coordinator.OnCallback)}(
+								Coordinator = GetCoordinator();
+
+								Coordinator.{nameof(Coordinator.OnCallback)}(
 									WebView2DOM.GetId(window),
 									obj.callbackId,
 									JSON.stringify(WebView2DOM.pre_stringify(parameters)));
@@ -226,11 +247,11 @@ namespace WebView2.DOM
 
 						const windowId = WebView2DOM.GetId(window);
 
-						while (Coordinator().{nameof(Coordinator.MoveNext)}(windowId))
+						while (Coordinator.{nameof(Coordinator.MoveNext)}(windowId))
 						{{
 							try
 							{{
-								const current = JSON.parse(Coordinator().{nameof(Coordinator.Current)}(windowId));
+								const current = JSON.parse(Coordinator.{nameof(Coordinator.Current)}(windowId));
 
 								//if (WebView2DOM.GetId(window) !== current.nameof(CoordinatorCall.windowId))
 								//{{
@@ -246,13 +267,13 @@ namespace WebView2.DOM
 									(() => {{
 										const result = new window[memberName](...WebView2DOM.post_parse(current.{nameof(CoordinatorCall.parameters)}));
 										WebView2DOM.SetId(result, current.{nameof(CoordinatorCall.referenceId)});
-										Coordinator().{nameof(Coordinator.ReturnVoid)}(windowId);
+										Coordinator.{nameof(Coordinator.ReturnVoid)}(windowId);
 									}})();
 									break;
 									case 'getter':
 									(() => {{
 										const result = reference[memberName];
-										Coordinator().{nameof(Coordinator.ReturnValue)}(
+										Coordinator.{nameof(Coordinator.ReturnValue)}(
 											windowId,
 											JSON.stringify(WebView2DOM.pre_stringify(result))
 										);
@@ -261,7 +282,7 @@ namespace WebView2.DOM
 									case 'setter':
 									(() => {{
 										reference[memberName] = WebView2DOM.post_parse(current.{nameof(CoordinatorCall.parameters)})[0];
-										Coordinator().{nameof(Coordinator.ReturnVoid)}(windowId);
+										Coordinator.{nameof(Coordinator.ReturnVoid)}(windowId);
 									}})();
 									break;
 									case 'indexerGetter':
@@ -269,7 +290,7 @@ namespace WebView2.DOM
 										const parameters = WebView2DOM.post_parse(current.{nameof(CoordinatorCall.parameters)});
 										const index = parameters[0];
 										const result = reference[index];
-										Coordinator().{nameof(Coordinator.ReturnValue)}(
+										Coordinator.{nameof(Coordinator.ReturnValue)}(
 											windowId,
 											JSON.stringify(WebView2DOM.pre_stringify(result))
 										);
@@ -281,7 +302,7 @@ namespace WebView2.DOM
 										const index = parameters[0];
 										const value = parameters[1];
 										reference[index] = value;
-										Coordinator().{nameof(Coordinator.ReturnVoid)}(windowId);
+										Coordinator.{nameof(Coordinator.ReturnVoid)}(windowId);
 									}})();
 									break;
 									case 'indexerDeleter':
@@ -289,13 +310,13 @@ namespace WebView2.DOM
 										const parameters = WebView2DOM.post_parse(current.{nameof(CoordinatorCall.parameters)});
 										const index = parameters[0];
 										delete reference[index];
-										Coordinator().{nameof(Coordinator.ReturnVoid)}(windowId);
+										Coordinator.{nameof(Coordinator.ReturnVoid)}(windowId);
 									}})();
 									break;
 									case 'invoke':
 									(() => {{
 										const result = reference[memberName](...WebView2DOM.post_parse(current.{nameof(CoordinatorCall.parameters)}));
-										Coordinator().{nameof(Coordinator.ReturnValue)}(
+										Coordinator.{nameof(Coordinator.ReturnValue)}(
 											windowId,
 											JSON.stringify(WebView2DOM.pre_stringify(result))
 										);
@@ -304,7 +325,7 @@ namespace WebView2.DOM
 									case 'invokeSymbol':
 									(() => {{
 										const result = reference[Symbol[memberName]](...WebView2DOM.post_parse(current.{nameof(CoordinatorCall.parameters)}));
-										Coordinator().{nameof(Coordinator.ReturnValue)}(
+										Coordinator.{nameof(Coordinator.ReturnValue)}(
 											windowId,
 											JSON.stringify(WebView2DOM.pre_stringify(result))
 										);
@@ -316,25 +337,27 @@ namespace WebView2.DOM
 										const _memberName = memberName;
 										_reference[_memberName] = event =>
 										{{
-											Coordinator().{nameof(Coordinator.RaiseEvent)}(
+											Coordinator = GetCoordinator();
+
+											Coordinator.{nameof(Coordinator.RaiseEvent)}(
 												WebView2DOM.GetId(window),
 												WebView2DOM.GetId(_reference),
 												_memberName,
 												WebView2DOM.GetId(event));
 											WebView2DOM.EventLoop();
 										}};
-										Coordinator().{nameof(Coordinator.ReturnVoid)}(windowId);
+										Coordinator.{nameof(Coordinator.ReturnVoid)}(windowId);
 									}})();
 									break;
 									case 'removeevent':
 									(() => {{
 										reference[memberName] = null;
-										Coordinator().{nameof(Coordinator.ReturnVoid)}(windowId);
+										Coordinator.{nameof(Coordinator.ReturnVoid)}(windowId);
 									}})();
 									break;
 									default:
 									(() => {{
-										Coordinator().{nameof(Coordinator.Throw)}(
+										Coordinator.{nameof(Coordinator.Throw)}(
 											windowId,
 											JSON.stringify({{
 												constructor_name: 'SyntaxError',
@@ -367,7 +390,7 @@ namespace WebView2.DOM
 										}});
 								}}
 
-								Coordinator().{nameof(Coordinator.Throw)}(windowId, exJson);
+								Coordinator.{nameof(Coordinator.Throw)}(windowId, exJson);
 							}}
 						}}
 

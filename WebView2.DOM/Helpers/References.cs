@@ -185,7 +185,7 @@ namespace WebView2.DOM
 
 		internal static string AddCallback(Delegate callback)
 		{
-			var id = System.Guid.NewGuid().ToString();
+			var id = Guid.NewGuid().ToString();
 			_ = callbackRefs.AddOrUpdate(id,
 				_ => callback,
 				(_, __) => throw new InvalidOperationException()
