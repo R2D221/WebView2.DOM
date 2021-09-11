@@ -1,10 +1,12 @@
-﻿namespace WebView2.DOM
+﻿using System.Runtime.Serialization;
+
+namespace WebView2.DOM
 {
 	public enum Enctype
 	{
 		_,
-		application̸ˑx̵ˑwww̵ˑform̵ˑurlencoded,
-		multipart̸ˑform̵ˑdata,
-		text̸ˑplain,
+		[EnumMember(Value = "application/x-www-form-urlencoded")] application_x_www_form_urlencoded,
+		[EnumMember(Value = "multipart/form-data")] multipart_form_data,
+		[EnumMember(Value = "text/plain")] text_plain,
 	}
 }

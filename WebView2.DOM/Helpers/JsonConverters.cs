@@ -25,19 +25,17 @@ namespace WebView2.DOM.Helpers
 	internal sealed class EnumJsonConverter<TEnum> : JsonConverter<TEnum>
 		where TEnum : struct, Enum
 	{
-		private static readonly EnumFormat enumFormat =
+		private static readonly EnumFormat customEnumFormat =
 			Enums.RegisterCustomEnumFormat(x => x.AsString() == "_" ? "" :
 				x.AsString()
 				.Replace("_", "-")
-				.Replace("̵ˑ", "-")
-				.Replace("̸ˑ", "/")
 			);
 
 		public override TEnum Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
-			Enums.Parse<TEnum>(reader.GetString() ?? throw new NullReferenceException(), ignoreCase: false, enumFormat);
+			Enums.Parse<TEnum>(reader.GetString() ?? throw new NullReferenceException(), ignoreCase: false, EnumFormat.EnumMemberValue, customEnumFormat);
 
 		public override void Write(Utf8JsonWriter writer, TEnum value, JsonSerializerOptions options) =>
-			writer.WriteStringValue(Enums.AsString(value, enumFormat));
+			writer.WriteStringValue(Enums.AsString(value, EnumFormat.EnumMemberValue, customEnumFormat));
 	}
 
 	internal sealed class JsObjectJsonConverterFactory : JsonConverterFactory

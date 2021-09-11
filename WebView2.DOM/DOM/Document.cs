@@ -179,6 +179,7 @@ namespace WebView2.DOM
 		//public HTMLAllCollection all => _all ??= GetObject<HTMLAllCollection>();
 		//private HTMLAllCollection? _all;
 		#endregion
+
 		#region CSSOM View Module
 		public Element? scrollingElement => Get<Element?>();
 		#endregion
