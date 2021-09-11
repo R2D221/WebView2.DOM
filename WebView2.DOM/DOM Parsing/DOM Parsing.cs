@@ -1,5 +1,6 @@
 ﻿using Microsoft.Web.WebView2.Core;
 using SmartAnalyzers.CSharpExtensions.Annotations;
+using System;
 using System.Runtime.Serialization;
 
 namespace WebView2.DOM
@@ -12,7 +13,7 @@ namespace WebView2.DOM
 			: base(coreWebView, referenceId) { }
 
 		public XMLSerializer()
-			: this(window.Instance.coreWebView, System.Guid.NewGuid().ToString()) =>
+			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
 			Construct();
 
 		public string serializeToString(Node root) =>
@@ -53,7 +54,7 @@ namespace WebView2.DOM
 			: base(coreWebView, referenceId) { }
 
 		public DOMParser()
-			: this(window.Instance.coreWebView, System.Guid.NewGuid().ToString()) =>
+			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
 			Construct();
 
 		public Document parseFromString(string str, SupportedType type) =>

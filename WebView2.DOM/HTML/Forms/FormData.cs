@@ -1,5 +1,6 @@
 ﻿using Microsoft.Web.WebView2.Core;
 using OneOf;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -15,11 +16,11 @@ namespace WebView2.DOM
 			: base(coreWebView, referenceId) { }
 
 		public FormData()
-			: this(window.Instance.coreWebView, System.Guid.NewGuid().ToString()) =>
+			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
 			Construct();
 
 		public FormData(HTMLFormElement form)
-			: this(window.Instance.coreWebView, System.Guid.NewGuid().ToString()) =>
+			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
 			Construct(form);
 
 		public void append(string name, string value) =>

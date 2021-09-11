@@ -1,4 +1,5 @@
 ﻿using Microsoft.Web.WebView2.Core;
+using System;
 using System.Threading;
 
 namespace WebView2.DOM
@@ -15,7 +16,7 @@ namespace WebView2.DOM
 			: base(coreWebView, referenceId) { }
 
 		public DOMPoint(double x = 0, double y = 0, double z = 0, double w = 1)
-			: this(window.Instance.coreWebView, System.Guid.NewGuid().ToString()) =>
+			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
 			_ = (x, y, z, w) switch
 			{
 				(0, 0, 0, 1) => Construct(),

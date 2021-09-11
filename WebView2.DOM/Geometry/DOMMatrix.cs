@@ -1,4 +1,5 @@
 ﻿using Microsoft.Web.WebView2.Core;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -16,15 +17,15 @@ namespace WebView2.DOM
 			: base(coreWebView, referenceId) { }
 
 		public DOMMatrix()
-			: this(window.Instance.coreWebView, System.Guid.NewGuid().ToString()) =>
+			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
 			Construct();
 
 		public DOMMatrix(string init)
-			: this(window.Instance.coreWebView, System.Guid.NewGuid().ToString()) =>
+			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
 			Construct(init);
 
 		public DOMMatrix(IReadOnlyList<double> init)
-			: this(window.Instance.coreWebView, System.Guid.NewGuid().ToString()) =>
+			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
 			Construct(init);
 
 		new public static DOMMatrix fromMatrix(DOMMatrixInit other) =>

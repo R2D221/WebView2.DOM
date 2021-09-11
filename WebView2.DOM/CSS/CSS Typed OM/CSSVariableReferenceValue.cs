@@ -1,4 +1,5 @@
 ﻿using Microsoft.Web.WebView2.Core;
+using System;
 
 namespace WebView2.DOM
 {
@@ -11,10 +12,10 @@ namespace WebView2.DOM
 		}
 
 		public CSSVariableReferenceValue(string variable)
-			: this(window.Instance.coreWebView, System.Guid.NewGuid().ToString()) =>
+			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
 			Construct(variable);
 		public CSSVariableReferenceValue(string variable, CSSUnparsedValue fallback)
-			: this(window.Instance.coreWebView, System.Guid.NewGuid().ToString()) =>
+			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
 			Construct(variable, fallback);
 
 		public string variable { get => Get<string>(); set => Set(value); }

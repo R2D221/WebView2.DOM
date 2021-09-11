@@ -1,4 +1,5 @@
 ﻿using Microsoft.Web.WebView2.Core;
+using System;
 
 namespace WebView2.DOM
 {
@@ -11,10 +12,10 @@ namespace WebView2.DOM
 		}
 
 		public CSSRotate(CSSNumericValue angleValue)
-			: this(window.Instance.coreWebView, System.Guid.NewGuid().ToString()) =>
+			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
 			Construct(angleValue);
 		public CSSRotate(CSSNumericValue x, CSSNumericValue y, CSSNumericValue z, CSSNumericValue angle)
-			: this(window.Instance.coreWebView, System.Guid.NewGuid().ToString()) =>
+			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
 			Construct(x, y, z, angle);
 
 		public CSSNumericValue angle { get => Get<CSSNumericValue>(); set => Set(value); }

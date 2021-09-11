@@ -1,4 +1,5 @@
 ﻿using Microsoft.Web.WebView2.Core;
+using System;
 
 namespace WebView2.DOM
 {
@@ -11,7 +12,7 @@ namespace WebView2.DOM
 		}
 
 		public CSSKeywordValue(string keyword)
-			: this(window.Instance.coreWebView, System.Guid.NewGuid().ToString()) =>
+			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
 			Construct(keyword);
 
 		public string value { get => Get<string>(); set => Set(value); }

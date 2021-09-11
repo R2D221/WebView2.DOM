@@ -17,15 +17,15 @@ namespace WebView2.DOM
 			: base(coreWebView, referenceId) { }
 
 		public DOMMatrixReadOnly()
-			: this(window.Instance.coreWebView, System.Guid.NewGuid().ToString()) =>
+			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
 			Construct();
 
 		public DOMMatrixReadOnly(string init)
-			: this(window.Instance.coreWebView, System.Guid.NewGuid().ToString()) =>
+			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
 			Construct(init);
 
 		public DOMMatrixReadOnly(IReadOnlyList<double> init)
-			: this(window.Instance.coreWebView, System.Guid.NewGuid().ToString()) =>
+			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
 			Construct(init);
 
 		public static DOMMatrixReadOnly fromMatrix(DOMMatrixInit other) =>

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Web.WebView2.Core;
+using System;
 
 namespace WebView2.DOM
 {
@@ -11,10 +12,10 @@ namespace WebView2.DOM
 		}
 
 		public CSSScale(CSSNumericValue x, CSSNumericValue y)
-			: this(window.Instance.coreWebView, System.Guid.NewGuid().ToString()) =>
+			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
 			Construct(x, y);
 		public CSSScale(CSSNumericValue x, CSSNumericValue y, CSSNumericValue z)
-			: this(window.Instance.coreWebView, System.Guid.NewGuid().ToString()) =>
+			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
 			Construct(x, y, z);
 
 		public CSSNumericValue x { get => Get<CSSNumericValue>(); set => Set(value); }

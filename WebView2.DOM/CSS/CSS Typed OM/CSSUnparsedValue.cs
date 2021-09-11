@@ -1,5 +1,6 @@
 ﻿using Microsoft.Web.WebView2.Core;
 using OneOf;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -22,7 +23,7 @@ namespace WebView2.DOM
 			: base(coreWebView, referenceId) { }
 
 		public CSSUnparsedValue(IReadOnlyList<OneOf<string, CSSVariableReferenceValue>> members)
-			: this(window.Instance.coreWebView, System.Guid.NewGuid().ToString()) =>
+			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
 			Construct(members);
 
 		public int Count => Get<int>("length");

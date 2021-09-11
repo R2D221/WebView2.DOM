@@ -1,4 +1,5 @@
 ﻿using Microsoft.Web.WebView2.Core;
+using System;
 using System.Threading;
 
 namespace WebView2.DOM
@@ -15,11 +16,11 @@ namespace WebView2.DOM
 			: base(coreWebView, referenceId) { }
 
 		public DOMQuad(DOMPointInit p1, DOMPointInit p2, DOMPointInit p3, DOMPointInit p4)
-			: this(window.Instance.coreWebView, System.Guid.NewGuid().ToString()) =>
+			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
 			Construct(p1, p2, p3, p4);
 
 		public DOMQuad(IDOMPointInit p1, IDOMPointInit p2, IDOMPointInit p3, IDOMPointInit p4)
-			: this(window.Instance.coreWebView, System.Guid.NewGuid().ToString()) =>
+			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
 			Construct(p1, p2, p3, p4);
 
 		public static DOMQuad fromRect(DOMRectInit other) =>

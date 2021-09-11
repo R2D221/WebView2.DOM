@@ -1,4 +1,5 @@
 ﻿using Microsoft.Web.WebView2.Core;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -21,7 +22,7 @@ namespace WebView2.DOM
 			: base(coreWebView, referenceId) { }
 
 		public CSSTransformValue(IReadOnlyList<CSSTransformComponent> transforms)
-			: this(window.Instance.coreWebView, System.Guid.NewGuid().ToString()) =>
+			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
 			Construct(transforms);
 
 		public bool is2D => Get<bool>();

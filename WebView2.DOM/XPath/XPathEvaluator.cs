@@ -1,4 +1,5 @@
 ﻿using Microsoft.Web.WebView2.Core;
+using System;
 
 namespace WebView2.DOM
 {
@@ -10,7 +11,7 @@ namespace WebView2.DOM
 			: base(coreWebView, referenceId) { }
 
 		public XPathEvaluator()
-			: this(window.Instance.coreWebView, System.Guid.NewGuid().ToString()) =>
+			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
 			Construct();
 
 		// https://dom.spec.whatwg.org/#mixin-xpathevaluatorbase

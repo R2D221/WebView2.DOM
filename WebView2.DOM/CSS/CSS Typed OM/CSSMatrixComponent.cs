@@ -1,5 +1,6 @@
 ﻿using Microsoft.Web.WebView2.Core;
 using SmartAnalyzers.CSharpExtensions.Annotations;
+using System;
 
 namespace WebView2.DOM
 {
@@ -27,10 +28,10 @@ namespace WebView2.DOM
 			: base(coreWebView, referenceId) { }
 
 		public CSSMatrixComponent(DOMMatrixReadOnly matrix)
-			: this(window.Instance.coreWebView, System.Guid.NewGuid().ToString()) =>
+			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
 			Construct(matrix);
 		public CSSMatrixComponent(DOMMatrixReadOnly matrix, CSSMatrixComponentOptions options)
-			: this(window.Instance.coreWebView, System.Guid.NewGuid().ToString()) =>
+			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
 			Construct(matrix, options);
 
 		public DOMMatrix matrix { get => Get<DOMMatrix>(); set => Set(value); }
