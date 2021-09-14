@@ -6,6 +6,7 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 using System.Text.Json;
 using System.Threading;
@@ -14,9 +15,12 @@ namespace WebView2.DOM
 {
 	internal record CoordinatorCall
 	{
-		/*[InitRequired]*/ public string referenceId { get; init; } = "";
-		/*[InitRequired]*/ public string memberType { get; init; } = "";
-		/*[InitRequired]*/ public string memberName { get; init; } = "";
+		/*[InitRequired]*/
+		public string referenceId { get; init; } = "";
+		/*[InitRequired]*/
+		public string memberType { get; init; } = "";
+		/*[InitRequired]*/
+		public string memberName { get; init; } = "";
 		public object?[]? parameters { get; init; }
 	}
 
@@ -161,6 +165,8 @@ namespace WebView2.DOM
 			}
 		}
 
+		private static readonly ConditionalWeakTable<Type, ParameterInfo[]> parametersInfoCache = new();
+
 		public void OnCallback(string windowId, string callbackId, string json)
 		{
 			json ??= "null";
@@ -194,7 +200,7 @@ namespace WebView2.DOM
 				var parameters = JsonSerializer.Deserialize<ImmutableArray<JsonElement>?>(json, coreWebView.Options())
 					?? ImmutableArray<JsonElement>.Empty;
 
-				var parametersInfo = callback.Method.GetParameters();
+				var parametersInfo = parametersInfoCache.GetValue(callback.GetType(), _ => callback.Method.GetParameters());
 
 				if (parametersInfo.Length != parameters.Length)
 				{

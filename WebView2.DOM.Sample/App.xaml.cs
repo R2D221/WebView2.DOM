@@ -10,7 +10,6 @@ namespace WebView2.DOM.Sample
 	{
 		public App()
 		{
-			Thread.CurrentThread.Priority = ThreadPriority.Highest;
 		}
 	}
 }

@@ -77,7 +77,7 @@ namespace WebView2.DOM.Sample
 			SystemClock.Instance
 			.InTzdbSystemDefaultZone()
 			.GetCurrentLocalDateTime()
-			.ToString();
+			.ToString("o", null);
 
 		private static readonly Queue<Duration> timestamps =
 			new Queue<Duration>();
