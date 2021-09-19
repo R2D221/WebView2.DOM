@@ -2,6 +2,7 @@
 using NodaTime.Extensions;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace WebView2.DOM.Sample
 {
@@ -23,7 +24,7 @@ namespace WebView2.DOM.Sample
 		{
 			await webView.EnsureCoreWebView2Async();
 			await WebView2DOM.InitAsync(webView);
-			webView.DOMContentLoaded().Handler += async (s, e) =>
+			webView.CoreWebView2.DOMContentLoaded += async (s, e) =>
 			{
 				await webView.InvokeInBrowserContextAsync(DOMContentLoaded);
 			};
@@ -32,9 +33,9 @@ namespace WebView2.DOM.Sample
 				<p>The current time is <span id='current-time'></span></p>
 				<p>requestAnimationFrame FPS (called from C#) is <span id='fps'></span></p>
 				<p>
-					<button id='jsAlertButton'>Call JS function</button>
+					<button id='jsAlertButton'>(JS) Show alert</button>
 					<br />
-					<button id='csAlertButton'>Call C# function</button>
+					<button id='csAlertButton'>(C#) Change window size</button>
 				</p>
 			");
 		}
@@ -65,11 +66,33 @@ namespace WebView2.DOM.Sample
 			window.alert("Hello! You invoked window.alert()");
 		}
 
-		private async void CsAlertButton_onclick(object sender, MouseEvent e)
+		/*
+		 * I disabled this method because, now with the new Dispatch.PushFrame mechanism, sending an InvokeAsync
+		 * from within the browser context makes the web view hang for several seconds, which the component then
+		 * interprets as a CoreWebView2ProcessFailedReason.Unresponsive event.
+		 * I'm trying to see if there's a way to disable this timeout, but for now it's best not to invoke anything
+		 * that takes several seconds from within the browser context.
+		 */
+		//private async void CsAlertButton_onclick(object sender, MouseEvent e)
+		//{
+		//	var result = await Dispatcher.InvokeAsync(() => MessageBox.Show("Hello! You invoked MessageBox.Show()"));
+
+		//	switch (result)
+		//	{
+		//	case MessageBoxResult.OK: Debugger.Break(); break;
+		//	}
+		//}
+
+		private void CsAlertButton_onclick(object sender, MouseEvent e)
 		{
-			await webView.InvokeInWpfContextAsync(() =>
+			Dispatcher.Invoke(() =>
 			{
-				_ = MessageBox.Show("Hello! You invoked MessageBox.Show()");
+				WindowState = WindowState switch
+				{
+					WindowState.Maximized => WindowState.Normal,
+					WindowState.Normal => WindowState.Maximized,
+					_ => WindowState.Minimized,
+				};
 			});
 		}
 

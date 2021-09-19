@@ -46,11 +46,12 @@ using WebView2.DOM;
 
 // webView is a WPF WebView2
 await webView.EnsureCoreWebView2Async();
+
 // InitAsync will register the necessary JS for the magic to work
 await WebView2DOM.InitAsync(webView);
-// CoreWebView2 already includes a DOMContentLoadedEvent, but it's not present
-// in the WPF object. We use this helper for simplicity.
-webView.DOMContentLoaded().Handler += async (s, e) =>
+
+// The DOMContentLoaded event still runs in the WPF context
+webView.CoreWebView2.DOMContentLoaded += async (s, e) =>
 {
 	// With this we get the DOM available in C#
 	await webView.InvokeInBrowserContextAsync(DOMContentLoaded);
