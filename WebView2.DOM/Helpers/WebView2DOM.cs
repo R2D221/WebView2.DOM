@@ -247,11 +247,16 @@ namespace WebView2.DOM
 
 						const windowId = WebView2DOM.GetId(window);
 
-						while (Coordinator.{nameof(Coordinator.MoveNext)}(windowId))
+						const myIterator = {{
+							[Symbol.iterator]: function() {{ return this; }},
+							next: function() {{ return JSON.parse(Coordinator.{nameof(Coordinator.next)}(windowId)); }}
+						}};
+
+						for (const item of myIterator)
 						{{
 							try
 							{{
-								const current = JSON.parse(Coordinator.{nameof(Coordinator.Current)}(windowId));
+								const current = JSON.parse(item);
 
 								//if (WebView2DOM.GetId(window) !== current.nameof(CoordinatorCall.windowId))
 								//{{

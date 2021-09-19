@@ -139,7 +139,7 @@ namespace WebView2.DOM.Tests
 					var width = mainWindow.Width;
 				});
 
-				await webView.InvokeInWpfContextAsync(() =>
+				await mainWindow.Dispatcher.InvokeAsync(() =>
 				{
 					var width = mainWindow.Width;
 				});
@@ -153,7 +153,7 @@ namespace WebView2.DOM.Tests
 
 			await webView.InvokeInBrowserContextAsync(async window =>
 			{
-				var width = await webView.InvokeInWpfContextAsync(() => mainWindow.Width);
+				var width = await mainWindow.Dispatcher.InvokeAsync(() => mainWindow.Width);
 
 				Assert.AreEqual(400, width);
 			});
@@ -172,7 +172,7 @@ namespace WebView2.DOM.Tests
 					var width = mainWindow.Width;
 				});
 
-				await webView.InvokeInWpfContextAsync(async () =>
+				await await mainWindow.Dispatcher.InvokeAsync(async () =>
 				{
 					await Task.Yield();
 					var width = mainWindow.Width;
@@ -187,13 +187,13 @@ namespace WebView2.DOM.Tests
 
 			await webView.InvokeInBrowserContextAsync(async window =>
 			{
-				var width = await webView.InvokeInWpfContextAsync(async () =>
+				var width = await mainWindow.Dispatcher.InvokeAsync(async () =>
 				{
 					await Task.Yield();
 					return mainWindow.Width;
 				});
 
-				Assert.AreEqual(400, width);
+				Assert.AreEqual(400, await width);
 			});
 		}
 
@@ -230,7 +230,7 @@ namespace WebView2.DOM.Tests
 			{
 				var myDiv = window.document.createHTMLElement(div);
 
-				await webView.InvokeInWpfContextAsync(async () =>
+				await await mainWindow.Dispatcher.InvokeAsync(async () =>
 				{
 					_ = await webView.CoreWebView2.CallDevToolsProtocolMethodAsync("HeapProfiler.collectGarbage", JsonSerializer.Serialize(new { }));
 				});

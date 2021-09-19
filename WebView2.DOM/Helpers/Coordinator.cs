@@ -1,7 +1,6 @@
 ﻿using Microsoft.Web.WebView2.Core;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
@@ -26,20 +25,41 @@ namespace WebView2.DOM
 
 	public sealed class Coordinator
 	{
+		private void DoEvents()
+		{
+			if (uiSyncContext is not System.Windows.Forms.WindowsFormsSynchronizationContext) { return; }
+
+			System.Windows.Forms.Application.DoEvents();
+		}
+
+		private void SetDispatcherFrameContinueFalse(string windowId)
+		{
+			if (uiSyncContext is not System.Windows.Threading.DispatcherSynchronizationContext) { return; }
+
+			DispatcherFrames.GetOrAdd(windowId, _ => new()).Continue = false;
+		}
+
+		private void DispatcherPushFrame(string windowId)
+		{
+			if (uiSyncContext is not System.Windows.Threading.DispatcherSynchronizationContext) { return; }
+
+			var frame = DispatcherFrames.GetOrAdd(windowId, _ => new());
+			System.Windows.Threading.Dispatcher.PushFrame(frame);
+			frame.Continue = true;
+		}
+
+
+
 		//private BlockingCollection<string> calls;
 		//private readonly BlockingCollection<object?> objects = new BlockingCollection<object?>();
 		//private IEnumerator<string> enumerator;
 
-		private readonly ConcurrentDictionary<string, BlockingCollection<object>> callsDict =
-			new ConcurrentDictionary<string, BlockingCollection<object>>();
+		private readonly ConcurrentDictionary<string, BlockingCollection<string>> callsDict = new();
 
-		private readonly ConcurrentDictionary<string, BlockingCollection<object?>> objectsDict =
-			new ConcurrentDictionary<string, BlockingCollection<object?>>();
-
-		private readonly ConcurrentDictionary<string, IEnumerator<object>> enumeratorDict =
-			new ConcurrentDictionary<string, IEnumerator<object>>();
+		private readonly ConcurrentDictionary<string, BlockingCollection<object?>> objectsDict = new();
 
 		private readonly CoreWebView2 coreWebView;
+		private readonly SynchronizationContext? uiSyncContext;
 		private CancellationTokenSource cts;
 		private readonly AsyncLocal<CancellationTokenSource?> asyncLocalCts = new AsyncLocal<CancellationTokenSource?>();
 		private readonly WebViewThread webViewThread;
@@ -47,8 +67,10 @@ namespace WebView2.DOM
 		private CancellationToken CancellationToken =>
 			asyncLocalCts.Value?.Token ?? throw new OperationCanceledException();
 
-		private BlockingCollection<object> Calls(string windowId) =>
+		private BlockingCollection<string> Calls(string windowId) =>
 			callsDict.GetOrAdd(windowId, _ => throw new OperationCanceledException());
+
+		private readonly ConcurrentDictionary<string, System.Windows.Threading.DispatcherFrame> DispatcherFrames = new();
 
 		private BlockingCollection<object?> Objects(string windowId) =>
 			objectsDict.GetOrAdd(windowId, _ => throw new OperationCanceledException());
@@ -59,6 +81,7 @@ namespace WebView2.DOM
 			//enumerator = calls.GetConsumingEnumerable().GetEnumerator();
 			cts = new CancellationTokenSource();
 			this.coreWebView = coreWebView;
+			uiSyncContext = SynchronizationContext.Current;
 			webViewThread = new WebViewThread(
 				WebViewSynchronizationContext.For(coreWebView),
 				coreWebView.GetSynchronizationContext());
@@ -69,7 +92,6 @@ namespace WebView2.DOM
 			cts.Cancel();
 			callsDict.Clear();
 			objectsDict.Clear();
-			enumeratorDict.Clear();
 		}
 
 		#region Called from JavaScript: Entry points
@@ -91,6 +113,7 @@ namespace WebView2.DOM
 				{
 					window.SetInstance(null);
 					Calls(windowId).CompleteAdding();
+					SetDispatcherFrameContinueFalse(windowId);
 				}
 			});
 		}
@@ -138,6 +161,7 @@ namespace WebView2.DOM
 					{
 						window.SetInstance(null);
 						Calls(windowId).CompleteAdding();
+						SetDispatcherFrameContinueFalse(windowId);
 					}
 				});
 			});
@@ -185,6 +209,7 @@ namespace WebView2.DOM
 					{
 						window.SetInstance(null);
 						Calls(windowId).CompleteAdding();
+						SetDispatcherFrameContinueFalse(windowId);
 					}
 				});
 			}
@@ -227,36 +252,34 @@ namespace WebView2.DOM
 		}
 		#endregion
 
-		#region Called from JavaScript: IEnumerator
-		public string Current(string windowId) => (string)enumeratorDict.GetOrAdd(windowId, _ => throw new InvalidOperationException()).Current;
-
-		public bool MoveNext(string windowId)
+		#region Called from JavaScript: Iterator
+		public string next(string windowId)
 		{
-			var enumerator = enumeratorDict.GetOrAdd(windowId, _ => throw new InvalidOperationException());
-			while (enumerator.MoveNext())
+			DispatcherPushFrame(windowId);
+
+			while (true)
 			{
-				if (enumerator.Current is string)
+				var calls = Calls(windowId);
+
+				if (calls.TryTake(out var item))
 				{
-					return true;
+					return JsonSerializer.Serialize(new { done = false, value = (string?)item });
 				}
-				else if (enumerator.Current is Action action)
+				else if (calls.IsCompleted)
 				{
-					action();
+					return JsonSerializer.Serialize(new { done = true, value = (string?)null });
+				}
+				else
+				{
+					DoEvents();
 				}
 			}
-			return false;
 		}
 
 		public void Reset(string windowId)
 		{
-			var calls = callsDict.AddOrUpdate(windowId,
-				_ => new BlockingCollection<object>(),
-				(_, __) => new BlockingCollection<object>());
+			var calls = callsDict[windowId] = new();
 			//calls = new BlockingCollection<string>();
-			_ = enumeratorDict.AddOrUpdate(windowId,
-				_ => calls.GetConsumingEnumerable().GetEnumerator(),
-				(_, __) => calls.GetConsumingEnumerable().GetEnumerator());
-			//enumerator = calls.GetConsumingEnumerable().GetEnumerator();
 
 			_ = objectsDict.GetOrAdd(windowId,
 				_ => new BlockingCollection<object?>());
@@ -292,6 +315,7 @@ namespace WebView2.DOM
 			try
 			{
 				Calls(windowId).Add(JsonSerializer.Serialize(call, coreWebView.Options()), CancellationToken);
+				SetDispatcherFrameContinueFalse(windowId);
 			}
 			catch (InvalidOperationException ex) when (ex.Source == "System.Collections.Concurrent")
 			{
@@ -314,6 +338,7 @@ namespace WebView2.DOM
 			try
 			{
 				Calls(windowId).Add(JsonSerializer.Serialize(call, coreWebView.Options()), CancellationToken);
+				SetDispatcherFrameContinueFalse(windowId);
 			}
 			catch (InvalidOperationException ex) when (ex.Source == "System.Collections.Concurrent")
 			{
@@ -326,21 +351,6 @@ namespace WebView2.DOM
 				string json => JsonSerializer.Deserialize<T>(json, coreWebView.Options())!,
 				_ => throw new InvalidOperationException("should never happen"),
 			};
-		}
-
-		internal void EnqueueUiThreadAction(Action action)
-		{
-			Debugger.NotifyOfCrossThreadDependency();
-			CancellationToken.ThrowIfCancellationRequested();
-			var windowId = window.Instance.referenceId;
-			try
-			{
-				Calls(windowId).Add(action, CancellationToken);
-			}
-			catch (InvalidOperationException ex) when (ex.Source == "System.Collections.Concurrent")
-			{
-				throw new InvalidOperationException("The calling thread cannot access this object because a different thread owns it.");
-			}
 		}
 		#endregion
 

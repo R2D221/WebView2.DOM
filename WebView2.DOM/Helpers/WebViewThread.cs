@@ -16,7 +16,7 @@ namespace WebView2.DOM
 		{
 			this.webViewSyncContext = webViewSyncContext;
 			this.uiSyncContext = uiSyncContext;
-			thread = new Thread(threadAction) { IsBackground = true, Priority = ThreadPriority.Highest };
+			thread = new Thread(threadAction) { IsBackground = true/*, Priority = ThreadPriority.Highest*/ };
 			thread.Start();
 		}
 

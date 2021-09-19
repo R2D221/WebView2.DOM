@@ -256,100 +256,64 @@ namespace WebView2.DOM
 			return await tcs.Task;
 		}
 
+		[Obsolete("Use Control.BeginInvoke() instead", true)]
 		public static async Task InvokeInWinFormsContextAsync(this Microsoft.Web.WebView2.WinForms.WebView2 webView, Action action) =>
 			await webView.GetCoreWebView().InvokeInUiContextAsync(action);
 
+		[Obsolete("Use Dispatcher.InvokeAsync() instead", true)]
 		public static async Task InvokeInWpfContextAsync(this Microsoft.Web.WebView2.Wpf.WebView2 webView, Action action) =>
 			await webView.GetCoreWebView().InvokeInUiContextAsync(action);
 
+		[Obsolete("", true)]
 		private static async Task InvokeInUiContextAsync(this CoreWebView2 coreWebView, Action action)
 		{
-			var tcs = new TaskCompletionSource();
-			coreWebView.Coordinator().EnqueueUiThreadAction(() =>
-			{
-				try
-				{
-					action();
-					tcs.SetResult();
-				}
-				catch (Exception ex)
-				{
-					tcs.SetException(ex);
-				}
-			});
-			await tcs.Task;
+			await Task.CompletedTask;
+			throw new NotSupportedException();
 		}
 
+		[Obsolete("Use Control.BeginInvoke() instead", true)]
 		public static async Task<T> InvokeInWinFormsContextAsync<T>(this Microsoft.Web.WebView2.WinForms.WebView2 webView, Func<T> function) =>
 			await webView.GetCoreWebView().InvokeInUiContextAsync(function);
 
+		[Obsolete("Use Dispatcher.InvokeAsync() instead", true)]
 		public static async Task<T> InvokeInWpfContextAsync<T>(this Microsoft.Web.WebView2.Wpf.WebView2 webView, Func<T> function) =>
 			await webView.GetCoreWebView().InvokeInUiContextAsync(function);
 
+		[Obsolete("", true)]
 		private static async Task<T> InvokeInUiContextAsync<T>(this CoreWebView2 coreWebView, Func<T> function)
 		{
-			var tcs = new TaskCompletionSource<T>();
-			coreWebView.Coordinator().EnqueueUiThreadAction(() =>
-			{
-				try
-				{
-					var result = function();
-					tcs.SetResult(result);
-				}
-				catch (Exception ex)
-				{
-					tcs.SetException(ex);
-				}
-			});
-			return await tcs.Task;
+			await Task.CompletedTask;
+			throw new NotSupportedException();
 		}
 
+		[Obsolete("Use Control.BeginInvoke() instead", true)]
 		public static async Task InvokeInWinFormsContextAsync(this Microsoft.Web.WebView2.WinForms.WebView2 webView, Func<Task> asyncAction) =>
 			await webView.GetCoreWebView().InvokeInUiContextAsync(asyncAction);
 
+		[Obsolete("Use Dispatcher.InvokeAsync() instead", true)]
 		public static async Task InvokeInWpfContextAsync(this Microsoft.Web.WebView2.Wpf.WebView2 webView, Func<Task> asyncAction) =>
 			await webView.GetCoreWebView().InvokeInUiContextAsync(asyncAction);
 
+		[Obsolete("", true)]
 		private static async Task InvokeInUiContextAsync(this CoreWebView2 coreWebView, Func<Task> asyncAction)
 		{
-			var tcs = new TaskCompletionSource();
-			coreWebView.Coordinator().EnqueueUiThreadAction(async () =>
-			{
-				try
-				{
-					await asyncAction();
-					tcs.SetResult();
-				}
-				catch (Exception ex)
-				{
-					tcs.SetException(ex);
-				}
-			});
-			await tcs.Task;
+			await Task.CompletedTask;
+			throw new NotSupportedException();
 		}
 
+		[Obsolete("Use Control.BeginInvoke() instead", true)]
 		public static async Task<T> InvokeInWinFormsContextAsync<T>(this Microsoft.Web.WebView2.WinForms.WebView2 webView, Func<Task<T>> asyncFunction) =>
 			await webView.GetCoreWebView().InvokeInUiContextAsync(asyncFunction);
 
+		[Obsolete("Use Dispatcher.InvokeAsync() instead", true)]
 		public static async Task<T> InvokeInWpfContextAsync<T>(this Microsoft.Web.WebView2.Wpf.WebView2 webView, Func<Task<T>> asyncFunction) =>
 			await webView.GetCoreWebView().InvokeInUiContextAsync(asyncFunction);
-
+		
+		[Obsolete("", true)]
 		private static async Task<T> InvokeInUiContextAsync<T>(this CoreWebView2 coreWebView, Func<Task<T>> asyncFunction)
 		{
-			var tcs = new TaskCompletionSource<T>();
-			coreWebView.Coordinator().EnqueueUiThreadAction(async () =>
-			{
-				try
-				{
-					var result = await asyncFunction();
-					tcs.SetResult(result);
-				}
-				catch (Exception ex)
-				{
-					tcs.SetException(ex);
-				}
-			});
-			return await tcs.Task;
+			await Task.CompletedTask;
+			throw new NotSupportedException();
 		}
 
 
