@@ -64,7 +64,7 @@ namespace WebView2.DOM
 		public event EventHandler<ProgressEvent/*	*/>? onprogress/*	*/{ add => AddEvent(value); remove => RemoveEvent(value); }
 		public event EventHandler<Event/*	*/>? onratechange/*	*/{ add => AddEvent(value); remove => RemoveEvent(value); }
 		public event EventHandler<Event/*	*/>? onreset/*	*/{ add => AddEvent(value); remove => RemoveEvent(value); }
-		public event EventHandler<UIEvent/*	*/>? onresize/*	*/{ add => AddEvent(value); remove => RemoveEvent(value); }
+		public event EventHandler<Event/*	*/>? onresize/*	*/{ add => AddEvent(value); remove => RemoveEvent(value); }
 		public event EventHandler<Event/*	*/>? onscroll/*	*/{ add => AddEvent(value); remove => RemoveEvent(value); }
 		public event EventHandler<Event/*	*/>? onseeked/*	*/{ add => AddEvent(value); remove => RemoveEvent(value); }
 		public event EventHandler<Event/*	*/>? onseeking/*	*/{ add => AddEvent(value); remove => RemoveEvent(value); }

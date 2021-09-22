@@ -6,9 +6,8 @@ namespace WebView2.DOM
 
 	public class UIEvent : Event
 	{
-		protected internal UIEvent(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal UIEvent(CoreWebView2 coreWebView, string referenceId)
+			: base(coreWebView, referenceId) { }
 
 		public Window? view => Get<Window?>();
 		//public int detail => Get<int>();

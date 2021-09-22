@@ -55,7 +55,7 @@ namespace WebView2.DOM
 		event EventHandler<ProgressEvent/*	*/>? onprogress/*	*/;
 		event EventHandler<Event/*	*/>? onratechange/*	*/;
 		event EventHandler<Event/*	*/>? onreset/*	*/;
-		event EventHandler<UIEvent/*	*/>? onresize/*	*/;
+		event EventHandler<Event/*	*/>? onresize/*	*/;
 		event EventHandler<Event/*	*/>? onscroll/*	*/;
 		//event EventHandler</*	*/>? onscrollend/*	*/;
 		event EventHandler<Event/*	*/>? onseeked/*	*/;

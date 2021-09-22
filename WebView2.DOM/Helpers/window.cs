@@ -202,7 +202,7 @@ namespace WebView2.DOM
 		public static event EventHandler<ProgressEvent/*	*/>? onprogress/*	*/{ add => Instance.AddEvent(value); remove => Instance.RemoveEvent(value); }
 		public static event EventHandler<Event/*	*/>? onratechange/*	*/{ add => Instance.AddEvent(value); remove => Instance.RemoveEvent(value); }
 		public static event EventHandler<Event/*	*/>? onreset/*	*/{ add => Instance.AddEvent(value); remove => Instance.RemoveEvent(value); }
-		public static event EventHandler<UIEvent/*	*/>? onresize/*	*/{ add => Instance.AddEvent(value); remove => Instance.RemoveEvent(value); }
+		public static event EventHandler<Event/*	*/>? onresize/*	*/{ add => Instance.AddEvent(value); remove => Instance.RemoveEvent(value); }
 		public static event EventHandler<Event/*	*/>? onscroll/*	*/{ add => Instance.AddEvent(value); remove => Instance.RemoveEvent(value); }
 		public static event EventHandler<Event/*	*/>? onseeked/*	*/{ add => Instance.AddEvent(value); remove => Instance.RemoveEvent(value); }
 		public static event EventHandler<Event/*	*/>? onseeking/*	*/{ add => Instance.AddEvent(value); remove => Instance.RemoveEvent(value); }
