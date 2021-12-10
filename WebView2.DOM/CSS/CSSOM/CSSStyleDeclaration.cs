@@ -38,7 +38,7 @@ namespace WebView2.DOM
 			while (enumerator.MoveNext())
 			{
 				var current = enumerator.Current;
-				yield return KeyValuePair.Create(current, this[current]);
+				yield return new KeyValuePair<string, string>(current, this[current]);
 			}
 		}
 

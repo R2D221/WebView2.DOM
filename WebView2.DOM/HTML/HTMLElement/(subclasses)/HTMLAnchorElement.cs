@@ -24,7 +24,7 @@ namespace WebView2.DOM
 				.Select(x => new Uri(x))
 				.ToImmutableArray()
 				;
-			set => Set(string.Join(' ', value));
+			set => Set(string.Join(" ", value));
 		}
 		public string rel { get => Get<string>(); set => Set(value); }
 		public DOMTokenList relList => _relList ??= Get<DOMTokenList>();

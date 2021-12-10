@@ -50,9 +50,9 @@ namespace WebView2.DOM
 			: base(coreWebView, referenceId) { }
 
 		public void set(string property, params OneOf<CSSStyleValue, string>[] values) =>
-			Method().Invoke(args: values.Select(x => x.Value).Prepend(property).ToArray());
+			Method().Invoke(args: new[] { property }.Concat(values.Select(x => x.Value)).ToArray());
 		public void append(string property, params OneOf<CSSStyleValue, string>[] values) =>
-			Method().Invoke(args: values.Select(x => x.Value).Prepend(property).ToArray());
+			Method().Invoke(args: new[] { property }.Concat(values.Select(x => x.Value)).ToArray());
 		public void delete(string property) => Method().Invoke(property);
 		public void clear() => Method().Invoke();
 	}

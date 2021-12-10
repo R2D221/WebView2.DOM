@@ -232,11 +232,11 @@ namespace WebView2.DOM.Microsyntaxes
 
 				var builder = new PeriodBuilder
 				{
-					Weeks = dict.GetValueOrDefault('w'),
-					Days = dict.GetValueOrDefault('d'),
-					Hours = dict.GetValueOrDefault('h'),
-					Minutes = dict.GetValueOrDefault('m'),
-					Seconds = dict.GetValueOrDefault('s'),
+					Weeks = dict.TryGetValue('w', out var w) ? w : 0,
+					Days = dict.TryGetValue('d', out var d) ? d : 0,
+					Hours = dict.TryGetValue('h', out var h) ? h : 0,
+					Minutes = dict.TryGetValue('m', out var m) ? m : 0,
+					Seconds = dict.TryGetValue('s', out var s) ? s : 0,
 				};
 				return ParseResult<Period>.ForValue(builder.Build().Normalize());
 			}

@@ -32,7 +32,17 @@
     <PackageReference Include="NodaTime" Version="3.0.5" />
     <PackageReference Include="Range" Version="3.0.6" />
     <PackageReference Include="SmartAnalyzers.CSharpExtensions.Annotations" Version="3.10.0" />
-    <PackageReference Include="System.Text.Json" Version="5.0.2" />
+    <PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
+    <PackageReference Include="System.Text.Json" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
+    <PackageReference Include="TunnelVisionLabs.ReferenceAssemblyAnnotator" Version="1.0.0-alpha.160">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageDownload Include="Microsoft.NETCore.App.Ref" Version="[6.0.0]" />
+    <PackageReference Include="Contrib.Bcl.Ranges" Version="1.0.0" />
   </ItemGroup>
 
 </Project>

@@ -73,7 +73,7 @@ namespace WebView2.DOM
 					item.width?.ToString(CultureInfo.InvariantCulture),
 					item.density?.ToString(CultureInfo.InvariantCulture)
 				}.Where(x => x != null))
-				.Select(parts => string.Join(' ', parts))
+				.Select(parts => string.Join(" ", parts))
 			);
 	}
 }

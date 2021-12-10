@@ -615,7 +615,7 @@ namespace WebView2.DOM.Helpers
 			&& reader.TokenType == JsonTokenType.EndArray
 			)
 			{
-				return KeyValuePair.Create(key, value);
+				return new KeyValuePair<TKey, TValue>(key, value);
 			}
 			else
 			{

@@ -12,3 +12,5 @@
 /WebView2.DOM.Tests/obj
 /WebView2.DOM.Tests.NetCore3_1/bin
 /WebView2.DOM.Tests.NetCore3_1/obj
+/WebView2.DOM.Sample.NetFx/bin
+/WebView2.DOM.Sample.NetFx/obj

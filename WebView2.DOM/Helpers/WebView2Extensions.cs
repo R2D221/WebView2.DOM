@@ -135,7 +135,12 @@ namespace WebView2.DOM
 				},
 			});
 
+#if NETFRAMEWORK
+			_ = optionsToWebViews.Remove(result);
+			optionsToWebViews.Add(result, coreWebView);
+#else
 			optionsToWebViews.AddOrUpdate(result, coreWebView);
+#endif
 
 			return result;
 		}

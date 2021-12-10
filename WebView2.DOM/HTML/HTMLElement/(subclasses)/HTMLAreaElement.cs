@@ -25,7 +25,7 @@ namespace WebView2.DOM
 				.Split(',')
 				.Select(x => double.Parse(x, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite, CultureInfo.InvariantCulture))
 				.ToImmutableArray();
-			set => Set(string.Join(',', value.Select(x => x.ToString(CultureInfo.InvariantCulture))));
+			set => Set(string.Join(",", value.Select(x => x.ToString(CultureInfo.InvariantCulture))));
 		}
 		public string download { get => Get<string>(); set => Set(value); }
 		public Shape shape { get => Get<Shape>(); set => Set(value); }
@@ -37,7 +37,7 @@ namespace WebView2.DOM
 				.Select(x => new Uri(x))
 				.ToImmutableArray()
 				;
-			set => Set(string.Join(' ', value));
+			set => Set(string.Join(" ", value));
 		}
 		public string rel { get => Get<string>(); set => Set(value); }
 		public DOMTokenList relList => _relList ??= Get<DOMTokenList>();

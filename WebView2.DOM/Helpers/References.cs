@@ -80,7 +80,7 @@ namespace WebView2.DOM
 				["button"/*	*/] = (id) => new HTMLButtonInputElement/*	*/(coreWebView, id),
 			};
 
-			types = new Dictionary<string, Func<string, JsObject>>(t1.Concat(t2));
+			types = t1.Concat(t2).ToDictionary(x => x.Key, x => x.Value);
 		}
 
 		#region Called from JavaScript

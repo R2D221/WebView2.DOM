@@ -67,7 +67,7 @@ namespace WebView2.DOM
 			{
 				var _key = key(i)!;
 				var _value = getItem(_key)!;
-				yield return KeyValuePair.Create(_key, _value);
+				yield return new KeyValuePair<string, string>(_key, _value);
 			}
 		}
 
