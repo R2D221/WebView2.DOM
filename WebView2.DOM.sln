@@ -11,7 +11,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebView2.DOM.Tests", "WebVi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebView2.DOM.Tests.NetCore3_1", "WebView2.DOM.Tests.NetCore3_1\WebView2.DOM.Tests.NetCore3_1.csproj", "{5D40AAE4-6553-4EE4-AFD4-16EC137F1153}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebView2.DOM.Sample.NetFx", "WebView2.DOM.Sample.NetFx\WebView2.DOM.Sample.NetFx.csproj", "{3C73D0F4-B828-443A-884F-945456CFF094}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebView2.DOM.Sample.NetFx", "WebView2.DOM.Sample.NetFx\WebView2.DOM.Sample.NetFx.csproj", "{3C73D0F4-B828-443A-884F-945456CFF094}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "repo", "repo", "{0110E9B9-0BCE-420B-A103-EF41E241FFC5}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -31,7 +31,7 @@ var divs = document.body.children.Where(x => x is HTMLDivElement);
 
 You can install the library from NuGet. https://www.nuget.org/packages/WebView2.DOM/
 
-You need .NET 5.0 and [Microsoft Edge WebView2](https://docs.microsoft.com/en-us/microsoft-edge/webview2/).
+You need either .NET Framework (minimum 4.6.1) or .NET Core (minimum 3.1) and [Microsoft Edge WebView2](https://docs.microsoft.com/en-us/microsoft-edge/webview2/).
 
 This library is mainly tested with WPF, but WinForms should work as well. I haven't tested WinUI yet, but can be included in the future.
 
