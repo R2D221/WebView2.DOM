@@ -10,7 +10,7 @@ namespace WebView2.DOM
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/clipboard/data_transfer_item_list.idl
 
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
-	public class DataTransferItemList : JsObject, Collections.ICollection<DataTransferItem>
+	public partial class DataTransferItemList : JsObject, ICollection<DataTransferItem>
 	{
 		protected internal DataTransferItemList(CoreWebView2 coreWebView, string referenceId)
 			: base(coreWebView, referenceId) { }

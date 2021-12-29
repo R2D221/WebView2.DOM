@@ -7,7 +7,7 @@ namespace WebView2.DOM
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/html/track/text_track_cue_list.idl
 
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
-	public class TextTrackCueList : JsObject, WebView2.DOM.Collections.IReadOnlyCollection<TextTrackCue>
+	public partial class TextTrackCueList : JsObject, IReadOnlyCollection<TextTrackCue>
 	{
 		protected internal TextTrackCueList(CoreWebView2 coreWebView, string referenceId)
 			: base(coreWebView, referenceId) { }

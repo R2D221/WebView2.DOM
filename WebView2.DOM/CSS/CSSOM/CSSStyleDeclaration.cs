@@ -7,7 +7,7 @@ namespace WebView2.DOM
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/css/css_style_declaration.idl
 
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
-	public class CSSStyleDeclaration : JsObject, WebView2.DOM.Collections.IReadOnlyCollection<KeyValuePair<string, string>>
+	public partial class CSSStyleDeclaration : JsObject, IReadOnlyCollection<KeyValuePair<string, string>>
 	{
 		protected internal CSSStyleDeclaration(CoreWebView2 coreWebView, string referenceId)
 			: base(coreWebView, referenceId) { }

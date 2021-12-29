@@ -7,7 +7,7 @@ namespace WebView2.DOM
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/css/media_list.idl
 
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
-	public class MediaList : JsObject, Collections.ICollection<string>
+	public partial class MediaList : JsObject, ICollection<string>
 	{
 		protected internal MediaList(CoreWebView2 coreWebView, string referenceId)
 			: base(coreWebView, referenceId) { }

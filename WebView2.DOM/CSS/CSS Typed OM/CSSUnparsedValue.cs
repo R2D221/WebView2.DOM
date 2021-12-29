@@ -17,7 +17,7 @@ namespace WebView2.DOM
 	// as a request.
 
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
-	public class CSSUnparsedValue : CSSStyleValue, WebView2.DOM.Collections.IReadOnlyCollection<OneOf<string, CSSVariableReferenceValue>>
+	public partial class CSSUnparsedValue : CSSStyleValue, IReadOnlyCollection<OneOf<string, CSSVariableReferenceValue>>
 	{
 		protected internal CSSUnparsedValue(CoreWebView2 coreWebView, string referenceId)
 			: base(coreWebView, referenceId) { }

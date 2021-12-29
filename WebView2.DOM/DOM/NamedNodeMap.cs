@@ -8,7 +8,7 @@ namespace WebView2.DOM
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/dom/named_node_map.idl
 
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
-	public class NamedNodeMap : JsObject, WebView2.DOM.Collections.IReadOnlyCollection<Attr>
+	public partial class NamedNodeMap : JsObject, IReadOnlyCollection<Attr>
 	{
 		protected internal NamedNodeMap(CoreWebView2 coreWebView, string referenceId)
 			: base(coreWebView, referenceId) { }

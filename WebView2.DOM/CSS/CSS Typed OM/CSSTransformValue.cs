@@ -16,7 +16,7 @@ namespace WebView2.DOM
 	// as a request.
 
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
-	public class CSSTransformValue : CSSStyleValue, WebView2.DOM.Collections.IReadOnlyCollection<CSSTransformValue>
+	public partial class CSSTransformValue : CSSStyleValue, IReadOnlyCollection<CSSTransformValue>
 	{
 		protected internal CSSTransformValue(CoreWebView2 coreWebView, string referenceId)
 			: base(coreWebView, referenceId) { }

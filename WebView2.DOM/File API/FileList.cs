@@ -7,7 +7,7 @@ namespace WebView2.DOM
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/fileapi/file_list.idl
 
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
-	public class FileList : JsObject, WebView2.DOM.Collections.IReadOnlyCollection<File>
+	public partial class FileList : JsObject, IReadOnlyCollection<File>
 	{
 		protected internal FileList(CoreWebView2 coreWebView, string referenceId)
 			: base(coreWebView, referenceId) { }

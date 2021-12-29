@@ -8,7 +8,7 @@ namespace WebView2.DOM
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/html/track/text_track_list.idl
 
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
-	public class TextTrackList : EventTarget, WebView2.DOM.Collections.IReadOnlyCollection<TextTrack>
+	public partial class TextTrackList : EventTarget, IReadOnlyCollection<TextTrack>
 	{
 		protected internal TextTrackList(CoreWebView2 coreWebView, string referenceId)
 			: base(coreWebView, referenceId) { }

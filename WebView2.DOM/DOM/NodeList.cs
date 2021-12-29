@@ -14,7 +14,7 @@ namespace WebView2.DOM
 	}
 
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
-	public class NodeList<TNode> : JsObject, WebView2.DOM.Collections.IReadOnlyCollection<TNode>
+	public partial class NodeList<TNode> : JsObject, IReadOnlyCollection<TNode>
 		where TNode : Node
 	{
 		protected internal NodeList(CoreWebView2 coreWebView, string referenceId)

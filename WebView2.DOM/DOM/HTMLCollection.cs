@@ -14,7 +14,7 @@ namespace WebView2.DOM
 	}
 
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
-	public class HTMLCollection<TElement> : JsObject, WebView2.DOM.Collections.IReadOnlyCollection<TElement>
+	public partial class HTMLCollection<TElement> : JsObject, IReadOnlyCollection<TElement>
 	{
 		protected internal HTMLCollection(CoreWebView2 coreWebView, string referenceId)
 			: base(coreWebView, referenceId) { }

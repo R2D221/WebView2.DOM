@@ -7,7 +7,7 @@ namespace WebView2.DOM
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/css/css_rule_list.idl
 
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
-	public class CSSRuleList : JsObject, WebView2.DOM.Collections.IReadOnlyCollection<CSSRule>
+	public partial class CSSRuleList : JsObject, IReadOnlyCollection<CSSRule>
 	{
 		protected internal CSSRuleList(CoreWebView2 coreWebView, string referenceId)
 			: base(coreWebView, referenceId) { }

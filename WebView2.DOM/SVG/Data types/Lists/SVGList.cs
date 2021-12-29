@@ -12,7 +12,7 @@ namespace WebView2.DOM
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/svg/svg_transform_list.idl
 
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
-	public abstract class SVGList<T> : JsObject, Collections.IList<T>
+	public abstract partial class SVGList<T> : JsObject, IList<T>
 	{
 		protected internal SVGList(CoreWebView2 coreWebView, string referenceId)
 			: base(coreWebView, referenceId) { }
