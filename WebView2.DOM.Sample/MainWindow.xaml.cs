@@ -2,6 +2,7 @@
 using NodaTime.Extensions;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Threading;
 
 namespace WebView2.DOM.Sample
@@ -22,6 +23,7 @@ namespace WebView2.DOM.Sample
 
 		private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
 		{
+			return;
 			await webView.EnsureCoreWebView2Async();
 			await WebView2DOM.InitAsync(webView);
 			webView.CoreWebView2.DOMContentLoaded += async (s, e) =>

@@ -5,10 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WebView2.DOM.Sample"
         xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+        xmlns:wv2d="clr-namespace:TestXaml.Library;assembly=TestXaml.Library"
         mc:Ignorable="d"
         WindowState="Maximized"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <wv2:WebView2 x:Name="webView" />
+        <wv2:WebView2 x:Name="webView">
+            <wv2d:WebView2.Document>
+                <html xmlns="http://www.w3.org/1999/xhtml"></html>
+            </wv2d:WebView2.Document>
+        </wv2:WebView2>
     </Grid>
 </Window>

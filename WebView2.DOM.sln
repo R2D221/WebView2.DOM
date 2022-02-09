@@ -18,6 +18,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "repo", "repo", "{0110E9B9-0
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestXaml.Library", "TestXaml.Library\TestXaml.Library.csproj", "{122B5A98-D56A-432D-B747-C17B511B4685}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestXaml.App", "TestXaml.App\TestXaml.App.csproj", "{A741967B-97DB-453C-922E-1745147D3D9F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +48,14 @@ Global
 		{3C73D0F4-B828-443A-884F-945456CFF094}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C73D0F4-B828-443A-884F-945456CFF094}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C73D0F4-B828-443A-884F-945456CFF094}.Release|Any CPU.Build.0 = Release|Any CPU
+		{122B5A98-D56A-432D-B747-C17B511B4685}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{122B5A98-D56A-432D-B747-C17B511B4685}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{122B5A98-D56A-432D-B747-C17B511B4685}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{122B5A98-D56A-432D-B747-C17B511B4685}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A741967B-97DB-453C-922E-1745147D3D9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A741967B-97DB-453C-922E-1745147D3D9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A741967B-97DB-453C-922E-1745147D3D9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A741967B-97DB-453C-922E-1745147D3D9F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
