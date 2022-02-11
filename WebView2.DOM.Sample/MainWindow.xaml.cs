@@ -118,5 +118,10 @@ namespace WebView2.DOM.Sample
 
 			return timestamps.Count;
 		}
+
+		private void h1_onclick(object sender, MouseEvent e)
+		{
+			window.alert("Hello from XAML!");
+		}
 	}
 }

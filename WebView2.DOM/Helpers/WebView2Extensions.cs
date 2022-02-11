@@ -349,6 +349,7 @@ namespace WebView2.DOM
 		public static CoreWebView2 GetCoreWebView(this Microsoft.Web.WebView2.Wpf.WebView2 webView)
 		{
 			var coreWebView = wpfWebViews2.GetValue(webView, x => x.CoreWebView2);
+
 			_ = syncContexts.GetValue(coreWebView, _ =>
 			{
 				var result = SynchronizationContext.Current;
@@ -361,6 +362,7 @@ namespace WebView2.DOM
 					throw new InvalidOperationException();
 				}
 			});
+
 			return coreWebView;
 		}
 

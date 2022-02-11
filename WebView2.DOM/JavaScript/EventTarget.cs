@@ -1,5 +1,6 @@
 ﻿using Microsoft.Web.WebView2.Core;
 using System;
+using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
@@ -11,7 +12,8 @@ namespace WebView2.DOM
 		protected internal EventTarget(CoreWebView2 coreWebView, string referenceId)
 			: base(coreWebView, referenceId) { }
 
-		internal void AddEvent<T>(EventHandler<T>? value, [CallerMemberName] string @event = "")
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		public void AddEvent<T>(EventHandler<T>? value, [CallerMemberName] string @event = "")
 			where T : Event
 		{
 			var events = References.events.GetOrAdd(referenceId, _ => new());
