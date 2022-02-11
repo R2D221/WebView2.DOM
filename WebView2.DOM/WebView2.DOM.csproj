@@ -30,6 +30,7 @@
     <PackageReference Include="Enums.NET" Version="4.0.0" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.961.33" />
     <PackageReference Include="NodaTime" Version="3.0.5" />
+    <!--<PackageReference Include="PartialMixin" Version="1.0.54" />-->
     <PackageReference Include="Range" Version="3.0.6" />
     <PackageReference Include="SmartAnalyzers.CSharpExtensions.Annotations" Version="3.10.0" />
     <PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
