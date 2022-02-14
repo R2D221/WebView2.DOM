@@ -14,11 +14,11 @@
             <wv2d:WebView2.Document>
                 <html xmlns="http://www.w3.org/1999/xhtml">
                     <head>
-                        <title>This is a test</title>
+                        <!--<title>This is a test</title>-->
                     </head>
                     <body>
-                        <h1 style="color: red;" onclick="h1_onclick">Hello, World!</h1>
-                        <p>Hello, indeed.</p>
+                        <!--<h1 style="color: red;" onclick="h1_onclick">Hello, World!</h1>-->
+                        <!--<p>Hello, indeed.</p>-->
                     </body>
                 </html>
             </wv2d:WebView2.Document>

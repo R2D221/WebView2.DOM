@@ -2,11 +2,9 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Windows.Markup;
 
 namespace WebView2.Markup
 {
-	[ContentProperty(nameof(childNodes))]
 	public abstract class Element : Node
 	{
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -27,6 +25,6 @@ namespace WebView2.Markup
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
 		public ConcurrentDictionary<string, List<EventHandler<DOM.Event>>> events { get; } = new();
 
-		public NodeList childNodes { get; } = new();
+		public virtual NodeList childNodes { get; } = new EmptyNodeList();
 	}
 }

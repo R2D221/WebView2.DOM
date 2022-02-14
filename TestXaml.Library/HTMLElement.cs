@@ -2,8 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Windows.Markup;
 
 namespace WebView2.Markup
 {
@@ -25,6 +25,7 @@ namespace WebView2.Markup
 	}
 
 	[DebuggerDisplay("{DebuggerDisplay,nq}")]
+	[XmlLangProperty(nameof(lang))]
 	public abstract class HTMLElement : Element
 	{
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -40,7 +41,7 @@ namespace WebView2.Markup
 			+
 			">"
 			+
-			(childNodes.Any() ? "..." : "")
+			(childNodes.Count != 0 ? "..." : "")
 			+
 			$"</{qualifiedName}>"
 			;

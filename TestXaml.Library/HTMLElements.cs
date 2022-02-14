@@ -1,5 +1,10 @@
+using System.Collections;
+using System.Windows.Markup;
+
 namespace WebView2.Markup
 {
+	public interface head_or_body { }
+
 	public sealed class a/*						*/: HTMLElement { }
 	public sealed class abbr/*					*/: HTMLElement { }
 	public sealed class address/*				*/: HTMLElement { }
@@ -12,7 +17,14 @@ namespace WebView2.Markup
 	public sealed class bdi/*						*/: HTMLElement { }
 	public sealed class bdo/*						*/: HTMLElement { }
 	public sealed class blockquote/*				*/: HTMLElement { }
-	public sealed class body/*					*/: HTMLElement { }
+
+	[ContentProperty(nameof(bodyChildNodes))]
+	public sealed class body : HTMLElement, head_or_body
+	{
+		public DefaultNodeList bodyChildNodes { get; } = new();
+		public override NodeList childNodes => bodyChildNodes;
+	}
+
 	public sealed class br/*						*/: HTMLElement { }
 	public sealed class button/*					*/: HTMLElement { }
 	public sealed class canvas/*					*/: HTMLElement { }
@@ -44,11 +56,44 @@ namespace WebView2.Markup
 	public sealed class h4/*						*/: HTMLElement { }
 	public sealed class h5/*						*/: HTMLElement { }
 	public sealed class h6/*						*/: HTMLElement { }
-	public sealed class head/*					*/: HTMLElement { }
+
+	[ContentProperty(nameof(headChildNodes))]
+	public sealed class head : HTMLElement, head_or_body
+	{
+		public DefaultNodeList headChildNodes { get; } = new();
+		public override NodeList childNodes => headChildNodes;
+	}
+
 	public sealed class header/*					*/: HTMLElement { }
 	public sealed class hgroup/*					*/: HTMLElement { }
 	public sealed class hr/*						*/: HTMLElement { }
-	public sealed class html/*					*/: HTMLElement { }
+
+	[ContentProperty(nameof(htmlChildNodes))]
+	public sealed class html : HTMLElement
+	{
+		public htmlNodeList htmlChildNodes { get; } = new();
+		public override NodeList childNodes => htmlChildNodes;
+
+		[ContentWrapper(typeof(head))]
+		[ContentWrapper(typeof(body))]
+		public sealed class htmlNodeList : NodeList
+		{
+			public void Add(head_or_body node) => _ = ((IList)this).Add(node);
+
+			protected override bool Validate(Node node)
+			{
+				switch ((Count, node))
+				{
+				case (_, Text t) when string.IsNullOrWhiteSpace(t.data): return false;
+				case (0, head): return true;
+				case (1, body): return true;
+
+				default: throw new System.Exception($"Can't add child node {node?.GetType().Name ?? "null"} to {this.GetType().Name}");
+				}
+			}
+		}
+	}
+
 	public sealed class i/*						*/: HTMLElement { }
 	public sealed class iframe/*					*/: HTMLElement { }
 	public sealed class img/*						*/: HTMLElement { }

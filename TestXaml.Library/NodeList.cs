@@ -6,23 +6,31 @@ using System.Windows.Markup;
 
 namespace WebView2.Markup
 {
-	[ContentWrapper(typeof(Element))]
-	[ContentWrapper(typeof(Text))]
-	[WhitespaceSignificantCollection]
 	[DebuggerDisplay("Count = {Count}")]
-	public sealed class NodeList : IList<Node>, IList
+	public abstract class NodeList : /*IList<Node>, */IList
 	{
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
 		private readonly List<Node> list = new();
 
+		protected abstract bool Validate(Node node);
+
 		int IList.Add(object? value)
 		{
-			return ((IList)list).Add(value switch
+			Node node = value switch
 			{
-				Node node => node,
+				Node n => n,
 				string text => new Text(text),
 				_ => throw new Exception(),
-			});
+			};
+
+			if (Validate(node))
+			{
+				return ((IList)list).Add(node);
+			}
+			else
+			{
+				return -1;
+			}
 		}
 
 		public int Count => ((ICollection<Node>)list).Count;
@@ -36,7 +44,13 @@ namespace WebView2.Markup
 
 		public void RemoveAt(int index) => ((IList<Node>)list).RemoveAt(index);
 
-		public void Add(Node item) => ((ICollection<Node>)list).Add(item);
+		//public void Add(Node item)
+		//{
+		//	if (Validate(item))
+		//	{
+		//		((ICollection<Node>)list).Add(item);
+		//	}
+		//}
 
 		public void Clear() => ((ICollection<Node>)list).Clear();
 
@@ -48,7 +62,7 @@ namespace WebView2.Markup
 
 		public Node this[int index] { get => ((IList<Node>)list)[index]; set => ((IList<Node>)list)[index] = value; }
 
-		void ICollection<Node>.CopyTo(Node[] array, int arrayIndex) => ((ICollection<Node>)list).CopyTo(array, arrayIndex);
+		//void ICollection<Node>.CopyTo(Node[] array, int arrayIndex) => ((ICollection<Node>)list).CopyTo(array, arrayIndex);
 
 		object? IList.this[int index] { get => ((IList)list)[index]; set => ((IList)list)[index] = value; }
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -65,5 +79,23 @@ namespace WebView2.Markup
 		void ICollection.CopyTo(Array array, int index) => ((ICollection)list).CopyTo(array, index);
 
 		IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)list).GetEnumerator();
+	}
+
+	public sealed class EmptyNodeList : NodeList
+	{
+		protected override bool Validate(Node node)
+		{
+			throw new NotImplementedException();
+		}
+	}
+
+	[ContentWrapper(typeof(Element))]
+	[ContentWrapper(typeof(Text))]
+	[WhitespaceSignificantCollection]
+	public sealed class DefaultNodeList : NodeList
+	{
+		public void Add(Node node) => _ = ((IList)this).Add(node);
+
+		protected override bool Validate(Node node) => true;
 	}
 }
