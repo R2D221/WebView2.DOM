@@ -98,4 +98,19 @@ namespace WebView2.Markup
 
 		protected override bool Validate(Node node) => true;
 	}
+
+	public sealed class TextNodeList : NodeList
+	{
+		protected override bool Validate(Node node)
+		{
+			if (node is Text)
+			{
+				return true;
+			}
+			else
+			{
+				throw new Exception("Can't insert elements");
+			}
+		}
+	}
 }

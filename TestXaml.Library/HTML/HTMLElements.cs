@@ -8,7 +8,7 @@ namespace WebView2.Markup
 	public sealed class aside/*					*/: HTMLElement { }
 	public sealed class audio/*					*/: HTMLElement { }
 	public sealed class b/*						*/: HTMLElement { }
-	public sealed class @base/*					*/: HTMLElement { }
+	public sealed class @base/*					*/: HTMLElement, MetadataContent { }
 	public sealed class bdi/*						*/: HTMLElement { }
 	public sealed class bdo/*						*/: HTMLElement { }
 	public sealed class blockquote/*				*/: HTMLElement { }
@@ -58,14 +58,14 @@ namespace WebView2.Markup
 	public sealed class label/*					*/: HTMLElement { }
 	public sealed class legend/*					*/: HTMLElement { }
 	public sealed class li/*						*/: HTMLElement { }
-	public sealed class link/*					*/: HTMLElement { }
+	public sealed class link/*					*/: HTMLElement, MetadataContent { }
 	public sealed class main/*					*/: HTMLElement { }
 	public sealed class map/*						*/: HTMLElement { }
 	public sealed class mark/*					*/: HTMLElement { }
-	public sealed class meta/*					*/: HTMLElement { }
+	public sealed class meta/*					*/: HTMLElement, MetadataContent { }
 	public sealed class meter/*					*/: HTMLElement { }
 	public sealed class nav/*						*/: HTMLElement { }
-	public sealed class noscript/*				*/: HTMLElement { }
+	public sealed class noscript/*				*/: HTMLElement, MetadataContent { }
 	public sealed class @object/*					*/: HTMLElement { }
 	public sealed class ol/*						*/: HTMLElement { }
 	public sealed class optgroup/*				*/: HTMLElement { }
@@ -82,7 +82,7 @@ namespace WebView2.Markup
 	public sealed class ruby/*					*/: HTMLElement { }
 	public sealed class s/*						*/: HTMLElement { }
 	public sealed class samp/*					*/: HTMLElement { }
-	public sealed class script/*					*/: HTMLElement { }
+	public sealed class script/*					*/: HTMLElement, MetadataContent { }
 	public sealed class section/*					*/: HTMLElement { }
 	public sealed class select/*					*/: HTMLElement { }
 	public sealed class slot/*					*/: HTMLElement { }
@@ -90,20 +90,19 @@ namespace WebView2.Markup
 	public sealed class source/*					*/: HTMLElement { }
 	public sealed class span/*					*/: HTMLElement { }
 	public sealed class strong/*					*/: HTMLElement { }
-	public sealed class style/*					*/: HTMLElement { }
+	public sealed class style/*					*/: HTMLElement, MetadataContent { }
 	public sealed class sub/*						*/: HTMLElement { }
 	public sealed class summary/*					*/: HTMLElement { }
 	public sealed class sup/*						*/: HTMLElement { }
 	public sealed class table/*					*/: HTMLElement { }
 	public sealed class tbody/*					*/: HTMLElement { }
 	public sealed class td/*						*/: HTMLElement { }
-	public sealed class template/*				*/: HTMLElement { }
+	public sealed class template/*				*/: HTMLElement, MetadataContent { }
 	public sealed class textarea/*				*/: HTMLElement { }
 	public sealed class tfoot/*					*/: HTMLElement { }
 	public sealed class th/*						*/: HTMLElement { }
 	public sealed class thead/*					*/: HTMLElement { }
 	public sealed class time/*					*/: HTMLElement { }
-	public sealed class title/*					*/: HTMLElement { }
 	public sealed class tr/*						*/: HTMLElement { }
 	public sealed class track/*					*/: HTMLElement { }
 	public sealed class u/*						*/: HTMLElement { }
