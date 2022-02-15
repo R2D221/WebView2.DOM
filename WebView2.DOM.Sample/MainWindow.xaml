@@ -17,8 +17,8 @@
                         <title>This is a test</title>
                     </head>
                     <body>
-                        <!--<h1 style="color: red;" onclick="h1_onclick">Hello, World!</h1>-->
-                        <!--<p>Hello, indeed.</p>-->
+                        <h1 style="color: red;" onclick="h1_onclick"><!--Hello, World!--></h1>
+                        <p><!--Hello, indeed.--></p>
                     </body>
                 </html>
             </wv2d:WebView2.Document>
