@@ -1,9 +1,17 @@
 namespace WebView2.Markup
 {
 	public sealed class a/*						*/: HTMLElement, PhrasingContent { /* check docs */ }
+	public sealed class area/*					*/: HTMLElement, PhrasingContent { /* check docs */ }
+	public sealed class input/*					*/: HTMLElement, PhrasingContent { }
+	public sealed class link/*					*/: HTMLElement, MetadataContent, PhrasingContent { /* check docs */ }
+	public sealed class main/*					*/: HTMLElement, FlowContent { /* check docs */ }
+	public sealed class meta/*					*/: HTMLElement, MetadataContent, PhrasingContent { /* check docs */ }
+
+
+
+
 	public sealed class abbr/*					*/: HTMLElement, PhrasingContent { }
 	public sealed class address/*				*/: HTMLElement, FlowContent { }
-	public sealed class area/*					*/: HTMLElement, PhrasingContent { /* check docs */ }
 	public sealed class article/*				*/: HTMLElement, FlowContent { }
 	public sealed class aside/*					*/: HTMLElement, FlowContent { }
 	public sealed class audio/*					*/: HTMLElement, PhrasingContent { }
@@ -52,21 +60,17 @@ namespace WebView2.Markup
 	public sealed class i/*						*/: HTMLElement, PhrasingContent { }
 	public sealed class iframe/*					*/: HTMLElement, PhrasingContent { }
 	public sealed class img/*						*/: HTMLElement, PhrasingContent { }
-	public sealed class input/*					*/: HTMLElement, PhrasingContent { }
 	public sealed class ins/*						*/: HTMLElement, PhrasingContent { }
 	public sealed class kbd/*						*/: HTMLElement, PhrasingContent { }
 	public sealed class label/*					*/: HTMLElement, PhrasingContent { }
 	public sealed class legend/*					*/: HTMLElement { }
 	public sealed class li/*						*/: HTMLElement { }
-	public sealed class link/*					*/: HTMLElement, MetadataContent, PhrasingContent { /* check docs */ }
-	public sealed class main/*					*/: HTMLElement, FlowContent { /* check docs */ }
 	public sealed class map/*						*/: HTMLElement, PhrasingContent { }
 	public sealed class mark/*					*/: HTMLElement, PhrasingContent { }
 
 	/* MathML : PhrasingContent */
 	/* menu : PhrasingContent */
 
-	public sealed class meta/*					*/: HTMLElement, MetadataContent, PhrasingContent { /* itemprop */ }
 	public sealed class meter/*					*/: HTMLElement, PhrasingContent { }
 	public sealed class nav/*						*/: HTMLElement, FlowContent { }
 	public sealed class noscript/*				*/: HTMLElement, MetadataContent, PhrasingContent { }
