@@ -10,14 +10,6 @@ namespace WebView2.Markup
 		public headNodeList headChildNodes { get; } = new();
 		public override NodeList childNodes => headChildNodes;
 
-		[ContentWrapper(typeof(@base))]
-		[ContentWrapper(typeof(link))]
-		[ContentWrapper(typeof(meta))]
-		[ContentWrapper(typeof(noscript))]
-		[ContentWrapper(typeof(script))]
-		[ContentWrapper(typeof(style))]
-		[ContentWrapper(typeof(template))]
-		[ContentWrapper(typeof(title))]
 		public sealed class headNodeList : NodeList
 		{
 			public void Add(MetadataContent node) => _ = ((IList)this).Add(node);

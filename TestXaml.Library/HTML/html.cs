@@ -9,8 +9,6 @@ namespace WebView2.Markup
 		public htmlNodeList htmlChildNodes { get; } = new();
 		public override NodeList childNodes => htmlChildNodes;
 
-		[ContentWrapper(typeof(head))]
-		[ContentWrapper(typeof(body))]
 		public sealed class htmlNodeList : NodeList
 		{
 			public void Add(head_or_body node) => _ = ((IList)this).Add(node);
