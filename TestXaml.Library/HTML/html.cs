@@ -15,11 +15,10 @@ namespace WebView2.Markup
 
 			protected override bool Validate(Node node)
 			{
-				switch ((Count, node))
+				switch (node)
 				{
-				case (_, Text t) when string.IsNullOrWhiteSpace(t.data): return false;
-				case (0, head): return true;
-				case (1, body): return true;
+				case head: return true;
+				case body: return true;
 
 				default: throw new System.Exception($"Can't add child node {node?.GetType().Name ?? "null"} to {this.GetType().Name}");
 				}

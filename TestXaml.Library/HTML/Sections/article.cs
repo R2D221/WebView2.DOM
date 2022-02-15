@@ -1,29 +1,16 @@
-﻿using System.Collections;
-using System.Windows.Markup;
+﻿using System.Windows.Markup;
 
 namespace WebView2.Markup
 {
-	//[ContentProperty(nameof(articleChildNodes))]
-	public sealed class article : HTMLElement, FlowContent, SectioningContent
+	/// <summary>
+	/// The article element represents a complete, or self-contained, composition in a document, page, application, or site and that is,
+	/// in principle, independently distributable or reusable, e.g. in syndication. This could be a forum post, a magazine or newspaper
+	/// article, a blog entry, a user-submitted comment, an interactive widget or gadget, or any other independent item of content.
+	/// </summary>
+	[ContentProperty(nameof(articleChildNodes))]
+	public sealed class article : HTMLElement, FlowContent, SectioningContent, headerContent_footerContent
 	{
-		//public articleNodeList articleChildNodes { get; } = new();
-		//public override NodeList childNodes => articleChildNodes;
-
-		//[WhitespaceSignificantCollection]
-		//public sealed class articleNodeList : NodeList
-		//{
-		//	public void Add(FlowContent node) => _ = ((IList)this).Add(node);
-
-		//	protected override bool Validate(Node node)
-		//	{
-		//		switch (node)
-		//		{
-
-		//		case FlowContent: return true;
-
-		//		default: throw new System.Exception($"Can't add child node {node?.GetType().Name ?? "null"} to {this.GetType().Name}");
-		//		}
-		//	}
-		//}
+		public FlowContentNodeList articleChildNodes { get; } = new();
+		public override NodeList childNodes => articleChildNodes;
 	}
 }

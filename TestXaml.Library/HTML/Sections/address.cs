@@ -5,8 +5,12 @@ namespace WebView2.Markup
 {
 	public interface addressContent { }
 
+	/// <summary>
+	/// The address element represents the contact information for its nearest article or body element ancestor. If that is the body
+	/// element, then the contact information applies to the document as a whole.
+	/// </summary>
 	[ContentProperty(nameof(addressChildNodes))]
-	public sealed class address : HTMLElement, FlowContent
+	public sealed class address : HTMLElement, FlowContent, headerContent_footerContent
 	{
 		public addressNodeList addressChildNodes { get; } = new();
 		public override NodeList childNodes => addressChildNodes;
@@ -20,6 +24,8 @@ namespace WebView2.Markup
 
 			protected override bool Validate(Node node)
 			{
+#warning The spec says *descendants*, not just children.
+
 				switch (node)
 				{
 				case HeadingContent: throw new System.Exception();
