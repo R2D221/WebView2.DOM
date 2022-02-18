@@ -4,7 +4,7 @@ using System.Windows.Markup;
 namespace WebView2.Markup
 {
 	[ContentProperty(nameof(hgroupChildNodes))]
-	public sealed class hgroup : HTMLElement, FlowContent, HeadingContent, headerContent_footerContent
+	public sealed class hgroup : HTMLElement, FlowContent, HeadingContent, header_footer_Content
 	{
 		public hgroupNodeList hgroupChildNodes { get; } = new();
 		public override NodeList childNodes => hgroupChildNodes;

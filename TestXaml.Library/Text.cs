@@ -6,7 +6,7 @@ namespace WebView2.Markup
 {
 	[ContentProperty(nameof(data))]
 	[DebuggerDisplay("#text {data}")]
-	public sealed class Text : Node, PhrasingContent, addressContent
+	public sealed class Text : Node, PhrasingContent, addressContent, header_footer_Content, dtContent
 	{
 		public string data { get; set; }
 

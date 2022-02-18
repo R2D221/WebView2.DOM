@@ -8,7 +8,7 @@ namespace WebView2.Markup
 	/// in printed typography.
 	/// </summary>
 	[ContentProperty(nameof(asideChildNodes))]
-	public sealed class aside : HTMLElement, FlowContent, SectioningContent, headerContent_footerContent
+	public sealed class aside : HTMLElement, FlowContent, SectioningContent, header_footer_Content
 	{
 		public FlowContentNodeList asideChildNodes { get; } = new();
 		public override NodeList childNodes => asideChildNodes;

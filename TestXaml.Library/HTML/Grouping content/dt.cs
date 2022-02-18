@@ -3,23 +3,22 @@ using System.Windows.Markup;
 
 namespace WebView2.Markup
 {
-	public interface addressContent { }
+	public interface dtContent { }
 
 	/// <summary>
-	/// The address element represents the contact information for its nearest article or body element ancestor. If that is the body
-	/// element, then the contact information applies to the document as a whole.
+	/// The dt element represents the term, or name, part of a term-description group in a description list (dl element).
 	/// </summary>
-	[ContentProperty(nameof(addressChildNodes))]
-	public sealed class address : HTMLElement, FlowContent, header_footer_Content, dtContent
+	[ContentProperty(nameof(dtChildNodes))]
+	public sealed class dt : HTMLElement, dlContent
 	{
-		public addressNodeList addressChildNodes { get; } = new();
-		public override NodeList childNodes => addressChildNodes;
+		public dtNodeList dtChildNodes { get; } = new();
+		public override NodeList childNodes => dtChildNodes;
 
 		[ContentWrapper(typeof(Text))]
 		[WhitespaceSignificantCollection]
-		public sealed class addressNodeList : NodeList
+		public sealed class dtNodeList : NodeList
 		{
-			public void Add(addressContent node) => _ = ((IList)this).Add(node);
+			public void Add(dtContent node) => _ = ((IList)this).Add(node);
 
 			protected override bool Validate(Node node)
 			{
@@ -31,7 +30,6 @@ namespace WebView2.Markup
 				case SectioningContent: throw new System.Exception();
 				case header: throw new System.Exception();
 				case footer: throw new System.Exception();
-				case address: throw new System.Exception();
 
 				case FlowContent: return true;
 

@@ -7,7 +7,7 @@ namespace WebView2.Markup
 	/// of content, typically with a heading.
 	/// </summary>
 	[ContentProperty(nameof(sectionChildNodes))]
-	public sealed class section : HTMLElement, FlowContent, SectioningContent, headerContent_footerContent
+	public sealed class section : HTMLElement, FlowContent, SectioningContent, header_footer_Content
 	{
 		public FlowContentNodeList sectionChildNodes { get; } = new();
 		public override NodeList childNodes => sectionChildNodes;

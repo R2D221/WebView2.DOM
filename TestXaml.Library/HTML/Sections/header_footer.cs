@@ -3,13 +3,13 @@ using System.Windows.Markup;
 
 namespace WebView2.Markup
 {
-	public interface headerContent_footerContent { }
+	public interface header_footer_Content { }
 
 	[ContentWrapper(typeof(Text))]
 	[WhitespaceSignificantCollection]
 	public sealed class header_footer_NodeList : NodeList
 	{
-		public void Add(headerContent_footerContent node) => _ = ((IList)this).Add(node);
+		public void Add(header_footer_Content node) => _ = ((IList)this).Add(node);
 
 		protected override bool Validate(Node node)
 		{

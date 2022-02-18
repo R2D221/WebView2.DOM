@@ -8,7 +8,7 @@ namespace WebView2.Markup
 	/// article, a blog entry, a user-submitted comment, an interactive widget or gadget, or any other independent item of content.
 	/// </summary>
 	[ContentProperty(nameof(articleChildNodes))]
-	public sealed class article : HTMLElement, FlowContent, SectioningContent, headerContent_footerContent
+	public sealed class article : HTMLElement, FlowContent, SectioningContent, header_footer_Content
 	{
 		public FlowContentNodeList articleChildNodes { get; } = new();
 		public override NodeList childNodes => articleChildNodes;

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Windows.Markup;
 
 namespace WebView2.Markup
@@ -81,13 +82,13 @@ namespace WebView2.Markup
 		protected void SetAttribute<TEnum>(TEnum? value, [CallerMemberName] string name = "")
 			where TEnum : struct, System.Enum
 		{
-			SetAttribute(value?.AsString());
+			SetAttribute(value?.AsString(EnumFormat.EnumMemberValue, EnumFormat.Name), name);
 		}
 
 		protected TEnum? GetAttribute<TEnum>([CallerMemberName] string name = "")
 			where TEnum : struct, System.Enum
 		{
-			return GetAttribute() is { } x ? Enums.Parse<TEnum>(x) : null;
+			return GetAttribute(name) is { } x ? Enums.Parse<TEnum>(x, ignoreCase: false, EnumFormat.EnumMemberValue, EnumFormat.Name) : null;
 		}
 
 		protected void AddEvent<TEvent>(EventHandler<TEvent> value, [CallerMemberName] string name = "")
@@ -145,7 +146,11 @@ namespace WebView2.Markup
 		public string? nonce { get => GetAttribute(); set => SetAttribute(value); }
 		public spellcheck? spellcheck { get => GetAttribute<spellcheck>(); set => SetAttribute(value); }
 		public string? style { get => GetAttribute(); set => SetAttribute(value); }
-		public int? tabindex { get => int.TryParse(GetAttribute(), out int result) ? result : null; set => SetAttribute(value is int i ? i.ToString() : null); }
+		public int? tabindex
+		{
+			get => GetAttribute() is { } s ? JsonSerializer.Deserialize<int>(s) : null;
+			set => SetAttribute(value is { } i ? JsonSerializer.Serialize(i) : null);
+		}
 		public string? title { get => GetAttribute(); set => SetAttribute(value); }
 		public translate? translate { get => GetAttribute<translate>(); set => SetAttribute(value); }
 
