@@ -15,7 +15,7 @@ namespace WebView2.Markup
 		public override NodeList childNodes => figureChildNodes;
 
 		[ContentWrapper(typeof(Text))]
-		[ContentWrapper(typeof(figCaptionWrapper))]
+		[ContentWrapper(typeof(figcaptionWrapper))]
 		[WhitespaceSignificantCollection]
 		public sealed class figureNodeList : NodeList
 		{
@@ -40,10 +40,10 @@ namespace WebView2.Markup
 	}
 
 	[ContentProperty(nameof(Item))]
-	public class figCaptionWrapper : FlowContent
+	public class figcaptionWrapper : FlowContent
 	{
 		public figcaption Item { get; set; }
 
-		public figCaptionWrapper(figcaption item) => Item = item;
+		public figcaptionWrapper(figcaption item) => Item = item;
 	}
 }

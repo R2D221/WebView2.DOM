@@ -12,6 +12,9 @@ namespace WebView2.Markup
 		public FlowContentNodeList blockquoteChildNodes { get; } = new();
 		public override NodeList childNodes => blockquoteChildNodes;
 
+		/// <summary>
+		/// Content inside a blockquote must be quoted from another source, whose address, if it has one, may be cited in the cite attribute.
+		/// </summary>
 		public Uri? cite
 		{
 			get => GetAttribute() is { } s ? new Uri(s, UriKind.RelativeOrAbsolute) : null;
