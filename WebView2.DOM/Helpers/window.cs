@@ -7,13 +7,15 @@ namespace WebView2.DOM
 {
 	public static class window
 	{
-		private static AsyncLocal<Window?> _window = new AsyncLocal<Window?>();
+		//private static AsyncLocal<Window?> _window = new AsyncLocal<Window?>();
 
-		internal static Window Instance => _window.Value ?? throw new InvalidOperationException("The calling thread cannot access this object because a different thread owns it.");
+		//internal static Window Instance => _window.Value ?? throw new InvalidOperationException("The calling thread cannot access this object because a different thread owns it.");
 
-		internal static void SetInstance(Window? value) => _window.Value = value;
+		//internal static void SetInstance(Window? value) => _window.Value = value;
 
-		internal static bool HasValue() => _window.Value != null;
+		//internal static bool HasValue() => _window.Value != null;
+
+		internal static Window Instance => BrowsingContext.Current.Window;
 
 		#region Window
 		public static event EventHandler<Event>? onsearch { add => Instance.AddEvent(value); remove => Instance.RemoveEvent(value); }
@@ -110,7 +112,7 @@ namespace WebView2.DOM
 		public static void queueMicrotask(Action callback)
 			=> Instance.Method().Invoke(callback);
 		public static AnimationFrameID requestAnimationFrame(Action<Duration> callback)
-			=> Instance.Method<AnimationFrameID>().Invoke(new Action<double>((highResTime) => callback(Duration.FromNanoseconds(Math.Round(highResTime * 1000) * 1000))));
+			=> Instance.requestAnimationFrame(callback);
 		public static IdleCallbackID requestIdleCallback(Action<IdleDeadline> callback)
 			=> Instance.Method<IdleCallbackID>().Invoke(callback);
 		public static IdleCallbackID requestIdleCallback(Action<IdleDeadline> callback, IdleRequestOptions options)

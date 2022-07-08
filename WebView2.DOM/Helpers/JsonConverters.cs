@@ -10,6 +10,24 @@ using System.Threading.Tasks;
 
 namespace WebView2.DOM.Helpers
 {
+	internal static class JSON
+	{
+		public static JsonSerializerOptions Options { get; } =
+			new JsonSerializerOptions
+			{
+				Converters =
+				{
+					new EnumJsonConverterFactory(),
+					new JsObjectJsonConverterFactory(),
+					new DelegateJsonConverterFactory(),
+					new anyJsonConverter(),
+					//new LocalDateTimeJsonConverter(),
+					new KeyValuePairJsonConverterFactory(),
+					new OneOfJsonConverterFactory(),
+				},
+			};
+	}
+
 	internal sealed class EnumJsonConverterFactory : JsonConverterFactory
 	{
 		public override bool CanConvert(Type typeToConvert) =>
@@ -72,10 +90,15 @@ namespace WebView2.DOM.Helpers
 			&& reader.Read()
 			&& reader.GetString() is string referenceId
 			&& reader.Read()
+			&& reader.TokenType == JsonTokenType.PropertyName
+			&& reader.GetString() == "referenceType"
+			&& reader.Read()
+			&& reader.GetString() is string referenceType
+			&& reader.Read()
 			&& reader.TokenType == JsonTokenType.EndObject
 			)
 			{
-				return References.GetNullable<TJsObject>(referenceId);
+				return References2.Load<TJsObject>(referenceId, referenceType);
 			}
 			else
 			{
@@ -88,7 +111,7 @@ namespace WebView2.DOM.Helpers
 			if (value is null) { writer.WriteNullValue(); return; }
 
 			writer.WriteStartObject();
-			writer.WriteString("referenceId", value.referenceId);
+			writer.WriteString("referenceId", References2.GetId(value));
 			writer.WriteEndObject();
 		}
 	}
@@ -111,10 +134,15 @@ namespace WebView2.DOM.Helpers
 			&& reader.Read()
 			&& reader.GetString() is string referenceId
 			&& reader.Read()
+			&& reader.TokenType == JsonTokenType.PropertyName
+			&& reader.GetString() == "referenceType"
+			&& reader.Read()
+			&& reader.GetString() is string referenceType
+			&& reader.Read()
 			&& reader.TokenType == JsonTokenType.EndObject
 			)
 			{
-				return (I?)(object?)References.GetNullable<JsObject>(referenceId);
+				return (I?)(object?)References2.Load<JsObject>(referenceId, referenceType);
 			}
 			else
 			{
@@ -129,440 +157,33 @@ namespace WebView2.DOM.Helpers
 			if (value is not JsObject obj) { throw new InvalidOperationException(); }
 
 			writer.WriteStartObject();
-			writer.WriteString("referenceId", obj.referenceId);
+			writer.WriteString("referenceId", References2.GetId(obj));
 			writer.WriteEndObject();
 		}
 	}
 
-	internal sealed class TaskJsonConverterFactory : JsonConverterFactory
+	internal sealed class DelegateJsonConverterFactory : JsonConverterFactory
 	{
 		public override bool CanConvert(Type typeToConvert) =>
-			typeof(Task).IsAssignableFrom(typeToConvert)
+			typeof(Delegate).IsAssignableFrom(typeToConvert)
 			;
-
-		public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options) =>
-			typeToConvert.GetGenericArguments() is Type[] genericArguments
-			&& genericArguments.SingleOrDefault() is Type genericArgument
-			? (JsonConverter)Activator.CreateInstance(typeof(TaskJsonConverter<>).MakeGenericType(genericArgument))!
-			: new VoidTaskJsonConverter()
-			;
-	}
-
-	internal sealed class TaskJsonConverter<T> : JsonConverter<Task<T>>
-	{
-		public override Task<T> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-		{
-			if (reader.TokenType == JsonTokenType.Null)
-			{
-				throw new NullReferenceException();
-			}
-
-			if (true
-			&& reader.TokenType == JsonTokenType.StartObject
-			&& reader.Read()
-			&& reader.TokenType == JsonTokenType.PropertyName
-			&& reader.GetString() == "promiseId"
-			&& reader.Read()
-			&& reader.GetString() is string promiseId
-			&& reader.Read()
-			&& reader.TokenType == JsonTokenType.EndObject
-			)
-			{
-				return References.GetTask(promiseId).ContinueWith(x =>
-					JsonSerializer.Deserialize<T>(x.GetAwaiter().GetResult(), options)!
-				);
-			}
-			else
-			{
-				throw new InvalidOperationException();
-			}
-		}
-
-		public override void Write(Utf8JsonWriter writer, Task<T> value, JsonSerializerOptions options)
-		{
-			throw new NotSupportedException();
-		}
-	}
-
-	internal sealed class VoidTaskJsonConverter : JsonConverter<Task>
-	{
-		public override Task Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-		{
-			if (reader.TokenType == JsonTokenType.Null)
-			{
-				throw new NullReferenceException();
-			}
-
-			if (true
-			&& reader.TokenType == JsonTokenType.StartObject
-			&& reader.Read()
-			&& reader.TokenType == JsonTokenType.PropertyName
-			&& reader.GetString() == "promiseId"
-			&& reader.Read()
-			&& reader.GetString() is string promiseId
-			&& reader.Read()
-			&& reader.TokenType == JsonTokenType.EndObject
-			)
-			{
-				return References.GetTask(promiseId);
-			}
-			else
-			{
-				throw new InvalidOperationException();
-			}
-		}
-
-		public override void Write(Utf8JsonWriter writer, Task value, JsonSerializerOptions options)
-		{
-			throw new NotSupportedException();
-		}
-	}
-
-	internal sealed class ActionJsonConverterFactory : JsonConverterFactory
-	{
-		private static readonly ImmutableDictionary<Type, Type> converters =
-			ImmutableDictionary<Type, Type>.Empty
-			.Add(typeof(Action<>/*	*/), typeof(ActionJsonConverter<>/*	*/))
-			.Add(typeof(Action<,>/*	*/), typeof(ActionJsonConverter<,>/*	*/))
-			.Add(typeof(Action<,,>/*	*/), typeof(ActionJsonConverter<,,>/*	*/))
-			.Add(typeof(Action<,,,>/*	*/), typeof(ActionJsonConverter<,,,>/*	*/))
-			.Add(typeof(Action<,,,,>/*	*/), typeof(ActionJsonConverter<,,,,>/*	*/))
-			.Add(typeof(Action<,,,,,>/*	*/), typeof(ActionJsonConverter<,,,,,>/*	*/))
-			.Add(typeof(Action<,,,,,,>/*	*/), typeof(ActionJsonConverter<,,,,,,>/*	*/))
-			.Add(typeof(Action<,,,,,,,>/*	*/), typeof(ActionJsonConverter<,,,,,,,>/*	*/))
-			.Add(typeof(Action<,,,,,,,,>/*	*/), typeof(ActionJsonConverter<,,,,,,,,>/*	*/))
-			.Add(typeof(Action<,,,,,,,,,>/*	*/), typeof(ActionJsonConverter<,,,,,,,,,>/*	*/))
-			.Add(typeof(Action<,,,,,,,,,,>/*	*/), typeof(ActionJsonConverter<,,,,,,,,,,>/*	*/))
-			.Add(typeof(Action<,,,,,,,,,,,>/*	*/), typeof(ActionJsonConverter<,,,,,,,,,,,>/*	*/))
-			.Add(typeof(Action<,,,,,,,,,,,,>/*	*/), typeof(ActionJsonConverter<,,,,,,,,,,,,>/*	*/))
-			.Add(typeof(Action<,,,,,,,,,,,,,>/*	*/), typeof(ActionJsonConverter<,,,,,,,,,,,,,>/*	*/))
-			.Add(typeof(Action<,,,,,,,,,,,,,,>/*	*/), typeof(ActionJsonConverter<,,,,,,,,,,,,,,>/*	*/))
-			.Add(typeof(Action<,,,,,,,,,,,,,,,>/*	*/), typeof(ActionJsonConverter<,,,,,,,,,,,,,,,>/*	*/))
-			;
-
-		public override bool CanConvert(Type typeToConvert) =>
-			typeToConvert.IsGenericType && converters.ContainsKey(typeToConvert.GetGenericTypeDefinition());
 
 		public override JsonConverter? CreateConverter(Type typeToConvert, JsonSerializerOptions options) =>
-			(JsonConverter)Activator.CreateInstance(converters[typeToConvert.GetGenericTypeDefinition()].MakeGenericType(typeToConvert.GetGenericArguments()))!;
+			new DelegateJsonConverter();
 	}
 
-	internal sealed class ActionJsonConverter : JsonConverter<Action?>
+	internal sealed class DelegateJsonConverter : JsonConverter<Delegate>
 	{
-		public override Action? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		public override Delegate? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
 			throw new NotImplementedException();
 		}
 
-		public override void Write(Utf8JsonWriter writer, Action? value, JsonSerializerOptions options)
+		public override void Write(Utf8JsonWriter writer, Delegate value, JsonSerializerOptions options)
 		{
 			if (value is null) { writer.WriteNullValue(); return; }
 
-			var callbackId = References.AddCallback(value);
-
-			writer.WriteStartObject();
-			writer.WriteString("callbackId", callbackId);
-			writer.WriteEndObject();
-		}
-	}
-
-	internal sealed class ActionJsonConverter<T1> : JsonConverter<Action<T1>?>
-	{
-		public override Action<T1>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-		{
-			throw new NotImplementedException();
-		}
-
-		public override void Write(Utf8JsonWriter writer, Action<T1>? value, JsonSerializerOptions options)
-		{
-			if (value is null) { writer.WriteNullValue(); return; }
-
-			var callbackId = References.AddCallback(value);
-
-			writer.WriteStartObject();
-			writer.WriteString("callbackId", callbackId);
-			writer.WriteEndObject();
-		}
-	}
-
-	internal sealed class ActionJsonConverter<T1, T2> : JsonConverter<Action<T1, T2>?>
-	{
-		public override Action<T1, T2>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-		{
-			throw new NotImplementedException();
-		}
-
-		public override void Write(Utf8JsonWriter writer, Action<T1, T2>? value, JsonSerializerOptions options)
-		{
-			if (value is null) { writer.WriteNullValue(); return; }
-
-			var callbackId = References.AddCallback(value);
-
-			writer.WriteStartObject();
-			writer.WriteString("callbackId", callbackId);
-			writer.WriteEndObject();
-		}
-	}
-
-	internal sealed class ActionJsonConverter<T1, T2, T3> : JsonConverter<Action<T1, T2, T3>?>
-	{
-		public override Action<T1, T2, T3>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-		{
-			throw new NotImplementedException();
-		}
-
-		public override void Write(Utf8JsonWriter writer, Action<T1, T2, T3>? value, JsonSerializerOptions options)
-		{
-			if (value is null) { writer.WriteNullValue(); return; }
-
-			var callbackId = References.AddCallback(value);
-
-			writer.WriteStartObject();
-			writer.WriteString("callbackId", callbackId);
-			writer.WriteEndObject();
-		}
-	}
-
-	internal sealed class ActionJsonConverter<T1, T2, T3, T4> : JsonConverter<Action<T1, T2, T3, T4>?>
-	{
-		public override Action<T1, T2, T3, T4>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-		{
-			throw new NotImplementedException();
-		}
-
-		public override void Write(Utf8JsonWriter writer, Action<T1, T2, T3, T4>? value, JsonSerializerOptions options)
-		{
-			if (value is null) { writer.WriteNullValue(); return; }
-
-			var callbackId = References.AddCallback(value);
-
-			writer.WriteStartObject();
-			writer.WriteString("callbackId", callbackId);
-			writer.WriteEndObject();
-		}
-	}
-
-	internal sealed class ActionJsonConverter<T1, T2, T3, T4, T5> : JsonConverter<Action<T1, T2, T3, T4, T5>?>
-	{
-		public override Action<T1, T2, T3, T4, T5>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-		{
-			throw new NotImplementedException();
-		}
-
-		public override void Write(Utf8JsonWriter writer, Action<T1, T2, T3, T4, T5>? value, JsonSerializerOptions options)
-		{
-			if (value is null) { writer.WriteNullValue(); return; }
-
-			var callbackId = References.AddCallback(value);
-
-			writer.WriteStartObject();
-			writer.WriteString("callbackId", callbackId);
-			writer.WriteEndObject();
-		}
-	}
-
-	internal sealed class ActionJsonConverter<T1, T2, T3, T4, T5, T6> : JsonConverter<Action<T1, T2, T3, T4, T5, T6>?>
-	{
-		public override Action<T1, T2, T3, T4, T5, T6>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-		{
-			throw new NotImplementedException();
-		}
-
-		public override void Write(Utf8JsonWriter writer, Action<T1, T2, T3, T4, T5, T6>? value, JsonSerializerOptions options)
-		{
-			if (value is null) { writer.WriteNullValue(); return; }
-
-			var callbackId = References.AddCallback(value);
-
-			writer.WriteStartObject();
-			writer.WriteString("callbackId", callbackId);
-			writer.WriteEndObject();
-		}
-	}
-
-	internal sealed class ActionJsonConverter<T1, T2, T3, T4, T5, T6, T7> : JsonConverter<Action<T1, T2, T3, T4, T5, T6, T7>?>
-	{
-		public override Action<T1, T2, T3, T4, T5, T6, T7>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-		{
-			throw new NotImplementedException();
-		}
-
-		public override void Write(Utf8JsonWriter writer, Action<T1, T2, T3, T4, T5, T6, T7>? value, JsonSerializerOptions options)
-		{
-			if (value is null) { writer.WriteNullValue(); return; }
-
-			var callbackId = References.AddCallback(value);
-
-			writer.WriteStartObject();
-			writer.WriteString("callbackId", callbackId);
-			writer.WriteEndObject();
-		}
-	}
-
-	internal sealed class ActionJsonConverter<T1, T2, T3, T4, T5, T6, T7, T8> : JsonConverter<Action<T1, T2, T3, T4, T5, T6, T7, T8>?>
-	{
-		public override Action<T1, T2, T3, T4, T5, T6, T7, T8>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-		{
-			throw new NotImplementedException();
-		}
-
-		public override void Write(Utf8JsonWriter writer, Action<T1, T2, T3, T4, T5, T6, T7, T8>? value, JsonSerializerOptions options)
-		{
-			if (value is null) { writer.WriteNullValue(); return; }
-
-			var callbackId = References.AddCallback(value);
-
-			writer.WriteStartObject();
-			writer.WriteString("callbackId", callbackId);
-			writer.WriteEndObject();
-		}
-	}
-
-	internal sealed class ActionJsonConverter<T1, T2, T3, T4, T5, T6, T7, T8, T9> : JsonConverter<Action<T1, T2, T3, T4, T5, T6, T7, T8, T9>?>
-	{
-		public override Action<T1, T2, T3, T4, T5, T6, T7, T8, T9>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-		{
-			throw new NotImplementedException();
-		}
-
-		public override void Write(Utf8JsonWriter writer, Action<T1, T2, T3, T4, T5, T6, T7, T8, T9>? value, JsonSerializerOptions options)
-		{
-			if (value is null) { writer.WriteNullValue(); return; }
-
-			var callbackId = References.AddCallback(value);
-
-			writer.WriteStartObject();
-			writer.WriteString("callbackId", callbackId);
-			writer.WriteEndObject();
-		}
-	}
-
-	internal sealed class ActionJsonConverter<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> : JsonConverter<Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>?>
-	{
-		public override Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-		{
-			throw new NotImplementedException();
-		}
-
-		public override void Write(Utf8JsonWriter writer, Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>? value, JsonSerializerOptions options)
-		{
-			if (value is null) { writer.WriteNullValue(); return; }
-
-			var callbackId = References.AddCallback(value);
-
-			writer.WriteStartObject();
-			writer.WriteString("callbackId", callbackId);
-			writer.WriteEndObject();
-		}
-	}
-
-	internal sealed class ActionJsonConverter<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> : JsonConverter<Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>?>
-	{
-		public override Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-		{
-			throw new NotImplementedException();
-		}
-
-		public override void Write(Utf8JsonWriter writer, Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>? value, JsonSerializerOptions options)
-		{
-			if (value is null) { writer.WriteNullValue(); return; }
-
-			var callbackId = References.AddCallback(value);
-
-			writer.WriteStartObject();
-			writer.WriteString("callbackId", callbackId);
-			writer.WriteEndObject();
-		}
-	}
-
-	internal sealed class ActionJsonConverter<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> : JsonConverter<Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>?>
-	{
-		public override Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-		{
-			throw new NotImplementedException();
-		}
-
-		public override void Write(Utf8JsonWriter writer, Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>? value, JsonSerializerOptions options)
-		{
-			if (value is null) { writer.WriteNullValue(); return; }
-
-			var callbackId = References.AddCallback(value);
-
-			writer.WriteStartObject();
-			writer.WriteString("callbackId", callbackId);
-			writer.WriteEndObject();
-		}
-	}
-
-	internal sealed class ActionJsonConverter<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13> : JsonConverter<Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>?>
-	{
-		public override Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-		{
-			throw new NotImplementedException();
-		}
-
-		public override void Write(Utf8JsonWriter writer, Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>? value, JsonSerializerOptions options)
-		{
-			if (value is null) { writer.WriteNullValue(); return; }
-
-			var callbackId = References.AddCallback(value);
-
-			writer.WriteStartObject();
-			writer.WriteString("callbackId", callbackId);
-			writer.WriteEndObject();
-		}
-	}
-
-	internal sealed class ActionJsonConverter<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14> : JsonConverter<Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>?>
-	{
-		public override Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-		{
-			throw new NotImplementedException();
-		}
-
-		public override void Write(Utf8JsonWriter writer, Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>? value, JsonSerializerOptions options)
-		{
-			if (value is null) { writer.WriteNullValue(); return; }
-
-			var callbackId = References.AddCallback(value);
-
-			writer.WriteStartObject();
-			writer.WriteString("callbackId", callbackId);
-			writer.WriteEndObject();
-		}
-	}
-
-	internal sealed class ActionJsonConverter<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15> : JsonConverter<Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>?>
-	{
-		public override Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-		{
-			throw new NotImplementedException();
-		}
-
-		public override void Write(Utf8JsonWriter writer, Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>? value, JsonSerializerOptions options)
-		{
-			if (value is null) { writer.WriteNullValue(); return; }
-
-			var callbackId = References.AddCallback(value);
-
-			writer.WriteStartObject();
-			writer.WriteString("callbackId", callbackId);
-			writer.WriteEndObject();
-		}
-	}
-
-	internal sealed class ActionJsonConverter<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16> : JsonConverter<Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16>?>
-	{
-		public override Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-		{
-			throw new NotImplementedException();
-		}
-
-		public override void Write(Utf8JsonWriter writer, Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16>? value, JsonSerializerOptions options)
-		{
-			if (value is null) { writer.WriteNullValue(); return; }
-
-			var callbackId = References.AddCallback(value);
+			var callbackId = Callbacks.Register(value);
 
 			writer.WriteStartObject();
 			writer.WriteString("callbackId", callbackId);
@@ -660,8 +281,8 @@ namespace WebView2.DOM.Helpers
 		{
 			var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
 
-			try { return JsonSerializer.Deserialize<T0>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T1>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T0>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T1>(element, options)!; } catch { }
 
 			return JsonSerializer.Deserialize<T0>("null")!;
 		}
@@ -679,9 +300,9 @@ namespace WebView2.DOM.Helpers
 		{
 			var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
 
-			try { return JsonSerializer.Deserialize<T0>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T1>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T2>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T0>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T1>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T2>(element, options)!; } catch { }
 
 			return JsonSerializer.Deserialize<T0>("null")!;
 		}
@@ -700,10 +321,10 @@ namespace WebView2.DOM.Helpers
 		{
 			var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
 
-			try { return JsonSerializer.Deserialize<T0>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T1>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T2>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T3>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T0>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T1>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T2>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T3>(element, options)!; } catch { }
 
 			return JsonSerializer.Deserialize<T0>("null")!;
 		}
@@ -723,11 +344,11 @@ namespace WebView2.DOM.Helpers
 		{
 			var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
 
-			try { return JsonSerializer.Deserialize<T0>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T1>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T2>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T3>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T4>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T0>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T1>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T2>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T3>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T4>(element, options)!; } catch { }
 
 			return JsonSerializer.Deserialize<T0>("null")!;
 		}
@@ -748,12 +369,12 @@ namespace WebView2.DOM.Helpers
 		{
 			var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
 
-			try { return JsonSerializer.Deserialize<T0>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T1>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T2>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T3>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T4>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T5>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T0>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T1>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T2>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T3>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T4>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T5>(element, options)!; } catch { }
 
 			return JsonSerializer.Deserialize<T0>("null")!;
 		}
@@ -775,13 +396,13 @@ namespace WebView2.DOM.Helpers
 		{
 			var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
 
-			try { return JsonSerializer.Deserialize<T0>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T1>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T2>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T3>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T4>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T5>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T6>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T0>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T1>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T2>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T3>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T4>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T5>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T6>(element, options)!; } catch { }
 
 			return JsonSerializer.Deserialize<T0>("null")!;
 		}
@@ -804,14 +425,14 @@ namespace WebView2.DOM.Helpers
 		{
 			var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
 
-			try { return JsonSerializer.Deserialize<T0>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T1>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T2>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T3>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T4>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T5>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T6>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T7>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T0>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T1>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T2>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T3>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T4>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T5>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T6>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T7>(element, options)!; } catch { }
 
 			return JsonSerializer.Deserialize<T0>("null")!;
 		}
@@ -835,15 +456,15 @@ namespace WebView2.DOM.Helpers
 		{
 			var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
 
-			try { return JsonSerializer.Deserialize<T0>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T1>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T2>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T3>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T4>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T5>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T6>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T7>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T8>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T0>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T1>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T2>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T3>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T4>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T5>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T6>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T7>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T8>(element, options)!; } catch { }
 
 			return JsonSerializer.Deserialize<T0>("null")!;
 		}
@@ -868,16 +489,16 @@ namespace WebView2.DOM.Helpers
 		{
 			var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
 
-			try { return JsonSerializer.Deserialize<T0>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T1>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T2>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T3>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T4>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T5>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T6>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T7>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T8>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T9>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T0>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T1>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T2>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T3>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T4>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T5>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T6>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T7>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T8>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T9>(element, options)!; } catch { }
 
 			return JsonSerializer.Deserialize<T0>("null")!;
 		}
@@ -903,17 +524,17 @@ namespace WebView2.DOM.Helpers
 		{
 			var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
 
-			try { return JsonSerializer.Deserialize<T0>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T1>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T2>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T3>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T4>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T5>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T6>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T7>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T8>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T9>(element.GetRawText(), options)!; } catch { }
-			try { return JsonSerializer.Deserialize<T10>(element.GetRawText(), options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T0>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T1>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T2>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T3>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T4>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T5>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T6>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T7>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T8>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T9>(element, options)!; } catch { }
+			try { return JsonSerializer.Deserialize<T10>(element, options)!; } catch { }
 
 			return JsonSerializer.Deserialize<T0>("null")!;
 		}

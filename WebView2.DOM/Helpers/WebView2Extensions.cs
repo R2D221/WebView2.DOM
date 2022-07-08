@@ -1,5 +1,6 @@
 ﻿using Microsoft.Web.WebView2.Core;
 using System;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading;
@@ -24,20 +25,20 @@ namespace WebView2.DOM
 		private static readonly ConditionalWeakTable<Microsoft.Web.WebView2.Wpf.WebView2, WpfEvents>
 			wpfEvents = new();
 
-		private static readonly ConditionalWeakTable<CoreWebView2, References>
-			references = new();
+		//private static readonly ConditionalWeakTable<CoreWebView2, References>
+		//	references = new();
 
-		private static readonly ConditionalWeakTable<CoreWebView2, Coordinator>
-			coordinators = new();
+		//private static readonly ConditionalWeakTable<CoreWebView2, Coordinator>
+		//	coordinators = new();
 
-		private static readonly ConditionalWeakTable<CoreWebView2, JsonSerializerOptions>
-			options = new();
+		//private static readonly ConditionalWeakTable<CoreWebView2, JsonSerializerOptions>
+		//	options = new();
 
-		private static readonly ConditionalWeakTable<JsonSerializerOptions, CoreWebView2>
-			optionsToWebViews = new();
+		//private static readonly ConditionalWeakTable<JsonSerializerOptions, CoreWebView2>
+		//	optionsToWebViews = new();
 
-		private static readonly ConditionalWeakTable<CoreWebView2, SynchronizationContext>
-			syncContexts = new();
+		//private static readonly ConditionalWeakTable<CoreWebView2, SynchronizationContext>
+		//	syncContexts = new();
 
 		public sealed class WinFormsEvents
 		{
@@ -107,49 +108,35 @@ namespace WebView2.DOM
 			}
 		}
 
-		public static References References(this CoreWebView2 coreWebView)
-		{
-			return references.GetValue(coreWebView, x => new References(x));
-		}
+		//public static References References(this CoreWebView2 coreWebView)
+		//{
+		//	return references.GetValue(coreWebView, x => new References(x));
+		//}
 
-		public static Coordinator Coordinator(this CoreWebView2 coreWebView)
-		{
-			return coordinators.GetValue(coreWebView, x => new Coordinator(x));
-		}
+		//public static Coordinator Coordinator(this CoreWebView2 coreWebView)
+		//{
+		//	return coordinators.GetValue(coreWebView, x => new Coordinator(x));
+		//}
 
-		public static JsonSerializerOptions Options(this CoreWebView2 coreWebView)
-		{
-			var result = options.GetValue(coreWebView, _ => new JsonSerializerOptions
-			{
-				Converters =
-				{
-					new EnumJsonConverterFactory(),
-					new JsObjectJsonConverterFactory(),
-					new TaskJsonConverterFactory(),
-					new ActionJsonConverter(),
-					new ActionJsonConverterFactory(),
-					new anyJsonConverter(),
-					//new LocalDateTimeJsonConverter(),
-					new KeyValuePairJsonConverterFactory(),
-					new OneOfJsonConverterFactory(),
-				},
-			});
+		//public static JsonSerializerOptions Options(this CoreWebView2 coreWebView)
+		//{
+		//	var result = options.GetValue(coreWebView, _ => );
 
-#if NETFRAMEWORK
-			_ = optionsToWebViews.Remove(result);
-			optionsToWebViews.Add(result, coreWebView);
-#else
-			optionsToWebViews.AddOrUpdate(result, coreWebView);
-#endif
+		//#if NETFRAMEWORK
+		//	_ = optionsToWebViews.Remove(result);
+		//	optionsToWebViews.Add(result, coreWebView);
+		//#else
+		//	optionsToWebViews.AddOrUpdate(result, coreWebView);
+		//#endif
 
-			return result;
-		}
+		//	return result;
+		//}
 
-		public static CoreWebView2 CoreWebView(this JsonSerializerOptions options)
-		{
-			if (!optionsToWebViews.TryGetValue(options, out var result)) { throw new InvalidOperationException(); }
-			return result;
-		}
+		//public static CoreWebView2 CoreWebView(this JsonSerializerOptions options)
+		//{
+		//	if (!optionsToWebViews.TryGetValue(options, out var result)) { throw new InvalidOperationException(); }
+		//	return result;
+		//}
 
 		public static WinFormsEvents DOMContentLoaded(this Microsoft.Web.WebView2.WinForms.WebView2 webView)
 		{
@@ -169,20 +156,29 @@ namespace WebView2.DOM
 
 		private static async Task InvokeInBrowserContextAsync(this CoreWebView2 coreWebView, Action<Window> action)
 		{
-			var syncContext = WebViewSynchronizationContext.For(coreWebView);
+			var browsingContext = BrowsingContext.For(coreWebView);
+
+			if (browsingContext is null) { throw new Exception(); }
+
 			var tcs = new TaskCompletionSource();
-			syncContext.Post(_ =>
-			{
-				try
+
+			browsingContext.innerSyncContext.Post(
+				state: Pool.Box((action, browsingContext.Window, tcs)),
+				d: static obj =>
 				{
-					action(window.Instance);
-					tcs.SetResult();
-				}
-				catch (Exception ex)
-				{
-					tcs.SetException(ex);
-				}
-			}, null);
+					var (action, window, tcs) = Pool.UnboxAndReturn<(Action<Window>, Window, TaskCompletionSource)>(obj);
+
+					try
+					{
+						action(window);
+						tcs.SetResult();
+					}
+					catch (Exception ex)
+					{
+						tcs.SetException(ex);
+					}
+				});
+
 			await tcs.Task;
 		}
 
@@ -194,20 +190,29 @@ namespace WebView2.DOM
 
 		private static async Task<T> InvokeInBrowserContextAsync<T>(this CoreWebView2 coreWebView, Func<Window, T> function)
 		{
-			var syncContext = WebViewSynchronizationContext.For(coreWebView);
+			var browsingContext = BrowsingContext.For(coreWebView);
+
+			if (browsingContext is null) { throw new Exception(); }
+
 			var tcs = new TaskCompletionSource<T>();
-			syncContext.Post(_ =>
-			{
-				try
+
+			browsingContext.innerSyncContext.Post(
+				state: Pool.Box((function, browsingContext.Window, tcs)),
+				d: static obj =>
 				{
-					var result = function(window.Instance);
-					tcs.SetResult(result);
-				}
-				catch (Exception ex)
-				{
-					tcs.SetException(ex);
-				}
-			}, null);
+					var (function, window, tcs) = Pool.UnboxAndReturn<(Func<Window, T>, Window, TaskCompletionSource<T>)>(obj);
+
+					try
+					{
+						var result = function(window);
+						tcs.SetResult(result);
+					}
+					catch (Exception ex)
+					{
+						tcs.SetException(ex);
+					}
+				});
+
 			return await tcs.Task;
 		}
 
@@ -219,20 +224,29 @@ namespace WebView2.DOM
 
 		private static async Task InvokeInBrowserContextAsync(this CoreWebView2 coreWebView, Func<Window, Task> asyncAction)
 		{
-			var syncContext = WebViewSynchronizationContext.For(coreWebView);
+			var browsingContext = BrowsingContext.For(coreWebView);
+
+			if (browsingContext is null) { throw new Exception(); }
+
 			var tcs = new TaskCompletionSource();
-			syncContext.Post(async _ =>
-			{
-				try
+
+			browsingContext.innerSyncContext.Post(
+				state: Pool.Box((asyncAction, browsingContext.Window, tcs)),
+				d: static async obj =>
 				{
-					await asyncAction(window.Instance);
-					tcs.SetResult();
-				}
-				catch (Exception ex)
-				{
-					tcs.SetException(ex);
-				}
-			}, null);
+					var (asyncAction, window, tcs) = Pool.UnboxAndReturn<(Func<Window, Task>, Window, TaskCompletionSource)>(obj);
+
+					try
+					{
+						await asyncAction(window);
+						tcs.SetResult();
+					}
+					catch (Exception ex)
+					{
+						tcs.SetException(ex);
+					}
+				});
+
 			await tcs.Task;
 		}
 
@@ -244,20 +258,29 @@ namespace WebView2.DOM
 
 		private static async Task<T> InvokeInBrowserContextAsync<T>(this CoreWebView2 coreWebView, Func<Window, Task<T>> asyncFunction)
 		{
-			var syncContext = WebViewSynchronizationContext.For(coreWebView);
+			var browsingContext = BrowsingContext.For(coreWebView);
+
+			if (browsingContext is null) { throw new Exception(); }
+
 			var tcs = new TaskCompletionSource<T>();
-			syncContext.Post(async _ =>
-			{
-				try
+
+			browsingContext.innerSyncContext.Post(
+				state: Pool.Box((asyncFunction, browsingContext.Window, tcs)),
+				d: static async obj =>
 				{
-					var result = await asyncFunction(window.Instance);
-					tcs.SetResult(result);
-				}
-				catch (Exception ex)
-				{
-					tcs.SetException(ex);
-				}
-			}, null);
+					var (asyncFunction, window, tcs) = Pool.UnboxAndReturn<(Func<Window, Task<T>>, Window, TaskCompletionSource<T>)>(obj);
+
+					try
+					{
+						var result = await asyncFunction(window);
+						tcs.SetResult(result);
+					}
+					catch (Exception ex)
+					{
+						tcs.SetException(ex);
+					}
+				});
+
 			return await tcs.Task;
 		}
 
@@ -331,18 +354,18 @@ namespace WebView2.DOM
 		public static CoreWebView2 GetCoreWebView(this Microsoft.Web.WebView2.WinForms.WebView2 webView)
 		{
 			var coreWebView = winformsWebViews2.GetValue(webView, x => x.CoreWebView2);
-			_ = syncContexts.GetValue(coreWebView, _ =>
-			{
-				var result = SynchronizationContext.Current;
-				if (result is WindowsFormsSynchronizationContext)
-				{
-					return result;
-				}
-				else
-				{
-					throw new InvalidOperationException();
-				}
-			});
+			//_ = syncContexts.GetValue(coreWebView, _ =>
+			//{
+			//	var result = SynchronizationContext.Current;
+			//	if (result is WindowsFormsSynchronizationContext)
+			//	{
+			//		return result;
+			//	}
+			//	else
+			//	{
+			//		throw new InvalidOperationException();
+			//	}
+			//});
 			return coreWebView;
 		}
 
@@ -350,41 +373,63 @@ namespace WebView2.DOM
 		{
 			var coreWebView = wpfWebViews2.GetValue(webView, x => x.CoreWebView2);
 
-			_ = syncContexts.GetValue(coreWebView, _ =>
-			{
-				var result = SynchronizationContext.Current;
-				if (result is DispatcherSynchronizationContext)
-				{
-					return result;
-				}
-				else
-				{
-					throw new InvalidOperationException();
-				}
-			});
+			//_ = syncContexts.GetValue(coreWebView, _ =>
+			//{
+			//	var result = SynchronizationContext.Current;
+			//	if (result is DispatcherSynchronizationContext)
+			//	{
+			//		return result;
+			//	}
+			//	else
+			//	{
+			//		throw new InvalidOperationException();
+			//	}
+			//});
 
 			return coreWebView;
 		}
 
-		internal static SynchronizationContext GetSynchronizationContext(this CoreWebView2 coreWebView) =>
-			syncContexts.GetValue(coreWebView, _ => throw new InvalidOperationException());
+		//internal static SynchronizationContext GetSynchronizationContext(this CoreWebView2 coreWebView) =>
+		//	syncContexts.GetValue(coreWebView, _ => throw new InvalidOperationException());
 
-		internal static void SyncContextPost(this CoreWebView2 coreWebView, SendOrPostCallback d, object? state)
+		//internal static void SyncContextPost(this CoreWebView2 coreWebView, SendOrPostCallback d, object? state)
+		//{
+		//	var syncContext = coreWebView.GetSynchronizationContext();
+		//	if (syncContext == SynchronizationContext.Current)
+		//	{
+		//		f();
+		//	}
+		//	else
+		//	{
+		//		syncContext.Post(_ => f(), null);
+		//	}
+
+		//	void f()
+		//	{
+		//		coreWebView.Coordinator().SyncContextPost(d, state);
+		//	}
+		//}
+
+		public static void AssertCorrectState(this Microsoft.Web.WebView2.Wpf.WebView2 webView)
 		{
-			var syncContext = coreWebView.GetSynchronizationContext();
-			if (syncContext == SynchronizationContext.Current)
-			{
-				f();
-			}
-			else
-			{
-				syncContext.Post(_ => f(), null);
-			}
+			var coreWebView = webView.GetCoreWebView();
 
-			void f()
-			{
-				coreWebView.Coordinator().SyncContextPost(d, state);
-			}
+			var browsingContext = BrowsingContext.For(coreWebView);
+
+			if (browsingContext is null) { throw new Exception(); }
+
+			Trace.Assert(browsingContext.coreWebView == coreWebView, "browsingContext.coreWebView == coreWebView");
+			Trace.Assert(browsingContext.uiSyncContext is DispatcherSynchronizationContext, "browsingContext.uiSyncContext is DispatcherSynchronizationContext");
+			Trace.Assert(browsingContext.innerSyncContext is not null, "browsingContext.innerSyncContext is not null");
+
+			//Trace.Assert(browsingContext.dispatcherFrame is not null, "browsingContext.dispatcherFrame is not null");
+			//Trace.Assert(browsingContext.dispatcherFrame?.Continue == true, "browsingContext.dispatcherFrame?.Continue == true");
+			//Trace.Assert(browsingContext.cts.IsCancellationRequested == false, "browsingContext.cts.IsCancellationRequested == false");
+
+			//Trace.Assert(browsingContext.requests?.Reader.Completion.IsCompleted != true);
+			//Trace.Assert((browsingContext.requests?.Reader.Count ?? 0) == 0);
+			//Trace.Assert(browsingContext.responses?.Reader.Completion.IsCompleted != true);
+			//Trace.Assert((browsingContext.responses?.Reader.Count ?? 0) == 0);
 		}
 	}
 }
