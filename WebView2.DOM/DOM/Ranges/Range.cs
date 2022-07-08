@@ -1,5 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 
 namespace WebView2.DOM
@@ -14,11 +13,9 @@ namespace WebView2.DOM
 		END_TO_START = 3,
 	}
 
-	public class Range : JsObject
+	public sealed class Range : JsObject
 	{
-		protected internal Range(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private Range() { }
 
 		public Node startContainer => Get<Node>();
 		public uint startOffset => Get<uint>();

@@ -1,13 +1,10 @@
-﻿using Microsoft.Web.WebView2.Core;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/svg/svg_fe_specular_lighting_element.idl
 
-	public partial class SVGFESpecularLightingElement : SVGElement
+	public sealed partial class SVGFESpecularLightingElement : SVGElement
 	{
-		protected internal SVGFESpecularLightingElement(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private SVGFESpecularLightingElement() { }
 
 		public SVGAnimatedString in1 => Get<SVGAnimatedString>();
 		public SVGAnimatedNumber surfaceScale => Get<SVGAnimatedNumber>();

@@ -7,12 +7,9 @@ namespace WebView2.DOM
 
 	public class CSSMathNegate : CSSMathValue
 	{
-		protected internal CSSMathNegate(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal CSSMathNegate() { }
 
-		public CSSMathNegate(CSSNumericValue value)
-			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
+		public CSSMathNegate(CSSNumericValue value) =>
 			Construct(value);
 
 		public CSSNumericValue value => Get<CSSNumericValue>();

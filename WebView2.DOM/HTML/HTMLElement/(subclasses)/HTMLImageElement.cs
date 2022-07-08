@@ -1,15 +1,11 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace WebView2.DOM
 {
-	public class HTMLImageElement : HTMLElement
+	public sealed class HTMLImageElement : HTMLElement
 	{
-		protected internal HTMLImageElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private HTMLImageElement() { }
 
 		public string alt { get => Get<string>(); set => Set(value); }
 		public Uri src { get => Get<Uri>(); set => Set(value); }
@@ -37,6 +33,6 @@ namespace WebView2.DOM
 		public int x => Get<int>();
 		public int y => Get<int>();
 
-		public Task decode() => Get<Task>();
+		public VoidPromise decode() => Method<VoidPromise>().Invoke();
 	}
 }

@@ -1,6 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/svg/svg_angle.idl
 
@@ -13,10 +11,9 @@ namespace WebView2.DOM
 		GRAD = 4,
 	}
 
-	public class SVGAngle : JsObject
+	public sealed class SVGAngle : JsObject
 	{
-		protected internal SVGAngle(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private SVGAngle() { }
 
 		public SVGAngleType unitType => Get<SVGAngleType>();
 		public float value { get => Get<float>(); set => Set(value); }

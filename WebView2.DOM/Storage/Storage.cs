@@ -1,5 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,10 +7,9 @@ namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/modules/storage/storage.idl
 
-	public partial class Storage : JsObject, IDictionary<string, string>
+	public sealed partial class Storage : JsObject, IDictionary<string, string>
 	{
-		protected internal Storage(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private Storage() { }
 
 		private uint length => Get<uint>();
 		private string? key(uint index) => Method<string?>().Invoke(index);

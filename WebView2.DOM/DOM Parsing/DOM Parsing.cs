@@ -1,6 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
-using SmartAnalyzers.CSharpExtensions.Annotations;
-using System;
+﻿using SmartAnalyzers.CSharpExtensions.Annotations;
 using System.Runtime.Serialization;
 
 namespace WebView2.DOM
@@ -9,11 +7,7 @@ namespace WebView2.DOM
 
 	public class XMLSerializer : JsObject
 	{
-		protected internal XMLSerializer(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
-
-		public XMLSerializer()
-			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
+		public XMLSerializer() =>
 			Construct();
 
 		public string serializeToString(Node root) =>
@@ -41,20 +35,35 @@ namespace WebView2.DOM
 
 	public enum SupportedType
 	{
+		/// <summary>
+		/// text/html
+		/// </summary>
 		[EnumMember(Value = "text/html")] text_html,
+
+		/// <summary>
+		/// text/xml
+		/// </summary>
 		[EnumMember(Value = "text/xml")] text_xml,
+
+		/// <summary>
+		/// application/xml
+		/// </summary>
 		[EnumMember(Value = "application/xml")] application_xml,
+
+		/// <summary>
+		/// application/xhtml+xml
+		/// </summary>
 		[EnumMember(Value = "application/xhtml+xml")] application_xhtml_xml,
+
+		/// <summary>
+		/// image/svg+xml
+		/// </summary>
 		[EnumMember(Value = "image/svg+xml")] image_svg_xml,
 	}
 
-	public class DOMParser : JsObject
+	public sealed class DOMParser : JsObject
 	{
-		protected internal DOMParser(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
-
-		public DOMParser()
-			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
+		public DOMParser() =>
 			Construct();
 
 		public Document parseFromString(string str, SupportedType type) =>

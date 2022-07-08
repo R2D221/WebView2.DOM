@@ -1,6 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/svg/svg_text_path_element.idl
 
@@ -10,7 +8,7 @@ namespace WebView2.DOM
 		ALIGN = 1,
 		STRETCH = 2,
 	}
-	
+
 	public enum SVGTextPathSpacingType : ushort
 	{
 		UNKNOWN = 0,
@@ -18,10 +16,9 @@ namespace WebView2.DOM
 		EXACT = 2,
 	}
 
-	public partial class SVGTextPathElement : SVGTextContentElement
+	public sealed partial class SVGTextPathElement : SVGTextContentElement
 	{
-		protected internal SVGTextPathElement(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private SVGTextPathElement() { }
 
 		public SVGAnimatedLength startOffset =>
 			Get<SVGAnimatedLength>();

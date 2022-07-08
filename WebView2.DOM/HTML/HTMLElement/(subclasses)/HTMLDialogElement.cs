@@ -1,12 +1,8 @@
-﻿using Microsoft.Web.WebView2.Core;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
-	public class HTMLDialogElement : HTMLElement
+	public sealed class HTMLDialogElement : HTMLElement
 	{
-		protected internal HTMLDialogElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private HTMLDialogElement() { }
 
 		public bool open { get => Get<bool>(); set => Set(value); }
 		public string returnValue { get => Get<string>(); set => Set(value); }

@@ -1,13 +1,10 @@
-﻿using Microsoft.Web.WebView2.Core;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/svg/svg_line_element.idl
-	
-	public class SVGLineElement : SVGGeometryElement
+
+	public sealed class SVGLineElement : SVGGeometryElement
 	{
-		protected internal SVGLineElement(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private SVGLineElement() { }
 
 		public SVGAnimatedLength x1 => Get<SVGAnimatedLength>();
 		public SVGAnimatedLength y1 => Get<SVGAnimatedLength>();

@@ -1,5 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -14,8 +13,7 @@ namespace WebView2.DOM
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
 	public abstract partial class SVGList<T> : JsObject, IList<T>
 	{
-		protected internal SVGList(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private protected SVGList() { }
 
 		public T this[int index]
 		{

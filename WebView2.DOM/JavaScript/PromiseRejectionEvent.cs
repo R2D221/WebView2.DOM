@@ -1,18 +1,14 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/events/promise_rejection_event.idl
 
-	public class PromiseRejectionEvent : Event
+	public sealed class PromiseRejectionEvent : Event
 	{
-		protected internal PromiseRejectionEvent(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private PromiseRejectionEvent() { }
 
-		public Task promise => Get<Task>();
+		public Promise promise => Get<Promise>();
 		[Obsolete("not tested")]
 		public dynamic reason => Get<any>();
 	}

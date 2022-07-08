@@ -1,15 +1,13 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 
 namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/events/input_event.idl
 
-	public class InputEvent : UIEvent
+	public sealed class InputEvent : UIEvent
 	{
-		protected internal InputEvent(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private InputEvent() { }
 
 		public string? data => Get<string?>();
 		public bool isComposing => Get<bool>();

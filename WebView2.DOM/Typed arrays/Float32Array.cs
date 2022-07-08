@@ -3,14 +3,11 @@ using System;
 
 namespace WebView2.DOM
 {
-	public class Float32Array : ArrayBufferView
+	public sealed class Float32Array : ArrayBufferView
 	{
-		protected internal Float32Array(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId)
+		public Float32Array()
 		{
 			throw new NotImplementedException();
 		}
-
-		public Float32Array() : this(null!, null!) { }
 	}
 }

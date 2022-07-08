@@ -8,11 +8,7 @@ namespace WebView2.DOM
 
 	public class CSSStyleSheet : StyleSheet
 	{
-		protected internal CSSStyleSheet(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
-
-		public CSSStyleSheet()
-			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
+		public CSSStyleSheet() =>
 			Construct();
 
 		public CSSRule? ownerRule => Get<CSSRule?>();
@@ -23,7 +19,8 @@ namespace WebView2.DOM
 		public void deleteRule(uint index) =>
 			Method().Invoke(index);
 
-		public Task<CSSStyleSheet> replace(string text) => Method<Task<CSSStyleSheet>>().Invoke(text);
+		public Promise<CSSStyleSheet> replace(string text) =>
+			Method<Promise<CSSStyleSheet>>().Invoke(text);
 		public void replaceSync(string text) => Method().Invoke(text);
 
 		// Non-standard APIs

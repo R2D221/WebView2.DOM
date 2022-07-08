@@ -7,12 +7,9 @@ namespace WebView2.DOM
 
 	public class CSSPerspective : CSSTransformComponent
 	{
-		protected internal CSSPerspective(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal CSSPerspective() { }
 
-		public CSSPerspective(CSSNumericValue length)
-			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
+		public CSSPerspective(CSSNumericValue length) =>
 			Construct(length);
 
 		public CSSNumericValue length { get => Get<CSSNumericValue>(); set => Set(value); }

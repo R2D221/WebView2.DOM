@@ -1,13 +1,10 @@
-﻿using Microsoft.Web.WebView2.Core;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/html/forms/html_text_area_element.idl
 
-	public class HTMLTextAreaElement : HTMLElement, IFormControl, ILabelableElement
+	public sealed class HTMLTextAreaElement : HTMLElement, IFormControl, ILabelableElement
 	{
-		protected internal HTMLTextAreaElement(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private HTMLTextAreaElement() { }
 
 		public string autocomplete { get => Get<string>(); set => Set(value); }
 		public uint cols { get => Get<uint>(); set => Set(value); }

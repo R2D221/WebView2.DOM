@@ -12,19 +12,19 @@ namespace WebView2.DOM
 		private static JsObject @static => _static.Value ??=
 			window.Instance.Get<JsObject>(nameof(DOMPointReadOnly));
 
-		protected internal DOMPointReadOnly(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		protected internal DOMPointReadOnly() { }
 
 		public DOMPointReadOnly(double x = 0, double y = 0, double z = 0, double w = 1)
-			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
-			_ = (x, y, z, w) switch
+		{
+			switch ((x, y, z, w))
 			{
-				(0, 0, 0, 1) => Construct(),
-				(_, 0, 0, 1) => Construct(x),
-				(_, _, 0, 1) => Construct(x, y),
-				(_, _, _, 1) => Construct(x, y, z),
-				(_, _, _, _) => Construct(x, y, z, w),
+			case ((0, 0, 0, 1)): Construct(); break;
+			case ((_, 0, 0, 1)): Construct(x); break;
+			case ((_, _, 0, 1)): Construct(x, y); break;
+			case ((_, _, _, 1)): Construct(x, y, z); break;
+			case ((_, _, _, _)): Construct(x, y, z, w); break;
 			};
+		}
 
 		public static DOMPointReadOnly fromPoint(DOMPointInit other) =>
 			@static.Method<DOMPointReadOnly>().Invoke(other);

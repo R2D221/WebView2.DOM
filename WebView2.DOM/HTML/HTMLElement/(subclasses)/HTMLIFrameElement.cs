@@ -1,14 +1,11 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System;
+﻿using System;
 using System.Text.Json;
 
 namespace WebView2.DOM
 {
-	public class HTMLIFrameElement : HTMLElement
+	public sealed class HTMLIFrameElement : HTMLElement
 	{
-		protected internal HTMLIFrameElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private HTMLIFrameElement() { }
 
 		public Uri src { get => Get<Uri>(); set => Set(value); }
 		public string srcdoc { get => Get<string>(); set => Set(value); }

@@ -1,15 +1,13 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 
 namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/events/touch_event.idl
 
-	public class TouchEvent : UIEvent
+	public sealed class TouchEvent : UIEvent
 	{
-		protected internal TouchEvent(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private TouchEvent() { }
 
 		public IReadOnlyList<Touch> touches => Get<ImmutableArray<Touch>>();
 		public IReadOnlyList<Touch> targetTouches => Get<ImmutableArray<Touch>>();

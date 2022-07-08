@@ -1,13 +1,11 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System;
+﻿using System;
 using System.Text.Json;
 
 namespace WebView2.DOM
 {
-	public class HTMLObjectElement : HTMLElement, IFormControl
+	public sealed class HTMLObjectElement : HTMLElement, IFormControl
 	{
-		protected internal HTMLObjectElement(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private HTMLObjectElement() { }
 
 		public Uri data { get => Get<Uri>(); set => Set(value); }
 		public string type { get => Get<string>(); set => Set(value); }

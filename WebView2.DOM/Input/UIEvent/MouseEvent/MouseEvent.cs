@@ -27,9 +27,7 @@ namespace WebView2.DOM
 
 	public class MouseEvent : UIEvent
 	{
-		protected internal MouseEvent(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private protected MouseEvent() { }
 
 		public double screenX => Get<double>();
 		public double screenY => Get<double>();

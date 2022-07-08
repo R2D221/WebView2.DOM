@@ -1,6 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/svg/svg_text_content_element.idl
 
@@ -11,10 +9,9 @@ namespace WebView2.DOM
 		SPACINGANDGLYPHS = 2,
 	}
 
-	public class SVGTextContentElement : SVGGraphicsElement
+	public abstract class SVGTextContentElement : SVGGraphicsElement
 	{
-		protected internal SVGTextContentElement(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private protected SVGTextContentElement() { }
 
 		public SVGAnimatedLength textLength =>
 			Get<SVGAnimatedLength>();

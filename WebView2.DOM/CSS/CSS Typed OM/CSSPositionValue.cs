@@ -7,12 +7,9 @@ namespace WebView2.DOM
 
 	public class CSSPositionValue : CSSStyleValue
 	{
-		protected internal CSSPositionValue(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal CSSPositionValue() { }
 
-		public CSSPositionValue(CSSNumericValue x, CSSNumericValue y)
-			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
+		public CSSPositionValue(CSSNumericValue x, CSSNumericValue y) =>
 			Construct(x, y);
 
 		public CSSNumericValue x { get => Get<CSSNumericValue>(); set => Set(value); }

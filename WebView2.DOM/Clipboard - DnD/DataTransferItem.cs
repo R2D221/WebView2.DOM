@@ -1,5 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System;
+﻿using System;
 
 namespace WebView2.DOM
 {
@@ -7,11 +6,9 @@ namespace WebView2.DOM
 
 	public enum DataTransferItemKind { file, @string }
 
-	public class DataTransferItem : JsObject
+	public sealed class DataTransferItem : JsObject
 	{
-		protected internal DataTransferItem(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private DataTransferItem() { }
 
 		public DataTransferItemKind kind => Get<DataTransferItemKind>();
 		public string type => Get<string>();

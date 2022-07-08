@@ -1,5 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System;
+﻿using System;
 
 namespace WebView2.DOM
 {
@@ -8,11 +7,9 @@ namespace WebView2.DOM
 	public enum TextTrackMode { disabled, hidden, showing };
 	public enum TextTrackKind { _, subtitles, captions, descriptions, chapters, metadata };
 
-	public class TextTrack : EventTarget
+	public sealed class TextTrack : EventTarget
 	{
-		protected internal TextTrack(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private TextTrack() { }
 
 		public TextTrackKind kind => Get<TextTrackKind>();
 		public string label => Get<string>();

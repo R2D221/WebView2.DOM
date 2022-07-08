@@ -7,15 +7,11 @@ namespace WebView2.DOM
 
 	public class CSSRotate : CSSTransformComponent
 	{
-		protected internal CSSRotate(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal CSSRotate() { }
 
-		public CSSRotate(CSSNumericValue angleValue)
-			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
+		public CSSRotate(CSSNumericValue angleValue) =>
 			Construct(angleValue);
-		public CSSRotate(CSSNumericValue x, CSSNumericValue y, CSSNumericValue z, CSSNumericValue angle)
-			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
+		public CSSRotate(CSSNumericValue x, CSSNumericValue y, CSSNumericValue z, CSSNumericValue angle) =>
 			Construct(x, y, z, angle);
 
 		public CSSNumericValue angle { get => Get<CSSNumericValue>(); set => Set(value); }

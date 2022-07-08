@@ -1,13 +1,10 @@
-﻿using Microsoft.Web.WebView2.Core;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/svg/svg_matrix.idl
 
-	public class SVGMatrix : JsObject
+	public sealed class SVGMatrix : JsObject
 	{
-		protected internal SVGMatrix(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private SVGMatrix() { }
 
 		public double a { get => Get<double>(); set => Set(value); }
 		public double b { get => Get<double>(); set => Set(value); }

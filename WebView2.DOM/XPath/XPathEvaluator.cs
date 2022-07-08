@@ -1,17 +1,10 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/xml/xpath_evaluator.idl
 
 	public class XPathEvaluator : JsObject
 	{
-		protected internal XPathEvaluator(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
-
-		public XPathEvaluator()
-			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
+		public XPathEvaluator() =>
 			Construct();
 
 		// https://dom.spec.whatwg.org/#mixin-xpathevaluatorbase

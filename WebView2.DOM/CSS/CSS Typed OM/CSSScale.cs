@@ -7,15 +7,11 @@ namespace WebView2.DOM
 
 	public class CSSScale : CSSTransformComponent
 	{
-		protected internal CSSScale(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal CSSScale() { }
 
-		public CSSScale(CSSNumericValue x, CSSNumericValue y)
-			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
+		public CSSScale(CSSNumericValue x, CSSNumericValue y) =>
 			Construct(x, y);
-		public CSSScale(CSSNumericValue x, CSSNumericValue y, CSSNumericValue z)
-			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
+		public CSSScale(CSSNumericValue x, CSSNumericValue y, CSSNumericValue z) =>
 			Construct(x, y, z);
 
 		public CSSNumericValue x { get => Get<CSSNumericValue>(); set => Set(value); }

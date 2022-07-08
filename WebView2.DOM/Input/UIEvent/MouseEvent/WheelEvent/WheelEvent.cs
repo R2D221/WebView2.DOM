@@ -11,11 +11,9 @@ namespace WebView2.DOM
 		PAGE = 2,
 	}
 
-	public class WheelEvent : MouseEvent
+	public sealed class WheelEvent : MouseEvent
 	{
-		protected internal WheelEvent(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private WheelEvent() { }
 
 		public double deltaX => Get<double>();
 		public double deltaY => Get<double>();

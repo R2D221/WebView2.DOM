@@ -1,15 +1,13 @@
-﻿using Microsoft.Web.WebView2.Core;
-using NodaTime;
+﻿using NodaTime;
 using OneOf;
 using System;
 using WebView2.DOM.Microsyntaxes;
 
 namespace WebView2.DOM
 {
-	public class HTMLModElement : HTMLElement
+	public sealed class HTMLModElement : HTMLElement
 	{
-		protected internal HTMLModElement(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private HTMLModElement() { }
 
 		public Uri cite { get => Get<Uri>(); set => Set(value); }
 		private string _dateTime

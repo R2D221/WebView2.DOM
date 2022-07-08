@@ -1,7 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace WebView2.DOM
 {
@@ -27,17 +24,15 @@ namespace WebView2.DOM
 		landscape_secondary,
 	}
 
-	public class ScreenOrientation : EventTarget
+	public sealed class ScreenOrientation : EventTarget
 	{
-		protected internal ScreenOrientation(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private ScreenOrientation() { }
 
 		public ushort angle => Get<ushort>();
 		public OrientationType type => Get<OrientationType>();
 
-		public Task @lock(OrientationLockType orientation)
-			=> Method<Task>().Invoke(orientation);
+		public VoidPromise @lock(OrientationLockType orientation) =>
+			Method<VoidPromise>().Invoke(orientation);
 		public void unlock() => Method().Invoke();
 
 		public event EventHandler<Event>? onchange { add { AddEvent(value); } remove { RemoveEvent(value); } }

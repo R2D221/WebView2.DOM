@@ -6,9 +6,7 @@ namespace WebView2.DOM
 
 	public class CSSConditionRule : CSSGroupingRule
 	{
-		protected internal CSSConditionRule(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private protected CSSConditionRule() { }
 
 		public string conditionText => Get<string>();
 	}

@@ -1,6 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/svg/svg_fe_convolve_matrix_element.idl
 
@@ -12,10 +10,9 @@ namespace WebView2.DOM
 		NONE = 3,
 	}
 
-	public partial class SVGFEConvolveMatrixElement : SVGElement
+	public sealed partial class SVGFEConvolveMatrixElement : SVGElement
 	{
-		protected internal SVGFEConvolveMatrixElement(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private SVGFEConvolveMatrixElement() { }
 
 		public SVGAnimatedString in1 =>
 			Get<SVGAnimatedString>();

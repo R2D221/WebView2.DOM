@@ -1,13 +1,10 @@
-﻿using Microsoft.Web.WebView2.Core;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/svg/svg_fe_gaussian_blur_element.idl
 
-	public partial class SVGFEGaussianBlurElement : SVGElement
+	public sealed partial class SVGFEGaussianBlurElement : SVGElement
 	{
-		protected internal SVGFEGaussianBlurElement(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private SVGFEGaussianBlurElement() { }
 
 		public SVGAnimatedString in1 => Get<SVGAnimatedString>();
 		public SVGAnimatedNumber stdDeviationX => Get<SVGAnimatedNumber>();

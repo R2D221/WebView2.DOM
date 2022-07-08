@@ -1,15 +1,10 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/css/css_scroll_timeline_rule.idl
 
-	public class CSSScrollTimelineRule : CSSRule
+	public sealed class CSSScrollTimelineRule : CSSRule
 	{
-		protected internal CSSScrollTimelineRule(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private CSSScrollTimelineRule() { }
 
 		public string name => Get<string>();
 		public string source => Get<string>();

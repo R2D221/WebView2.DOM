@@ -1,6 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/svg/svg_fe_color_matrix_element.idl
 
@@ -13,10 +11,9 @@ namespace WebView2.DOM
 		LUMINANCETOALPHA = 4,
 	}
 
-	public partial class SVGFEColorMatrixElement : SVGElement
+	public sealed partial class SVGFEColorMatrixElement : SVGElement
 	{
-		protected internal SVGFEColorMatrixElement(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private SVGFEColorMatrixElement() { }
 
 		public SVGAnimatedString in1 =>
 			Get<SVGAnimatedString>();

@@ -1,6 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/html/media/media_error.idl
 
@@ -12,11 +10,9 @@ namespace WebView2.DOM
 		SRC_NOT_SUPPORTED = 4,
 	}
 
-	public class MediaError : JsObject
+	public sealed class MediaError : JsObject
 	{
-		protected internal MediaError(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private MediaError() { }
 
 		public MediaErrorCode code => Get<MediaErrorCode>();
 		public string message => Get<string>();

@@ -18,11 +18,9 @@ namespace WebView2.DOM
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
 	public partial class CSSTransformValue : CSSStyleValue, IReadOnlyCollection<CSSTransformValue>
 	{
-		protected internal CSSTransformValue(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		protected internal CSSTransformValue() { }
 
-		public CSSTransformValue(IReadOnlyList<CSSTransformComponent> transforms)
-			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
+		public CSSTransformValue(IReadOnlyList<CSSTransformComponent> transforms) =>
 			Construct(transforms);
 
 		public bool is2D => Get<bool>();

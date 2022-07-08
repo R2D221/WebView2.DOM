@@ -4,10 +4,9 @@ namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/html/forms/submit_event.idl
 
-	public class SubmitEvent : Event
+	public sealed class SubmitEvent : Event
 	{
-		protected internal SubmitEvent(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private SubmitEvent() { }
 
 		public HTMLElement? submitter => Get<HTMLElement?>();
 	}

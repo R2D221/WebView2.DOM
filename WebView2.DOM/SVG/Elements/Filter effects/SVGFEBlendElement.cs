@@ -1,9 +1,7 @@
-﻿using Microsoft.Web.WebView2.Core;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/svg/svg_fe_blend_element.idl
-	
+
 	public enum SVGFEBlendMode : ushort
 	{
 		UNKNOWN = 0,
@@ -24,11 +22,10 @@ namespace WebView2.DOM
 		COLOR = 15,
 		LUMINOSITY = 16,
 	}
-	
-	public partial class SVGFEBlendElement : SVGElement
+
+	public sealed partial class SVGFEBlendElement : SVGElement
 	{
-		protected internal SVGFEBlendElement(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private SVGFEBlendElement() { }
 
 		public SVGAnimatedString in1 => Get<SVGAnimatedString>();
 		public SVGAnimatedString in2 => Get<SVGAnimatedString>();

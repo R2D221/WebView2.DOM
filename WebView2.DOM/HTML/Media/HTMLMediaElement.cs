@@ -1,9 +1,7 @@
-﻿using Microsoft.Web.WebView2.Core;
-using NodaTime;
+﻿using NodaTime;
 using Savage.Range;
 using System;
 using System.Collections.Immutable;
-using System.Threading.Tasks;
 
 namespace WebView2.DOM
 {
@@ -30,11 +28,9 @@ namespace WebView2.DOM
 		HAVE_ENOUGH_DATA = 4,
 	}
 
-	public class HTMLMediaElement : HTMLElement
+	public abstract class HTMLMediaElement : HTMLElement
 	{
-		protected internal HTMLMediaElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private protected HTMLMediaElement() { }
 
 		// error state
 		public MediaError? error => Get<MediaError?>();
@@ -71,7 +67,7 @@ namespace WebView2.DOM
 		public bool ended => Get<bool>();
 		public bool autoplay { get => Get<bool>(); set => Set(value); }
 		public bool loop { get => Get<bool>(); set => Set(value); }
-		public Task play() => Method<Task>().Invoke();
+		public VoidPromise play() => Method<VoidPromise>().Invoke();
 		public void pause() => Method().Invoke();
 		//attribute double latencyHint;
 		//attribute boolean preservesPitch;

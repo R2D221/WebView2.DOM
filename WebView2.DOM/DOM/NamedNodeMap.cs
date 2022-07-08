@@ -1,5 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -8,10 +7,9 @@ namespace WebView2.DOM
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/dom/named_node_map.idl
 
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
-	public partial class NamedNodeMap : JsObject, IReadOnlyCollection<Attr>
+	public sealed partial class NamedNodeMap : JsObject, IReadOnlyCollection<Attr>
 	{
-		protected internal NamedNodeMap(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private NamedNodeMap() { }
 
 		//public Attr this[uint index] =>
 		//	IndexerGet<Attr?>(index) ?? throw new ArgumentOutOfRangeException(nameof(index));

@@ -1,13 +1,10 @@
-﻿using Microsoft.Web.WebView2.Core;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/svg/svg_rect_element.idl
 
-	public class SVGRectElement : SVGGeometryElement
+	public sealed class SVGRectElement : SVGGeometryElement
 	{
-		protected internal SVGRectElement(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private SVGRectElement() { }
 
 		public SVGAnimatedLength x => Get<SVGAnimatedLength>();
 		public SVGAnimatedLength y => Get<SVGAnimatedLength>();

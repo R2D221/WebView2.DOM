@@ -10,11 +10,9 @@ namespace WebView2.DOM
 
 	public class CSSMathMin : CSSMathValue
 	{
-		protected internal CSSMathMin(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		protected internal CSSMathMin() { }
 
-		public CSSMathMin(params CSSNumericValue[] values)
-			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
+		public CSSMathMin(params CSSNumericValue[] values) =>
 			Construct(args: values.ToArray<object?>());
 
 		public IReadOnlyList<CSSNumericValue> values => Get<ImmutableArray<CSSNumericValue>>();

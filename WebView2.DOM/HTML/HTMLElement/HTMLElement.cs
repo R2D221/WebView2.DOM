@@ -1,5 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System;
+﻿using System;
 
 namespace WebView2.DOM
 {
@@ -17,8 +16,7 @@ namespace WebView2.DOM
 
 	public partial class HTMLElement : Element
 	{
-		protected internal HTMLElement(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private protected HTMLElement() { }
 
 		// metadata attributes
 		public string title { get => Get<string>(); set => Set(value); }

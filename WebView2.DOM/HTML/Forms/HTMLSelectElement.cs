@@ -1,13 +1,10 @@
-﻿using Microsoft.Web.WebView2.Core;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/html/forms/html_select_element.idl
 
-	public class HTMLSelectElement : HTMLElement, IFormControl, ILabelableElement
+	public sealed class HTMLSelectElement : HTMLElement, IFormControl, ILabelableElement
 	{
-		protected internal HTMLSelectElement(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private HTMLSelectElement() { }
 
 		public string autocomplete { get => Get<string>(); set => Set(value); }
 		public bool disabled { get => Get<bool>(); set => Set(value); }

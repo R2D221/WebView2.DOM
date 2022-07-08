@@ -1,11 +1,7 @@
-﻿using Microsoft.Web.WebView2.Core;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
-	public class HTMLUnknownElement : HTMLElement
+	public sealed class HTMLUnknownElement : HTMLElement
 	{
-		protected internal HTMLUnknownElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private HTMLUnknownElement() { }
 	}
 }

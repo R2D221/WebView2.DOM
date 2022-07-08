@@ -24,14 +24,11 @@ namespace WebView2.DOM
 
 	public class CSSMatrixComponent : CSSTransformComponent
 	{
-		protected internal CSSMatrixComponent(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		protected internal CSSMatrixComponent() { }
 
-		public CSSMatrixComponent(DOMMatrixReadOnly matrix)
-			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
+		public CSSMatrixComponent(DOMMatrixReadOnly matrix) =>
 			Construct(matrix);
-		public CSSMatrixComponent(DOMMatrixReadOnly matrix, CSSMatrixComponentOptions options)
-			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
+		public CSSMatrixComponent(DOMMatrixReadOnly matrix, CSSMatrixComponentOptions options) =>
 			Construct(matrix, options);
 
 		public DOMMatrix matrix { get => Get<DOMMatrix>(); set => Set(value); }

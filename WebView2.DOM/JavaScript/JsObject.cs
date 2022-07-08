@@ -1,110 +1,118 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System;
-using System.Runtime.CompilerServices;
-using System.Threading;
+﻿using System.Runtime.CompilerServices;
 
 namespace WebView2.DOM
 {
 	public class JsObject
 	{
-		internal readonly CoreWebView2 coreWebView;
-		internal readonly string referenceId;
+		private protected JsObject() { }
 
-		protected internal JsObject(CoreWebView2 coreWebView, string referenceId)
+		//		~JsObject()
+		//		{
+		//			try
+		//			{
+		//				var syncContext = coreWebView.GetSynchronizationContext();
+		//				if (syncContext == SynchronizationContext.Current)
+		//				{
+		//					f(coreWebView, referenceId);
+		//				}
+		//				else
+		//				{
+		////#error esto no me gusta
+		//					syncContext.Post(
+		//						state: Tuple.Create(coreWebView, referenceId),
+		//						d: static x =>
+		//						{
+		//#pragma warning disable CS8600 // Se va a convertir un literal nulo o un posible valor nulo en un tipo que no acepta valores NULL
+		//							var tuple = (Tuple<CoreWebView2, string>)x;
+		//#pragma warning restore CS8600 // Se va a convertir un literal nulo o un posible valor nulo en un tipo que no acepta valores NULL
+
+		//							(var coreWebView, var referenceId) = tuple;
+
+		//							f(coreWebView, referenceId);
+		//						});
+		//				}
+
+		//				static async void f(CoreWebView2 coreWebView, string referenceId)
+		//				{
+		//					try
+		//					{
+		//						_ = await coreWebView.ExecuteScriptAsync($@"
+		//							(() => {{
+		//								WebView2DOM.RemoveId('{referenceId}');
+		//							}})()
+		//						");
+		//					}
+		//					catch
+		//					{
+		//						// Don't want bad things to happen
+		//					}
+		//				}
+		//			}
+		//			catch
+		//			{
+		//				// Don't want bad things to happen
+		//			}
+		//		}
+
+		internal void Construct(params object?[] args)
 		{
-			this.coreWebView = coreWebView;
-			this.referenceId = referenceId;
+			BrowsingContext.Current.Construct(this, GetType().Name, args);
 		}
 
-		~JsObject()
+		internal T Get<T>([CallerMemberName] string property = "")
 		{
-			try
-			{
-				var syncContext = coreWebView.GetSynchronizationContext();
-				if (syncContext == SynchronizationContext.Current)
-				{
-					f();
-				}
-				else
-				{
-					syncContext.Post(_ => f(), null);
-				}
-
-				async void f()
-				{
-					try
-					{
-						_ = await coreWebView.ExecuteScriptAsync($@"
-							(() => {{
-								WebView2DOM.RemoveId('{referenceId}');
-							}})()
-						");
-					}
-					catch
-					{
-						// Don't want bad things to happen
-					}
-				}
-			}
-			catch
-			{
-				// Don't want bad things to happen
-			}
+			return BrowsingContext.Current.Get<T>(this, property);
 		}
 
-		internal @void Construct(params object?[] args)
+		internal void Set<T>(T value, [CallerMemberName] string property = "")
 		{
-			coreWebView.References().Add(this);
-			coreWebView.Coordinator().Call(new()
-			{
-				referenceId = referenceId,
-				memberType = "constructor",
-				memberName = GetType().Name,
-				parameters = args,
-			});
-			return default!;
+			BrowsingContext.Current.Set(this, property, value);
 		}
 
-		internal T Get<T>([CallerMemberName] string property = "") =>
-			coreWebView.Coordinator().Call<T>(new()
-			{
-				referenceId = referenceId,
-				memberType = "getter",
-				memberName = property,
-			});
+		internal T IndexerGet<T>(string index)
+		{
+			return BrowsingContext.Current.Get<T>(this, index);
+		}
 
-		internal void Set<T>(T value, [CallerMemberName] string property = "") =>
-			coreWebView.Coordinator().Call(new()
-			{
-				referenceId = referenceId,
-				memberType = "setter",
-				memberName = property,
-				parameters = new object?[] { value },
-			});
+		internal T IndexerGet<T>(uint index)
+		{
+			return BrowsingContext.Current.Get<T>(this, index);
+		}
 
-		internal T IndexerGet<T>(object? index) =>
-			coreWebView.Coordinator().Call<T>(new()
-			{
-				referenceId = referenceId,
-				memberType = "indexerGetter",
-				parameters = new[] { index },
-			});
+		internal T IndexerGet<T>(int index)
+		{
+			return BrowsingContext.Current.Get<T>(this, index);
+		}
 
-		internal void IndexerSet<T>(object? index, T value) =>
-			coreWebView.Coordinator().Call(new()
-			{
-				referenceId = referenceId,
-				memberType = "indexerSetter",
-				parameters = new[] { index, value },
-			});
+		internal void IndexerSet<T>(string index, T value)
+		{
+			BrowsingContext.Current.Set(this, index, value);
+		}
 
-		internal void IndexerDelete(object? index) =>
-			coreWebView.Coordinator().Call(new()
-			{
-				referenceId = referenceId,
-				memberType = "indexerDeleter",
-				parameters = new[] { index },
-			});
+		internal void IndexerSet<T>(uint index, T value)
+		{
+			BrowsingContext.Current.Set(this, index, value);
+		}
+
+		internal void IndexerSet<T>(int index, T value)
+		{
+			BrowsingContext.Current.Set(this, index, value);
+		}
+
+		internal void IndexerDelete(string index)
+		{
+			BrowsingContext.Current.Delete(this, index);
+		}
+
+		internal void IndexerDelete(uint index)
+		{
+			BrowsingContext.Current.Delete(this, index);
+		}
+
+		internal void IndexerDelete(int index)
+		{
+			BrowsingContext.Current.Delete(this, index);
+		}
 
 		internal Invoker Method([CallerMemberName] string method = "")
 			=> new Invoker(this, method);
@@ -115,14 +123,10 @@ namespace WebView2.DOM
 			private readonly JsObject @this;
 			private readonly string method;
 
-			public @void Invoke(params object?[] args) =>
-				@this.coreWebView.Coordinator().Call<string?>(new()
-				{
-					referenceId = @this.referenceId,
-					memberType = "invoke",
-					memberName = method,
-					parameters = args,
-				});
+			public void Invoke(params object?[] args)
+			{
+				BrowsingContext.Current.InvokeVoid(@this, method, args);
+			}
 		}
 
 		internal Invoker<T> Method<T>([CallerMemberName] string method = "")
@@ -134,14 +138,10 @@ namespace WebView2.DOM
 			private readonly JsObject @this;
 			private readonly string method;
 
-			public T Invoke(params object?[] args) =>
-				@this.coreWebView.Coordinator().Call<T>(new()
-				{
-					referenceId = @this.referenceId,
-					memberType = "invoke",
-					memberName = method,
-					parameters = args,
-				});
+			public T Invoke(params object?[] args)
+			{
+				return BrowsingContext.Current.Invoke<T>(@this, method, args);
+			}
 		}
 
 		internal SymbolInvoker<T> SymbolMethod<T>([CallerMemberName] string method = "")
@@ -153,14 +153,10 @@ namespace WebView2.DOM
 			private readonly JsObject @this;
 			private readonly string method;
 
-			public T Invoke(params object?[] args) =>
-				@this.coreWebView.Coordinator().Call<T>(new()
-				{
-					referenceId = @this.referenceId,
-					memberType = "invokeSymbol",
-					memberName = method,
-					parameters = args,
-				});
+			public T Invoke(params object?[] args)
+			{
+				return BrowsingContext.Current.SymbolInvoke<T>(@this, method, args);
+			}
 		}
 	}
 }

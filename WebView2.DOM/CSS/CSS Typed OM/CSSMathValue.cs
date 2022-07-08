@@ -16,9 +16,7 @@ namespace WebView2.DOM
 
 	public class CSSMathValue : CSSNumericValue
 	{
-		protected internal CSSMathValue(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal CSSMathValue() { }
 
 		public CSSMathOperator @operator => Get<CSSMathOperator>();
 	}

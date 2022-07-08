@@ -6,8 +6,6 @@ namespace WebView2.DOM
 
 	public class CSSImageValue : CSSStyleValue
 	{
-		protected internal CSSImageValue(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal CSSImageValue() { }
 	}
 }

@@ -7,15 +7,11 @@ namespace WebView2.DOM
 
 	public class CSSVariableReferenceValue : CSSStyleValue
 	{
-		protected internal CSSVariableReferenceValue(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal CSSVariableReferenceValue() { }
 
-		public CSSVariableReferenceValue(string variable)
-			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
+		public CSSVariableReferenceValue(string variable) =>
 			Construct(variable);
-		public CSSVariableReferenceValue(string variable, CSSUnparsedValue fallback)
-			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
+		public CSSVariableReferenceValue(string variable, CSSUnparsedValue fallback) =>
 			Construct(variable, fallback);
 
 		public string variable { get => Get<string>(); set => Set(value); }

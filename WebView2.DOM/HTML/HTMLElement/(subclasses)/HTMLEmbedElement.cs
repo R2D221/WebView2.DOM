@@ -1,14 +1,11 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System;
+﻿using System;
 using System.Text.Json;
 
 namespace WebView2.DOM
 {
-	public class HTMLEmbedElement : HTMLElement
+	public sealed class HTMLEmbedElement : HTMLElement
 	{
-		protected internal HTMLEmbedElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private HTMLEmbedElement() { }
 
 		public Uri src { get => Get<Uri>(); set => Set(value); }
 		public string type { get => Get<string>(); set => Set(value); }

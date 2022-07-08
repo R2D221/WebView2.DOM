@@ -1,6 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace WebView2.DOM
 {
@@ -14,8 +12,7 @@ namespace WebView2.DOM
 
 	public partial class Document : Node
 	{
-		protected internal Document(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private protected Document() { }
 
 		#region url
 		public DOMImplementation implementation => _implementation ??= Get<DOMImplementation>();
@@ -216,10 +213,10 @@ namespace WebView2.DOM
 		#endregion
 
 		#region Storage Access API
-		public Task<bool> hasStorageAccess()
-			=> Method<Task<bool>>().Invoke();
-		public Task requestStorageAccess()
-		  => Method<Task>().Invoke();
+		public Promise<bool> hasStorageAccess() =>
+			Method<Promise<bool>>().Invoke();
+		public VoidPromise requestStorageAccess() =>
+			Method<VoidPromise>().Invoke();
 		#endregion
 
 		#region Text fragment directive API

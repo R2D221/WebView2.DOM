@@ -1,14 +1,10 @@
-﻿using Microsoft.Web.WebView2.Core;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/dom/dom_string_map.idl
 
-	public class DOMStringMap : JsObject
+	public sealed class DOMStringMap : JsObject
 	{
-		protected internal DOMStringMap(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private DOMStringMap() { }
 
 		public string this[string name]
 		{

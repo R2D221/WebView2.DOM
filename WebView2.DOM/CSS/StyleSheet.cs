@@ -6,9 +6,7 @@ namespace WebView2.DOM
 
 	public class StyleSheet : JsObject
 	{
-		protected internal StyleSheet(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal StyleSheet() { }
 
 		public string type => Get<string>();
 		public string? href => Get<string?>();

@@ -1,9 +1,7 @@
-﻿using Microsoft.Web.WebView2.Core;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/svg/svg_fe_composite_element.idl
-	
+
 	public enum SVGFECompositeOperator : ushort
 	{
 		UNKNOWN = 0,
@@ -15,10 +13,9 @@ namespace WebView2.DOM
 		ARITHMETIC = 6,
 	}
 
-	public partial class SVGFECompositeElement : SVGElement
+	public sealed partial class SVGFECompositeElement : SVGElement
 	{
-		protected internal SVGFECompositeElement(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private SVGFECompositeElement() { }
 
 		public SVGAnimatedString in2 =>
 			Get<SVGAnimatedString>();

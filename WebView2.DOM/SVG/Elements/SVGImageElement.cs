@@ -1,14 +1,10 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System.Threading.Tasks;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/svg/svg_image_element.idl
 
-	public partial class SVGImageElement : SVGGraphicsElement
+	public sealed partial class SVGImageElement : SVGGraphicsElement
 	{
-		protected internal SVGImageElement(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private SVGImageElement() { }
 
 		public SVGAnimatedLength x => Get<SVGAnimatedLength>();
 		public SVGAnimatedLength y => Get<SVGAnimatedLength>();
@@ -17,7 +13,7 @@ namespace WebView2.DOM
 		public SVGAnimatedPreserveAspectRatio preserveAspectRatio => Get<SVGAnimatedPreserveAspectRatio>();
 
 		public ImageDecodingHint decoding { get => Get<ImageDecodingHint>(); set => Set(value); }
-		public Task decode() => Get<Task>();
+		public VoidPromise decode() => Method<VoidPromise>().Invoke();
 	}
 
 	public partial class SVGImageElement : SVGURIReference

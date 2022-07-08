@@ -1,13 +1,10 @@
-﻿using Microsoft.Web.WebView2.Core;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/svg/svg_fe_image_element.idl
 
-	public partial class SVGFEImageElement : SVGElement
+	public sealed partial class SVGFEImageElement : SVGElement
 	{
-		protected internal SVGFEImageElement(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private SVGFEImageElement() { }
 
 		public SVGAnimatedPreserveAspectRatio preserveAspectRatio =>
 			Get<SVGAnimatedPreserveAspectRatio>();

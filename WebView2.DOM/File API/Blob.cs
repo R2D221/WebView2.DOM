@@ -1,5 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System;
+﻿using System;
 
 namespace WebView2.DOM
 {
@@ -7,11 +6,9 @@ namespace WebView2.DOM
 
 	public class Blob : JsObject
 	{
-		protected internal Blob(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
+		public Blob()
 		{
 			throw new NotImplementedException();
 		}
-
-		public Blob() : this(null!, null!) { }
 	}
 }

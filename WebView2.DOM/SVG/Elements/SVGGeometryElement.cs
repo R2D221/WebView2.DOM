@@ -1,13 +1,10 @@
-﻿using Microsoft.Web.WebView2.Core;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/svg/svg_geometry_element.idl
 
-	public class SVGGeometryElement : SVGGraphicsElement
+	public abstract class SVGGeometryElement : SVGGraphicsElement
 	{
-		protected internal SVGGeometryElement(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private protected SVGGeometryElement() { }
 
 		public SVGAnimatedNumber pathLength => _pathLength ??= Get<SVGAnimatedNumber>();
 		private SVGAnimatedNumber? _pathLength;

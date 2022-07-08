@@ -34,27 +34,27 @@ namespace WebView2.DOM
 
 		internal InputType([CallerMemberName] string name = "") => Name = name.Replace("_", "-");
 
-		public static readonly InputType<HTMLHiddenInputElement/*	*/> hidden/*	*/= new InputType();
-		public static readonly InputType<HTMLTextInputElement/*	*/> text/*	*/= new InputType();
-		public static readonly InputType<HTMLSearchInputElement/*	*/> search/*	*/= new InputType();
-		public static readonly InputType<HTMLTelephoneInputElement/*	*/> tel/*	*/= new InputType();
-		public static readonly InputType<HTMLURLInputElement/*	*/> url/*	*/= new InputType();
-		public static readonly InputType<HTMLEmailInputElement/*	*/> email/*	*/= new InputType();
-		public static readonly InputType<HTMLPasswordInputElement/*	*/> password/*	*/= new InputType();
-		public static readonly InputType<HTMLDateInputElement/*	*/> date/*	*/= new InputType();
-		public static readonly InputType<HTMLMonthInputElement/*	*/> month/*	*/= new InputType();
-		public static readonly InputType<HTMLWeekInputElement/*	*/> week/*	*/= new InputType();
-		public static readonly InputType<HTMLTimeInputElement/*	*/> time/*	*/= new InputType();
-		public static readonly InputType<HTMLLocalDateTimeInputElement/*	*/> datetime_local/*	*/= new InputType();
-		public static readonly InputType<HTMLNumberInputElement/*	*/> number/*	*/= new InputType();
-		public static readonly InputType<HTMLRangeInputElement/*	*/> range/*	*/= new InputType();
-		public static readonly InputType<HTMLColorInputElement/*	*/> color/*	*/= new InputType();
-		public static readonly InputType<HTMLCheckboxInputElement/*	*/> checkbox/*	*/= new InputType();
-		public static readonly InputType<HTMLRadioButtonInputElement/*	*/> radio/*	*/= new InputType();
-		public static readonly InputType<HTMLFileUploadInputElement/*	*/> file/*	*/= new InputType();
-		public static readonly InputType<HTMLSubmitInputElement/*	*/> submit/*	*/= new InputType();
-		public static readonly InputType<HTMLImageInputElement/*	*/> image/*	*/= new InputType();
-		public static readonly InputType<HTMLResetInputElement/*	*/> reset/*	*/= new InputType();
-		public static readonly InputType<HTMLButtonInputElement/*	*/> button/*	*/= new InputType();
+		public static readonly InputType<HTMLInputElement.hidden/*         	*/> hidden/*         	*/= new InputType();
+		public static readonly InputType<HTMLInputElement.text/*           	*/> text/*           	*/= new InputType();
+		public static readonly InputType<HTMLInputElement.search/*         	*/> search/*         	*/= new InputType();
+		public static readonly InputType<HTMLInputElement.tel/*            	*/> tel/*            	*/= new InputType();
+		public static readonly InputType<HTMLInputElement.url/*            	*/> url/*            	*/= new InputType();
+		public static readonly InputType<HTMLInputElement.email/*          	*/> email/*          	*/= new InputType();
+		public static readonly InputType<HTMLInputElement.password/*       	*/> password/*       	*/= new InputType();
+		public static readonly InputType<HTMLInputElement.date/*           	*/> date/*           	*/= new InputType();
+		public static readonly InputType<HTMLInputElement.month/*          	*/> month/*          	*/= new InputType();
+		public static readonly InputType<HTMLInputElement.week/*           	*/> week/*           	*/= new InputType();
+		public static readonly InputType<HTMLInputElement.time/*           	*/> time/*           	*/= new InputType();
+		public static readonly InputType<HTMLInputElement.datetime_local/* 	*/> datetime_local/* 	*/= new InputType();
+		public static readonly InputType<HTMLInputElement.number/*         	*/> number/*         	*/= new InputType();
+		public static readonly InputType<HTMLInputElement.range/*          	*/> range/*          	*/= new InputType();
+		public static readonly InputType<HTMLInputElement.color/*          	*/> color/*          	*/= new InputType();
+		public static readonly InputType<HTMLInputElement.checkbox/*       	*/> checkbox/*       	*/= new InputType();
+		public static readonly InputType<HTMLInputElement.radio/*          	*/> radio/*          	*/= new InputType();
+		public static readonly InputType<HTMLInputElement.file/*           	*/> file/*           	*/= new InputType();
+		public static readonly InputType<HTMLInputElement.submit/*         	*/> submit/*         	*/= new InputType();
+		public static readonly InputType<HTMLInputElement.image/*          	*/> image/*          	*/= new InputType();
+		public static readonly InputType<HTMLInputElement.reset/*          	*/> reset/*          	*/= new InputType();
+		public static readonly InputType<HTMLInputElement.button/*         	*/> button/*         	*/= new InputType();
 	}
 }

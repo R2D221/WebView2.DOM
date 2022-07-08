@@ -11,8 +11,7 @@ namespace WebView2.DOM
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
 	public class HTMLOptionsCollection : HTMLCollection<HTMLOptionElement>, IList<HTMLOptionElement>
 	{
-		protected internal HTMLOptionsCollection(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private HTMLOptionsCollection() { }
 
 		public int selectedIndex { get => Get<int>(); set => Set(value); }
 

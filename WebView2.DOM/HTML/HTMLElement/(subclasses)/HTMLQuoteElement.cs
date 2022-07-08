@@ -1,13 +1,10 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System;
+﻿using System;
 
 namespace WebView2.DOM
 {
-	public class HTMLQuoteElement : HTMLElement
+	public sealed class HTMLQuoteElement : HTMLElement
 	{
-		protected internal HTMLQuoteElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private HTMLQuoteElement() { }
 
 		public Uri cite { get => Get<Uri>(); set => Set(value); }
 	}

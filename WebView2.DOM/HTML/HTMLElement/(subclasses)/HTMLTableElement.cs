@@ -1,12 +1,8 @@
-﻿using Microsoft.Web.WebView2.Core;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
-	public class HTMLTableElement : HTMLElement
+	public sealed class HTMLTableElement : HTMLElement
 	{
-		protected internal HTMLTableElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private HTMLTableElement() { }
 
 		public HTMLTableCaptionElement? caption { get => Get<HTMLTableCaptionElement?>(); set => Set(value); }
 		public HTMLTableCaptionElement createCaption() => Method<HTMLTableCaptionElement>().Invoke();

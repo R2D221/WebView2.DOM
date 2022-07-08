@@ -7,12 +7,9 @@ namespace WebView2.DOM
 
 	public class CSSSkewX : CSSTransformComponent
 	{
-		protected internal CSSSkewX(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal CSSSkewX() { }
 
-		public CSSSkewX(CSSNumericValue ax)
-			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
+		public CSSSkewX(CSSNumericValue ax) =>
 			Construct(ax);
 
 		public CSSNumericValue ax { get => Get<CSSNumericValue>(); set => Set(value); }

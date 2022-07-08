@@ -1,16 +1,13 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace WebView2.DOM
 {
 	public enum PotentialDestination { _, script, style, image, track, font, fetch }
 
-	public class HTMLLinkElement : HTMLElement
+	public sealed class HTMLLinkElement : HTMLElement
 	{
-		protected internal HTMLLinkElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private HTMLLinkElement() { }
 
 		public bool disabled { get => Get<bool>(); set => Set(value); }
 		public Uri href { get => Get<Uri>(); set => Set(value); }

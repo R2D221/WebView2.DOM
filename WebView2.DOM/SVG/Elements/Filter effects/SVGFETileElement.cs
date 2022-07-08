@@ -1,13 +1,10 @@
-﻿using Microsoft.Web.WebView2.Core;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/svg/svg_fe_tile_element.idl
 
-	public partial class SVGFETileElement : SVGElement
+	public sealed partial class SVGFETileElement : SVGElement
 	{
-		protected internal SVGFETileElement(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private SVGFETileElement() { }
 
 		public SVGAnimatedString in1 => Get<SVGAnimatedString>();
 	}

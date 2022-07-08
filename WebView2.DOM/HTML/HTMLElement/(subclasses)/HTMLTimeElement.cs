@@ -1,14 +1,12 @@
-﻿using Microsoft.Web.WebView2.Core;
-using NodaTime;
+﻿using NodaTime;
 using OneOf;
 using WebView2.DOM.Microsyntaxes;
 
 namespace WebView2.DOM
 {
-	public class HTMLTimeElement : HTMLElement
+	public sealed class HTMLTimeElement : HTMLElement
 	{
-		protected internal HTMLTimeElement(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private HTMLTimeElement() { }
 
 		private string _dateTime
 		{

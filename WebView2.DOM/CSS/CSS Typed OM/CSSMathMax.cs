@@ -10,11 +10,9 @@ namespace WebView2.DOM
 
 	public class CSSMathMax : CSSMathValue
 	{
-		protected internal CSSMathMax(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		protected internal CSSMathMax() { }
 
-		public CSSMathMax(params CSSNumericValue[] values)
-			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
+		public CSSMathMax(params CSSNumericValue[] values) =>
 			Construct(args: values.ToArray<object?>());
 
 		public IReadOnlyList<CSSNumericValue> values => Get<ImmutableArray<CSSNumericValue>>();

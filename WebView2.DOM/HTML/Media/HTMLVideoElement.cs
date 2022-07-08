@@ -1,15 +1,12 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System;
+﻿using System;
 
 namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/html/media/html_video_element.idl
 
-	public class HTMLVideoElement : HTMLMediaElement
+	public sealed class HTMLVideoElement : HTMLMediaElement
 	{
-		protected internal HTMLVideoElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private HTMLVideoElement() { }
 
 		public uint width { get => Get<uint>(); set => Set(value); }
 		public uint height { get => Get<uint>(); set => Set(value); }

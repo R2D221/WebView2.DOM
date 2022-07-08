@@ -1,14 +1,12 @@
-﻿using Microsoft.Web.WebView2.Core;
-using NodaTime;
+﻿using NodaTime;
 
 namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/svg/svg_svg_element.idl
 
-	public partial class SVGSVGElement : SVGGraphicsElement
+	public sealed partial class SVGSVGElement : SVGGraphicsElement
 	{
-		protected internal SVGSVGElement(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private SVGSVGElement() { }
 
 		public SVGAnimatedLength x => Get<SVGAnimatedLength>();
 		public SVGAnimatedLength y => Get<SVGAnimatedLength>();

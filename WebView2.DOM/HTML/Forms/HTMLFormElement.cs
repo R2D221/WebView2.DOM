@@ -1,14 +1,12 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System;
+﻿using System;
 
 namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/html/forms/html_form_element.idl
 
-	public class HTMLFormElement : HTMLElement
+	public sealed class HTMLFormElement : HTMLElement
 	{
-		protected internal HTMLFormElement(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private HTMLFormElement() { }
 
 		public string acceptCharset { get => Get<string>(); set => Set(value); }
 		public Uri action { get => Get<Uri>(); set => Set(value); }

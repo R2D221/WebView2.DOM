@@ -1,27 +1,24 @@
-﻿using Microsoft.Web.WebView2.Core;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/svg/svg_fe_turbulence_element.idl
-	
+
 	public enum SVGTurbulenceType : ushort
 	{
 		UNKNOWN = 0,
 		FRACTALNOISE = 1,
 		TURBULENCE = 2,
 	}
-	
+
 	public enum SVGStitchType : ushort
 	{
 		UNKNOWN = 0,
 		STITCH = 1,
 		NOSTITCH = 2,
 	}
-	
-	public partial class SVGFETurbulenceElement : SVGElement
+
+	public sealed partial class SVGFETurbulenceElement : SVGElement
 	{
-		protected internal SVGFETurbulenceElement(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private SVGFETurbulenceElement() { }
 
 		public SVGAnimatedNumber baseFrequencyX =>
 			Get<SVGAnimatedNumber>();

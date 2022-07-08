@@ -7,15 +7,11 @@ namespace WebView2.DOM
 
 	public class CSSTranslate : CSSTransformComponent
 	{
-		protected internal CSSTranslate(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal CSSTranslate() { }
 
-		public CSSTranslate(CSSNumericValue x, CSSNumericValue y)
-			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
+		public CSSTranslate(CSSNumericValue x, CSSNumericValue y) =>
 			Construct(x, y);
-		public CSSTranslate(CSSNumericValue x, CSSNumericValue y, CSSNumericValue z)
-			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
+		public CSSTranslate(CSSNumericValue x, CSSNumericValue y, CSSNumericValue z) =>
 			Construct(x, y, z);
 
 		public CSSNumericValue x { get => Get<CSSNumericValue>(); set => Set(value); }

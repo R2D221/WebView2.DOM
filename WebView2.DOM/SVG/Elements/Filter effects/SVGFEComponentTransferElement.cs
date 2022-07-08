@@ -1,13 +1,10 @@
-﻿using Microsoft.Web.WebView2.Core;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/svg/svg_fe_component_transfer_element.idl
 
-	public partial class SVGFEComponentTransferElement : SVGElement
+	public sealed partial class SVGFEComponentTransferElement : SVGElement
 	{
-		protected internal SVGFEComponentTransferElement(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private SVGFEComponentTransferElement() { }
 
 		public SVGAnimatedString in1 => Get<SVGAnimatedString>();
 	}

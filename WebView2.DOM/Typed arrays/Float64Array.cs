@@ -1,16 +1,12 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System;
+﻿using System;
 
 namespace WebView2.DOM
 {
-	public class Float64Array : ArrayBufferView
+	public sealed class Float64Array : ArrayBufferView
 	{
-		protected internal Float64Array(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId)
+		public Float64Array()
 		{
 			throw new NotImplementedException();
 		}
-
-		public Float64Array() : this(null!, null!) { }
 	}
 }

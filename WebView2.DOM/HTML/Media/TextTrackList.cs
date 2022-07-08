@@ -1,5 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -8,10 +7,9 @@ namespace WebView2.DOM
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/html/track/text_track_list.idl
 
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
-	public partial class TextTrackList : EventTarget, IReadOnlyCollection<TextTrack>
+	public sealed partial class TextTrackList : EventTarget, IReadOnlyCollection<TextTrack>
 	{
-		protected internal TextTrackList(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private TextTrackList() { }
 
 		//public TextTrack this[uint index] =>
 		//	IndexerGet<TextTrack?>(index) ?? throw new ArgumentOutOfRangeException(nameof(index));

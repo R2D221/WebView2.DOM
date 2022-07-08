@@ -1,5 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System;
+﻿using System;
 
 namespace WebView2.DOM
 {
@@ -32,11 +31,9 @@ namespace WebView2.DOM
 		IMPLEMENTATION_SPECIFIC/*	*/= 0b100000,
 	}
 
-	public class Node : EventTarget
+	public abstract class Node : EventTarget
 	{
-		protected internal Node(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private protected Node() { }
 
 		public NodeType nodeType => Get<NodeType>();
 		public string nodeName => Get<string>();
@@ -48,8 +45,8 @@ namespace WebView2.DOM
 		public Node? parentNode => Get<Node?>();
 		public Element? parentElement => Get<Element?>();
 		public bool hasChildNodes() => Method<bool>().Invoke();
-		public NodeList<Node> childNodes => _childNodes ??= Get<NodeList<Node>>();
-		private NodeList<Node>? _childNodes;
+		public NodeList<Node> childNodes => /*_childNodes ??=*/ Get<NodeList<Node>>();
+		//private NodeList<Node>? _childNodes;
 		public Node? firstChild => Get<Node?>();
 		public Node? lastChild => Get<Node?>();
 		public Node? previousSibling => Get<Node?>();

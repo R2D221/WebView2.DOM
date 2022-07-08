@@ -7,12 +7,9 @@ namespace WebView2.DOM
 
 	public class CSSKeywordValue : CSSStyleValue
 	{
-		protected internal CSSKeywordValue(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal CSSKeywordValue() { }
 
-		public CSSKeywordValue(string keyword)
-			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
+		public CSSKeywordValue(string keyword) =>
 			Construct(keyword);
 
 		public string value { get => Get<string>(); set => Set(value); }

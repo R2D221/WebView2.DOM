@@ -1,18 +1,15 @@
-﻿using Microsoft.Web.WebView2.Core;
-using SmartAnalyzers.CSharpExtensions.Annotations;
+﻿using SmartAnalyzers.CSharpExtensions.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Threading.Tasks;
 
 namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/frame/navigator.idl
 
-	public class Navigator : JsObject
+	public sealed class Navigator : JsObject
 	{
-		protected internal Navigator(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private Navigator() { }
 
 		[Obsolete("The value of the Navigator.vendorSub property is always the empty string, in any browser.")]
 		public string vendorSub => Get<string>();
@@ -72,15 +69,14 @@ namespace WebView2.DOM
 
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/frame/navigator_ua_data.idl
 
-	public class NavigatorUAData : JsObject
+	public sealed class NavigatorUAData : JsObject
 	{
-		protected internal NavigatorUAData(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private NavigatorUAData() { }
 
 		public IReadOnlyList<NavigatorUABrandVersion> brands => Get<ImmutableArray<NavigatorUABrandVersion>>();
 		public bool mobile => Get<bool>();
-		public Task<UADataValues> getHighEntropyValues(IReadOnlyList<string> hints) =>
-			Method<Task<UADataValues>>().Invoke(hints);
+		public Promise<UADataValues> getHighEntropyValues(IReadOnlyList<string> hints) =>
+			Method<Promise<UADataValues>>().Invoke(hints);
 	}
 
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/frame/navigator_ua_brand_version.idl

@@ -1,13 +1,10 @@
-﻿using Microsoft.Web.WebView2.Core;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/svg/svg_pattern_element.idl
 
-	public partial class SVGPatternElement : SVGElement
+	public sealed partial class SVGPatternElement : SVGElement
 	{
-		protected internal SVGPatternElement(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private SVGPatternElement() { }
 
 		public SVGAnimatedEnumeration<SVGUnitType> patternUnits => Get<SVGAnimatedEnumeration<SVGUnitType>>();
 		public SVGAnimatedEnumeration<SVGUnitType> patternContentUnits => Get<SVGAnimatedEnumeration<SVGUnitType>>();

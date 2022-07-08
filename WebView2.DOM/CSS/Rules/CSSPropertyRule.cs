@@ -1,15 +1,10 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/css/css_property_rule.idl
 
-	public class CSSPropertyRule : CSSRule
+	public sealed class CSSPropertyRule : CSSRule
 	{
-		protected internal CSSPropertyRule(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private CSSPropertyRule() { }
 
 		public string name => Get<string>();
 		public string syntax => Get<string>();

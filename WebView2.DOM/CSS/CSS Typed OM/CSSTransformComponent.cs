@@ -6,9 +6,7 @@ namespace WebView2.DOM
 
 	public class CSSTransformComponent : JsObject
 	{
-		protected internal CSSTransformComponent(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal CSSTransformComponent() { }
 
 		public override string ToString() => Method<string>("toString").Invoke();
 		public bool is2D { get => Get<bool>(); set => Set(value); }

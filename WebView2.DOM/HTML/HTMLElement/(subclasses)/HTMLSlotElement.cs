@@ -1,5 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
-using SmartAnalyzers.CSharpExtensions.Annotations;
+﻿using SmartAnalyzers.CSharpExtensions.Annotations;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 
@@ -20,11 +19,9 @@ namespace WebView2.DOM
 			= false;
 	}
 
-	public class HTMLSlotElement : HTMLElement
+	public sealed class HTMLSlotElement : HTMLElement
 	{
-		protected internal HTMLSlotElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private HTMLSlotElement() { }
 
 		public string name { get => Get<string>(); set => Set(value); }
 		public IReadOnlyList<Node> assignedNodes() =>

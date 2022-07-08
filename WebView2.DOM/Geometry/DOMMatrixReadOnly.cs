@@ -13,19 +13,13 @@ namespace WebView2.DOM
 		private static JsObject @static => _static.Value ??=
 			window.Instance.Get<JsObject>(nameof(DOMMatrixReadOnly));
 
-		protected internal DOMMatrixReadOnly(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
-
-		public DOMMatrixReadOnly()
-			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
+		public DOMMatrixReadOnly() =>
 			Construct();
 
-		public DOMMatrixReadOnly(string init)
-			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
+		public DOMMatrixReadOnly(string init) =>
 			Construct(init);
 
-		public DOMMatrixReadOnly(IReadOnlyList<double> init)
-			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
+		public DOMMatrixReadOnly(IReadOnlyList<double> init) =>
 			Construct(init);
 
 		public static DOMMatrixReadOnly fromMatrix(DOMMatrixInit other) =>

@@ -1,15 +1,12 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System;
+﻿using System;
 
 namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/frame/visual_viewport.idl
 
-	public class VisualViewport : EventTarget
+	public sealed class VisualViewport : EventTarget
 	{
-		protected internal VisualViewport(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private VisualViewport() { }
 
 		public double offsetLeft => Get<double>();
 		public double offsetTop => Get<double>();

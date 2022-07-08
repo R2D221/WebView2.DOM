@@ -1,9 +1,7 @@
-﻿using Microsoft.Web.WebView2.Core;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/svg/svg_fe_displacement_map_element.idl
-	
+
 	public enum SVGChannel : ushort
 	{
 		UNKNOWN = 0,
@@ -12,11 +10,10 @@ namespace WebView2.DOM
 		B = 3,
 		A = 4,
 	}
-	
-	public partial class SVGFEDisplacementMapElement : SVGElement
+
+	public sealed partial class SVGFEDisplacementMapElement : SVGElement
 	{
-		protected internal SVGFEDisplacementMapElement(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private SVGFEDisplacementMapElement() { }
 
 		public SVGAnimatedString in1 =>
 			Get<SVGAnimatedString>();

@@ -9,21 +9,24 @@ namespace WebView2.DOM
 
 	public class CSSUnitValue : CSSNumericValue
 	{
-		protected internal CSSUnitValue(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		protected internal CSSUnitValue() { }
 
-		public CSSUnitValue(double value, string unit)
-			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
+		public CSSUnitValue(double value, string unit) =>
 			Construct(value, unit);
 
 		public double value => Get<double>();
 		public string unit => Get<string>();
 	}
 
-	public static class CSS
+	public sealed class CSS : JsObject
 	{
-		private static readonly AsyncLocal<JsObject?> _static = new();
-		private static JsObject @static => _static.Value ??= window.Instance.Get<JsObject>(nameof(CSS));
+		//private static readonly AsyncLocal<JsObject?> _static = new();
+		//private static JsObject @static => _static.Value ??= window.Instance.Get<JsObject>(nameof(CSS));
+
+		private CSS() { }
+
+		private static readonly ThreadLocal<CSS> _static = new(() => window.Instance.Get<CSS>(nameof(CSS)));
+		private static CSS @static => _static.Value!;
 
 		public static CSSUnitValue number(double value) => @static.Method<CSSUnitValue>().Invoke(value);
 		public static CSSUnitValue percent(double value) => @static.Method<CSSUnitValue>().Invoke(value);

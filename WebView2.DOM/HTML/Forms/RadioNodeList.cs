@@ -6,8 +6,7 @@ namespace WebView2.DOM
 
 	public class RadioNodeList : NodeList<HTMLElement>
 	{
-		protected internal RadioNodeList(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private RadioNodeList() { }
 
 		public string value { get => Get<string>(); set => Set(value); }
 	}

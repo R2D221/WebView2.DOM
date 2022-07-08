@@ -1,5 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
@@ -10,10 +9,9 @@ namespace WebView2.DOM
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/clipboard/data_transfer_item_list.idl
 
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
-	public partial class DataTransferItemList : JsObject, ICollection<DataTransferItem>
+	public sealed partial class DataTransferItemList : JsObject, ICollection<DataTransferItem>
 	{
-		protected internal DataTransferItemList(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private DataTransferItemList() { }
 
 		public DataTransferItem this[uint index] =>
 			IndexerGet<DataTransferItem?>(index) ?? throw new ArgumentOutOfRangeException(nameof(index));

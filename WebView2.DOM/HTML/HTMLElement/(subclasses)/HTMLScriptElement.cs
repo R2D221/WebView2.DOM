@@ -1,13 +1,10 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System;
+﻿using System;
 
 namespace WebView2.DOM
 {
-	public class HTMLScriptElement : HTMLElement
+	public sealed class HTMLScriptElement : HTMLElement
 	{
-		protected internal HTMLScriptElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private HTMLScriptElement() { }
 
 		public Uri src { get => Get<Uri>(); set => Set(value); }
 		public string type { get => Get<string>(); set => Set(value); }

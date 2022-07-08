@@ -1,15 +1,10 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/css/css_keyframes_rule.idl
 
-	public class CSSKeyframesRule : CSSRule
+	public sealed class CSSKeyframesRule : CSSRule
 	{
-		protected internal CSSKeyframesRule(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private CSSKeyframesRule() { }
 
 		public string name => Get<string>();
 		public CSSRuleList cssRules => Get<CSSRuleList>();

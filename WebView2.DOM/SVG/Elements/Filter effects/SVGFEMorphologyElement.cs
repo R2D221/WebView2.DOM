@@ -1,20 +1,17 @@
-﻿using Microsoft.Web.WebView2.Core;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/svg/svg_fe_morphology_element.idl
-	
+
 	public enum SVGMorphologyOperator : ushort
 	{
 		UNKNOWN = 0,
 		ERODE = 1,
 		DILATE = 2,
 	}
-	
-	public partial class SVGFEMorphologyElement : SVGElement
+
+	public sealed partial class SVGFEMorphologyElement : SVGElement
 	{
-		protected internal SVGFEMorphologyElement(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private SVGFEMorphologyElement() { }
 
 		public SVGAnimatedString in1 =>
 			Get<SVGAnimatedString>();

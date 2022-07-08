@@ -1,13 +1,10 @@
-﻿using Microsoft.Web.WebView2.Core;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/svg/svg_graphics_element.idl
 
-	public partial class SVGGraphicsElement : SVGElement
+	public abstract partial class SVGGraphicsElement : SVGElement
 	{
-		protected internal SVGGraphicsElement(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private protected SVGGraphicsElement() { }
 
 		public SVGAnimatedTransformList transform =>
 			Get<SVGAnimatedTransformList>();

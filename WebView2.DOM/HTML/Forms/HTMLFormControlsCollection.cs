@@ -8,8 +8,7 @@ namespace WebView2.DOM
 
 	public class HTMLFormControlsCollection : HTMLCollection<IFormControl>
 	{
-		protected internal HTMLFormControlsCollection(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private HTMLFormControlsCollection() { }
 
 		new public OneOf<RadioNodeList, IFormControl> this[string name] =>
 			IndexerGet<OneOf<RadioNodeList, IFormControl>?>(name) ??

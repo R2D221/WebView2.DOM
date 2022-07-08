@@ -1,12 +1,8 @@
-﻿using Microsoft.Web.WebView2.Core;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
-	public class HTMLOListElement : HTMLElement
+	public sealed class HTMLOListElement : HTMLElement
 	{
-		protected internal HTMLOListElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private HTMLOListElement() { }
 
 		public bool reversed { get => Get<bool>(); set => Set(value); }
 		public int start { get => Get<int>(); set => Set(value); }

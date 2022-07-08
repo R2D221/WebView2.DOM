@@ -12,15 +12,12 @@ namespace WebView2.DOM
 		private static JsObject @static => _static.Value ??=
 			window.Instance.Get<JsObject>(nameof(DOMQuad));
 
-		protected internal DOMQuad(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		protected internal DOMQuad() { }
 
-		public DOMQuad(DOMPointInit p1, DOMPointInit p2, DOMPointInit p3, DOMPointInit p4)
-			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
+		public DOMQuad(DOMPointInit p1, DOMPointInit p2, DOMPointInit p3, DOMPointInit p4) =>
 			Construct(p1, p2, p3, p4);
 
-		public DOMQuad(IDOMPointInit p1, IDOMPointInit p2, IDOMPointInit p3, IDOMPointInit p4)
-			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
+		public DOMQuad(IDOMPointInit p1, IDOMPointInit p2, IDOMPointInit p3, IDOMPointInit p4) =>
 			Construct(p1, p2, p3, p4);
 
 		public static DOMQuad fromRect(DOMRectInit other) =>

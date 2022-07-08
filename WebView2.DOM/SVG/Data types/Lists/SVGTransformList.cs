@@ -1,13 +1,11 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace WebView2.DOM
 {
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
-	public class SVGTransformList : SVGList<SVGTransform>
+	public sealed class SVGTransformList : SVGList<SVGTransform>
 	{
-		protected internal SVGTransformList(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private SVGTransformList() { }
 
 		public SVGTransform createSVGTransformFromMatrix(SVGMatrix matrix) =>
 			Method<SVGTransform>().Invoke(matrix);

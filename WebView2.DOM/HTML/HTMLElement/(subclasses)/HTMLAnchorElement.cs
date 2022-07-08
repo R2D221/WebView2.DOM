@@ -1,5 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -8,9 +7,7 @@ namespace WebView2.DOM
 {
 	public sealed class HTMLAnchorElement : HTMLElement, HTMLHyperlinkElementUtils
 	{
-		internal HTMLAnchorElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private HTMLAnchorElement() { }
 
 		// HTMLAnchorElement includes HTMLHyperlinkElementUtils
 		public Uri href { get => Get<Uri>(); set => Set(value); }

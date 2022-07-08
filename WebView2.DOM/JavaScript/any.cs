@@ -10,7 +10,7 @@ namespace WebView2.DOM
 
 		public override bool TryConvert(ConvertBinder binder, out object? result)
 		{
-			result = JsonSerializer.Deserialize(json.GetRawText(), binder.Type, options);
+			result = JsonSerializer.Deserialize(json, binder.Type, options);
 			return true;
 		}
 	}

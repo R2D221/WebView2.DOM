@@ -1,6 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/svg/svg_component_transfer_function_element.idl
 
@@ -14,11 +12,10 @@ namespace WebView2.DOM
 		GAMMA = 5,
 	}
 
-	public class SVGComponentTransferFunctionElement : SVGElement
+	public abstract class SVGComponentTransferFunctionElement : SVGElement
 	{
-		protected internal SVGComponentTransferFunctionElement(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
-		
+		private protected SVGComponentTransferFunctionElement() { }
+
 		public SVGAnimatedEnumeration<SVGFEComponentTransferType> type =>
 			Get<SVGAnimatedEnumeration<SVGFEComponentTransferType>>();
 		public SVGAnimatedNumberList tableValues =>

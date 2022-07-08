@@ -1,5 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace WebView2.DOM
@@ -7,10 +6,9 @@ namespace WebView2.DOM
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/css/media_list.idl
 
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
-	public partial class MediaList : JsObject, ICollection<string>
+	public sealed partial class MediaList : JsObject, ICollection<string>
 	{
-		protected internal MediaList(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private MediaList() { }
 
 		public string mediaText { get => Get<string>(); set => Set(value); }
 
@@ -24,7 +22,7 @@ namespace WebView2.DOM
 		{
 			try
 			{
-				_ = Method("deleteMedium").Invoke(medium);
+				Method("deleteMedium").Invoke(medium);
 				return true;
 			}
 			catch (NotFoundError)

@@ -12,15 +12,10 @@ namespace WebView2.DOM
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
 	public class FormData : JsObject, IEnumerable<KeyValuePair<string, OneOf<File, string>>>
 	{
-		protected internal FormData(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
-
-		public FormData()
-			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
+		public FormData() =>
 			Construct();
 
-		public FormData(HTMLFormElement form)
-			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
+		public FormData(HTMLFormElement form) =>
 			Construct(form);
 
 		public void append(string name, string value) =>

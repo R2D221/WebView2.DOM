@@ -1,0 +1,10 @@
+﻿[*.cs]
+
+# CSE005: Return value unused
+dotnet_diagnostic.CSE005.severity = none
+
+# IDE0058: El valor de la expresión no se utiliza nunca.
+dotnet_diagnostic.IDE0058.severity = error
+
+# CSE006: Expression too complex
+dotnet_diagnostic.CSE006.severity = none

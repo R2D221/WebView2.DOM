@@ -1,14 +1,11 @@
-﻿using Microsoft.Web.WebView2.Core;
-using NodaTime;
+﻿using NodaTime;
 using System;
 
 namespace WebView2.DOM
 {
-	public class TextTrackCue : EventTarget
+	public sealed class TextTrackCue : EventTarget
 	{
-		protected internal TextTrackCue(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private TextTrackCue() { }
 
 		public TextTrack? track => Get<TextTrack?>();
 

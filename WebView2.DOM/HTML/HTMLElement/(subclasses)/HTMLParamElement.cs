@@ -1,12 +1,8 @@
-﻿using Microsoft.Web.WebView2.Core;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
-	public class HTMLParamElement : HTMLElement
+	public sealed class HTMLParamElement : HTMLElement
 	{
-		protected internal HTMLParamElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private HTMLParamElement() { }
 
 		public string name { get => Get<string>(); set => Set(value); }
 		public string value { get => Get<string>(); set => Set(value); }

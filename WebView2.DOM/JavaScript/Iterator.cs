@@ -5,21 +5,11 @@ using System.Collections.Generic;
 
 namespace WebView2.DOM
 {
-	public sealed class Iterator : JsObject
-	{
-		internal Iterator(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
-	}
+	public abstract class Iterator : JsObject { }
 
-	public sealed class Iterator<T> : JsObject, IEnumerator<T>
+	public sealed class Iterator<T> : Iterator, IEnumerator<T>
 	{
-		public static Iterator<T> FromJsObject(JsObject iterator) => new Iterator<T>(iterator);
-
-		internal Iterator(JsObject iterator)
-			 : base(iterator.coreWebView, iterator.referenceId)
-		{
-			References.Update(target: this);
-		}
+		private Iterator() { }
 
 		private T current = default!;
 

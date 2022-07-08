@@ -1,14 +1,11 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace WebView2.DOM
 {
-	public class HTMLSourceElement : HTMLElement
+	public sealed class HTMLSourceElement : HTMLElement
 	{
-		protected internal HTMLSourceElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private HTMLSourceElement() { }
 
 		public Uri src { get => Get<Uri>(); set => Set(value); }
 		public string type { get => Get<string>(); set => Set(value); }

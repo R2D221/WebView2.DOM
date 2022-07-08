@@ -19,11 +19,9 @@ namespace WebView2.DOM
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
 	public partial class CSSUnparsedValue : CSSStyleValue, IReadOnlyCollection<OneOf<string, CSSVariableReferenceValue>>
 	{
-		protected internal CSSUnparsedValue(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		protected internal CSSUnparsedValue() { }
 
-		public CSSUnparsedValue(IReadOnlyList<OneOf<string, CSSVariableReferenceValue>> members)
-			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
+		public CSSUnparsedValue(IReadOnlyList<OneOf<string, CSSVariableReferenceValue>> members) =>
 			Construct(members);
 
 		public int Count => Get<int>("length");

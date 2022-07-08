@@ -7,12 +7,9 @@ namespace WebView2.DOM
 
 	public class CSSMathInvert : CSSMathValue
 	{
-		protected internal CSSMathInvert(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal CSSMathInvert() { }
 
-		public CSSMathInvert(CSSNumericValue value)
-			: this(window.Instance.coreWebView, Guid.NewGuid().ToString()) =>
+		public CSSMathInvert(CSSNumericValue value) =>
 			Construct(value);
 
 		public CSSNumericValue value => Get<CSSNumericValue>();

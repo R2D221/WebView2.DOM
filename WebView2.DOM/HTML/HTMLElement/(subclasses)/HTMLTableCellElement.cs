@@ -1,14 +1,10 @@
-﻿using Microsoft.Web.WebView2.Core;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
 	public enum TableHeaderCellScope { _, row, col, rowgroup, colgroup }
 
-	public class HTMLTableCellElement : HTMLElement
+	public sealed class HTMLTableCellElement : HTMLElement
 	{
-		protected internal HTMLTableCellElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private HTMLTableCellElement() { }
 
 		public uint colSpan { get => Get<uint>(); set => Set(value); }
 		public uint rowSpan { get => Get<uint>(); set => Set(value); }

@@ -1,11 +1,7 @@
-﻿using Microsoft.Web.WebView2.Core;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
-	public class HTMLTableCaptionElement : HTMLElement
+	public sealed class HTMLTableCaptionElement : HTMLElement
 	{
-		protected internal HTMLTableCaptionElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private HTMLTableCaptionElement() { }
 	}
 }

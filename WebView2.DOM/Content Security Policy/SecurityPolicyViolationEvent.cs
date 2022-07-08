@@ -1,6 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/events/security_policy_violation_event.idl
 
@@ -9,11 +7,9 @@ namespace WebView2.DOM
 		enforce, report
 	}
 
-	public class SecurityPolicyViolationEvent : Event
+	public sealed class SecurityPolicyViolationEvent : Event
 	{
-		protected internal SecurityPolicyViolationEvent(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private SecurityPolicyViolationEvent() { }
 
 		public string documentURI => Get<string>();
 		public string referrer => Get<string>();

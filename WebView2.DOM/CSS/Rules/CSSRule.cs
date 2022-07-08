@@ -1,7 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/css/css_rule.idl
 
@@ -23,9 +20,7 @@ namespace WebView2.DOM
 
 	public class CSSRule : JsObject
 	{
-		protected internal CSSRule(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private protected CSSRule() { }
 
 		public CSSRuleType type => Get<CSSRuleType>();
 		public string cssText { get => Get<string>(); set => Set(value); }

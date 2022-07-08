@@ -1,5 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
-using OneOf;
+﻿using OneOf;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
@@ -14,8 +13,7 @@ namespace WebView2.DOM
 		//, IEnumerable<KeyValuePair<string, IReadOnlyList<CSSStyleValue>>>
 		, IReadOnlyDictionary<string, IReadOnlyList<CSSStyleValue>>
 	{
-		protected internal StylePropertyMapReadOnly(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private protected StylePropertyMapReadOnly() { }
 
 		public int Count => Get<int>("size");
 
@@ -44,10 +42,9 @@ namespace WebView2.DOM
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/css/cssom/style_property_map.idl
 
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
-	public class StylePropertyMap : StylePropertyMapReadOnly
+	public sealed class StylePropertyMap : StylePropertyMapReadOnly
 	{
-		protected internal StylePropertyMap(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private StylePropertyMap() { }
 
 		public void set(string property, params OneOf<CSSStyleValue, string>[] values) =>
 			Method().Invoke(args: new[] { property }.Concat(values.Select(x => x.Value)).ToArray());

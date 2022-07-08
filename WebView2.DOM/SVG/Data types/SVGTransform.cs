@@ -1,6 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/svg/svg_transform.idl
 
@@ -15,10 +13,9 @@ namespace WebView2.DOM
 		SKEWY = 6,
 	}
 
-	public class SVGTransform : JsObject
+	public sealed class SVGTransform : JsObject
 	{
-		protected internal SVGTransform(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private SVGTransform() { }
 
 		public SVGTransformType type => Get<SVGTransformType>();
 		public SVGMatrix matrix => Get<SVGMatrix>();

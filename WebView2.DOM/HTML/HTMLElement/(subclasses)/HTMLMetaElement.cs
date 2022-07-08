@@ -1,12 +1,8 @@
-﻿using Microsoft.Web.WebView2.Core;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
-	public class HTMLMetaElement : HTMLElement
+	public sealed class HTMLMetaElement : HTMLElement
 	{
-		protected internal HTMLMetaElement(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private HTMLMetaElement() { }
 
 		public string name { get => Get<string>(); set => Set(value); }
 		public string httpEquiv { get => Get<string>(); set => Set(value); }

@@ -11,9 +11,7 @@ namespace WebView2.DOM
 
 	public class CSSNumericValue : CSSStyleValue, IEquatable<CSSNumericValue>
 	{
-		protected internal CSSNumericValue(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		protected internal CSSNumericValue() { }
 
 		private static readonly AsyncLocal<Function?> _static = new();
 		private static Function @static => _static.Value ??= window.Instance.Get<Function>(nameof(CSSNumericValue));

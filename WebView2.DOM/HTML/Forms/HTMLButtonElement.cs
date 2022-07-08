@@ -1,14 +1,12 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System;
+﻿using System;
 
 namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/html/forms/html_button_element.idl
 
-	public class HTMLButtonElement : HTMLElement, IFormControl, ILabelableElement
+	public sealed class HTMLButtonElement : HTMLElement, IFormControl, ILabelableElement
 	{
-		protected internal HTMLButtonElement(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private HTMLButtonElement() { }
 
 		public bool disabled { get => Get<bool>(); set => Set(value); }
 		public HTMLFormElement? form => Get<HTMLFormElement?>();

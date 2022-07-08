@@ -1,5 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace WebView2.DOM
@@ -7,10 +6,9 @@ namespace WebView2.DOM
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/fileapi/file_list.idl
 
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
-	public partial class FileList : JsObject, IReadOnlyCollection<File>
+	public sealed partial class FileList : JsObject, IReadOnlyCollection<File>
 	{
-		protected internal FileList(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private FileList() { }
 
 		//public File this[uint index] =>
 		//	IndexerGet<File?>(index) ?? throw new ArgumentOutOfRangeException(nameof(index));

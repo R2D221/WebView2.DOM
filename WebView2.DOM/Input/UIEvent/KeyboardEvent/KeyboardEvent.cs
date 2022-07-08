@@ -1,6 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/events/keyboard_event.idl
 
@@ -12,11 +10,9 @@ namespace WebView2.DOM
 		NUMPAD/*	*/= 3,
 	}
 
-	public class KeyboardEvent : UIEvent
+	public sealed class KeyboardEvent : UIEvent
 	{
-		protected internal KeyboardEvent(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private KeyboardEvent() { }
 
 		public string key => Get<string>();
 		public string code => Get<string>();

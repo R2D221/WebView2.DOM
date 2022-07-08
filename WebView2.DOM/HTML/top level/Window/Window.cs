@@ -1,8 +1,8 @@
-﻿using Microsoft.Web.WebView2.Core;
-using NodaTime;
+﻿using NodaTime;
 using SmartAnalyzers.CSharpExtensions.Annotations;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace WebView2.DOM
 {
@@ -26,10 +26,9 @@ namespace WebView2.DOM
 		} = "/";
 	}
 
-	public partial class Window : EventTarget
+	public sealed partial class Window : EventTarget
 	{
-		protected internal Window(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		internal Window() { }
 
 		//public Window window => Get<Window>();
 		public Window self => Get<Window>();
@@ -111,8 +110,14 @@ namespace WebView2.DOM
 		//private FrozenArray<string>? _originPolicyIds;
 
 		// AnimationFrameProvider mixin
+		private static ConditionalWeakTable<Action<Duration>, Action<double>> requestAnimationFrameCallbacks = new();
 		public AnimationFrameID requestAnimationFrame(Action<Duration> callback)
-			=> Method<AnimationFrameID>().Invoke(new Action<double>((highResTime) => callback(Duration.FromNanoseconds(Math.Round(highResTime * 1000) * 1000))));
+			=> Method<AnimationFrameID>().Invoke
+			(
+				requestAnimationFrameCallbacks.GetValue(callback, static _callback =>
+					(highResTime) => _callback(Duration.FromNanoseconds(Math.Round(highResTime * 1000) * 1000)))
+			);
+
 		public void cancelAnimationFrame(AnimationFrameID handle)
 			=> Method().Invoke(handle);
 

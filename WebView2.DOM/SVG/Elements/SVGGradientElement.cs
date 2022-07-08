@@ -1,6 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/svg/svg_gradient_element.idl
 
@@ -12,10 +10,9 @@ namespace WebView2.DOM
 		REPEAT = 3,
 	}
 
-	public partial class SVGGradientElement : SVGElement
+	public abstract partial class SVGGradientElement : SVGElement
 	{
-		protected internal SVGGradientElement(CoreWebView2 coreWebView, string referenceId)
-			: base(coreWebView, referenceId) { }
+		private protected SVGGradientElement() { }
 
 		public SVGAnimatedEnumeration<SVGUnitType> gradientUnits =>
 			Get<SVGAnimatedEnumeration<SVGUnitType>>();

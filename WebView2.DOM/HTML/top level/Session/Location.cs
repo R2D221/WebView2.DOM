@@ -1,5 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 
@@ -7,11 +6,9 @@ namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/frame/location.idl
 
-	public class Location : JsObject
+	public sealed class Location : JsObject
 	{
-		protected internal Location(CoreWebView2 coreWebView, string referenceId) : base(coreWebView, referenceId)
-		{
-		}
+		private Location() { }
 
 		public void assign(string url) => Method().Invoke(url);
 
