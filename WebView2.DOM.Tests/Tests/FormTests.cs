@@ -29,7 +29,7 @@ namespace WebView2.DOM.Tests
 						</form>
 					";
 
-					var form = (HTMLFormElement)body.children.First()!;
+					var form = (HTMLFormElement)body.children.First();
 
 					foreach (var element in form.elements)
 					{
@@ -85,7 +85,7 @@ namespace WebView2.DOM.Tests
 						</form>
 					";
 
-					var form = (HTMLFormElement)body.children.First()!;
+					var form = (HTMLFormElement)body.children.First();
 
 					var a = form.elements["a"];
 					var b = form.elements["b"];
@@ -100,7 +100,7 @@ namespace WebView2.DOM.Tests
 
 					foreach (var item in dList)
 					{
-						Assert.IsInstanceOfType(item, typeof(HTMLRadioButtonInputElement));
+						Assert.IsInstanceOfType(item, typeof(HTMLInputElement.radio));
 					}
 				}
 				finally
@@ -167,9 +167,7 @@ namespace WebView2.DOM.Tests
 					body.innerHTML = "<input type=hidden value='foo'>";
 					var _input = body.children.First();
 
-					Assert.IsInstanceOfType(_input, typeof(HTMLHiddenInputElement));
-
-					var input = (HTMLHiddenInputElement)_input!;
+					Assert.That.IsInstanceOfType(_input, out HTMLInputElement.hidden input);
 
 					Assert.AreEqual("foo", input.value);
 				}
@@ -192,9 +190,7 @@ namespace WebView2.DOM.Tests
 					body.innerHTML = "<input type=text value='foo'>";
 					var _input = body.children.First();
 
-					Assert.IsInstanceOfType(_input, typeof(HTMLTextInputElement));
-
-					var input = (HTMLTextInputElement)_input!;
+					Assert.That.IsInstanceOfType(_input, out HTMLInputElement.text input);
 
 					Assert.AreEqual("foo", input.value);
 				}
@@ -217,9 +213,7 @@ namespace WebView2.DOM.Tests
 					body.innerHTML = "<input type=search value='foo'>";
 					var _input = body.children.First();
 
-					Assert.IsInstanceOfType(_input, typeof(HTMLSearchInputElement));
-
-					var input = (HTMLSearchInputElement)_input!;
+					Assert.That.IsInstanceOfType(_input, out HTMLInputElement.search input);
 
 					Assert.AreEqual("foo", input.value);
 				}
@@ -242,9 +236,7 @@ namespace WebView2.DOM.Tests
 					body.innerHTML = "<input type=tel value='+521234567890'>";
 					var _input = body.children.First();
 
-					Assert.IsInstanceOfType(_input, typeof(HTMLTelephoneInputElement));
-
-					var input = (HTMLTelephoneInputElement)_input!;
+					Assert.That.IsInstanceOfType(_input, out HTMLInputElement.tel input);
 
 					Assert.AreEqual("+521234567890", input.value);
 				}
@@ -267,9 +259,7 @@ namespace WebView2.DOM.Tests
 					body.innerHTML = "<input type=url value='https://example.com'>";
 					var _input = body.children.First();
 
-					Assert.IsInstanceOfType(_input, typeof(HTMLURLInputElement));
-
-					var input = (HTMLURLInputElement)_input!;
+					Assert.That.IsInstanceOfType(_input, out HTMLInputElement.url input);
 
 					Assert.AreEqual("https://example.com", input.value);
 				}
@@ -292,9 +282,7 @@ namespace WebView2.DOM.Tests
 					body.innerHTML = "<input type=email value='foo@example.com'>";
 					var _input = body.children.First();
 
-					Assert.IsInstanceOfType(_input, typeof(HTMLEmailInputElement));
-
-					var input = (HTMLEmailInputElement)_input!;
+					Assert.That.IsInstanceOfType(_input, out HTMLInputElement.email input);
 
 					Assert.AreEqual("foo@example.com", input.value);
 				}
@@ -317,9 +305,7 @@ namespace WebView2.DOM.Tests
 					body.innerHTML = "<input type=password value='correct horse'>";
 					var _input = body.children.First();
 
-					Assert.IsInstanceOfType(_input, typeof(HTMLPasswordInputElement));
-
-					var input = (HTMLPasswordInputElement)_input!;
+					Assert.That.IsInstanceOfType(_input, out HTMLInputElement.password input);
 
 					Assert.AreEqual("correct horse", input.value);
 				}
@@ -342,9 +328,7 @@ namespace WebView2.DOM.Tests
 					body.innerHTML = "<input type=date value='2000-01-01' min='1970-01-01'>";
 					var _input = body.children.First();
 
-					Assert.IsInstanceOfType(_input, typeof(HTMLDateInputElement));
-
-					var input = (HTMLDateInputElement)_input!;
+					Assert.That.IsInstanceOfType(_input, out HTMLInputElement.date input);
 
 					Assert.AreEqual(new LocalDate(2000, 1, 1), input.value);
 					Assert.AreEqual(new LocalDate(1970, 1, 1), input.min);
@@ -369,9 +353,7 @@ namespace WebView2.DOM.Tests
 					body.innerHTML = "<input type=month value='2000-01' min='1970-01'>";
 					var _input = body.children.First();
 
-					Assert.IsInstanceOfType(_input, typeof(HTMLMonthInputElement));
-
-					var input = (HTMLMonthInputElement)_input!;
+					Assert.That.IsInstanceOfType(_input, out HTMLInputElement.month input);
 
 					Assert.AreEqual(new YearMonth(2000, 1), input.value);
 					Assert.AreEqual(new YearMonth(1970, 1), input.min);
@@ -396,9 +378,7 @@ namespace WebView2.DOM.Tests
 					body.innerHTML = "<input type=week value='2000-W01' min='1970-W01'>";
 					var _input = body.children.First();
 
-					Assert.IsInstanceOfType(_input, typeof(HTMLWeekInputElement));
-
-					var input = (HTMLWeekInputElement)_input!;
+					Assert.That.IsInstanceOfType(_input, out HTMLInputElement.week input);
 
 					Assert.AreEqual(new IsoWeek(2000, 1), input.value);
 					Assert.AreEqual(new IsoWeek(1970, 1), input.min);
@@ -423,9 +403,7 @@ namespace WebView2.DOM.Tests
 					body.innerHTML = "<input type=time value='04:20:59' min='01:02:03'>";
 					var _input = body.children.First();
 
-					Assert.IsInstanceOfType(_input, typeof(HTMLTimeInputElement));
-
-					var input = (HTMLTimeInputElement)_input!;
+					Assert.That.IsInstanceOfType(_input, out HTMLInputElement.time input);
 
 					Assert.AreEqual(new LocalTime(4, 20, 59), input.value);
 					Assert.AreEqual(new LocalTime(1, 2, 3), input.min);
@@ -450,9 +428,7 @@ namespace WebView2.DOM.Tests
 					body.innerHTML = "<input type='datetime-local' value='2000-01-01T04:20:59' min='1970-01-01T00:00:00'>";
 					var _input = body.children.First();
 
-					Assert.IsInstanceOfType(_input, typeof(HTMLLocalDateTimeInputElement));
-
-					var input = (HTMLLocalDateTimeInputElement)_input!;
+					Assert.That.IsInstanceOfType(_input, out HTMLInputElement.datetime_local input);
 
 					Assert.AreEqual(new LocalDateTime(2000, 1, 1, 4, 20, 59), input.value);
 					Assert.AreEqual(new LocalDateTime(1970, 1, 1, 0, 0, 0), input.min);
@@ -477,9 +453,7 @@ namespace WebView2.DOM.Tests
 					body.innerHTML = "<input type='number' value='69' min='3'>";
 					var _input = body.children.First();
 
-					Assert.IsInstanceOfType(_input, typeof(HTMLNumberInputElement));
-
-					var input = (HTMLNumberInputElement)_input!;
+					Assert.That.IsInstanceOfType(_input, out HTMLInputElement.number input);
 
 					Assert.AreEqual(69, input.value);
 					Assert.AreEqual(3, input.min);
@@ -504,9 +478,7 @@ namespace WebView2.DOM.Tests
 					body.innerHTML = "<input type='range' value='69' min='3'>";
 					var _input = body.children.First();
 
-					Assert.IsInstanceOfType(_input, typeof(HTMLRangeInputElement));
-
-					var input = (HTMLRangeInputElement)_input!;
+					Assert.That.IsInstanceOfType(_input, out HTMLInputElement.range input);
 
 					Assert.AreEqual(69, input.value);
 					Assert.AreEqual(3, input.min);
@@ -531,9 +503,7 @@ namespace WebView2.DOM.Tests
 					body.innerHTML = "<input type='color' value='#abcdef'>";
 					var _input = body.children.First();
 
-					Assert.IsInstanceOfType(_input, typeof(HTMLColorInputElement));
-
-					var input = (HTMLColorInputElement)_input!;
+					Assert.That.IsInstanceOfType(_input, out HTMLInputElement.color input);
 
 					Assert.AreEqual("#abcdef", input.value);
 				}
@@ -556,9 +526,7 @@ namespace WebView2.DOM.Tests
 					body.innerHTML = "<input type=checkbox value='foo' checked>";
 					var _input = body.children.First();
 
-					Assert.IsInstanceOfType(_input, typeof(HTMLCheckboxInputElement));
-
-					var input = (HTMLCheckboxInputElement)_input!;
+					Assert.That.IsInstanceOfType(_input, out HTMLInputElement.checkbox input);
 
 					Assert.AreEqual("foo", input.value);
 					Assert.IsTrue(input.@checked);
@@ -582,9 +550,7 @@ namespace WebView2.DOM.Tests
 					body.innerHTML = "<input type=radio value='foo' checked>";
 					var _input = body.children.First();
 
-					Assert.IsInstanceOfType(_input, typeof(HTMLRadioButtonInputElement));
-
-					var input = (HTMLRadioButtonInputElement)_input!;
+					Assert.That.IsInstanceOfType(_input, out HTMLInputElement.radio input);
 
 					Assert.AreEqual("foo", input.value);
 					Assert.IsTrue(input.@checked);
@@ -608,7 +574,7 @@ namespace WebView2.DOM.Tests
 					body.innerHTML = "<input type=file>";
 					var _input = body.children.First();
 
-					Assert.IsInstanceOfType(_input, typeof(HTMLFileUploadInputElement));
+					Assert.That.IsInstanceOfType(_input, out HTMLInputElement.file input);
 				}
 				finally
 				{
@@ -629,7 +595,7 @@ namespace WebView2.DOM.Tests
 					body.innerHTML = "<input type=submit>";
 					var _input = body.children.First();
 
-					Assert.IsInstanceOfType(_input, typeof(HTMLSubmitInputElement));
+					Assert.That.IsInstanceOfType(_input, out HTMLInputElement.submit input);
 				}
 				finally
 				{
@@ -650,7 +616,7 @@ namespace WebView2.DOM.Tests
 					body.innerHTML = "<input type=image>";
 					var _input = body.children.First();
 
-					Assert.IsInstanceOfType(_input, typeof(HTMLImageInputElement));
+					Assert.That.IsInstanceOfType(_input, out HTMLInputElement.image input);
 				}
 				finally
 				{
@@ -671,7 +637,7 @@ namespace WebView2.DOM.Tests
 					body.innerHTML = "<input type=button>";
 					var _input = body.children.First();
 
-					Assert.IsInstanceOfType(_input, typeof(HTMLButtonInputElement));
+					Assert.That.IsInstanceOfType(_input, out HTMLInputElement.button input);
 				}
 				finally
 				{
@@ -692,7 +658,7 @@ namespace WebView2.DOM.Tests
 					body.innerHTML = "<input type=reset>";
 					var _input = body.children.First();
 
-					Assert.IsInstanceOfType(_input, typeof(HTMLResetInputElement));
+					Assert.That.IsInstanceOfType(_input, out HTMLInputElement.reset input);
 				}
 				finally
 				{

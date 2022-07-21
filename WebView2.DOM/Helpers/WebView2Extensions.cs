@@ -351,7 +351,7 @@ namespace WebView2.DOM
 
 
 
-		public static CoreWebView2 GetCoreWebView(this Microsoft.Web.WebView2.WinForms.WebView2 webView)
+		internal static CoreWebView2 GetCoreWebView(this Microsoft.Web.WebView2.WinForms.WebView2 webView)
 		{
 			var coreWebView = winformsWebViews2.GetValue(webView, x => x.CoreWebView2);
 			//_ = syncContexts.GetValue(coreWebView, _ =>
@@ -369,7 +369,7 @@ namespace WebView2.DOM
 			return coreWebView;
 		}
 
-		public static CoreWebView2 GetCoreWebView(this Microsoft.Web.WebView2.Wpf.WebView2 webView)
+		internal static CoreWebView2 GetCoreWebView(this Microsoft.Web.WebView2.Wpf.WebView2 webView)
 		{
 			var coreWebView = wpfWebViews2.GetValue(webView, x => x.CoreWebView2);
 
