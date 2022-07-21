@@ -1,64 +1,19 @@
-﻿using Microsoft.Extensions.ObjectPool;
-using OneOf;
-using System;
-using System.Collections.Concurrent;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using System.Text.Json;
+using System.Threading;
 using WebView2.DOM.Helpers;
-using static WebView2.DOM.BrowsingContext;
 
 namespace WebView2.DOM
 {
-	internal static class Pool
-	{
-		// based on PooledAwait.Pool
-		// https://github.com/mgravell/PooledAwait/blob/master/src/PooledAwait/Pool.cs
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static object Box<T>(in T value) where T : struct
-			=> ItemBox<T>.Create(in value);
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static T UnboxAndReturn<T>(object? obj) where T : struct
-			=> ItemBox<T>.UnboxAndReturn(obj);
-
-		internal sealed class ItemBox<T> where T : struct
-		{
-			private static readonly ObjectPool<ItemBox<T>> pool = new DefaultObjectPool<ItemBox<T>>(new DefaultPooledObjectPolicy<ItemBox<T>>());
-
-			private T _value;
-
-			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			public static ItemBox<T> Create(in T value)
-			{
-				var box = pool.Get();
-				box._value = value;
-				return box;
-			}
-
-			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			public static T UnboxAndReturn(object? obj)
-			{
-				var box = (ItemBox<T>)obj!;
-				var value = box._value;
-				box._value = default;
-				pool.Return(box);
-				return value;
-			}
-		}
-	}
-
 	public sealed partial class BrowsingContext
 	{
-		public _HostObject HostObject => new _HostObject(this);
-
 		public class _HostObject
 		{
 			private readonly BrowsingContext browsingContext;
 
-			public _HostObject(BrowsingContext browsingContext)
+			internal _HostObject(BrowsingContext browsingContext)
 			{
 				this.browsingContext = browsingContext;
 			}
@@ -68,57 +23,118 @@ namespace WebView2.DOM
 				return References2.GetId(browsingContext.Window);
 			}
 
-			private void DoEvents()
-			{
-				if (browsingContext.uiSyncContext is not System.Windows.Forms.WindowsFormsSynchronizationContext) { return; }
-
-				System.Windows.Forms.Application.DoEvents();
-			}
-
-			private DuplexChannel? duplexChannel;
-			//private readonly ConcurrentDictionary<long, IEnumerator<Request>> enumerators = new();
 			private IEnumerator<Request>? enumerator;
 
-			private IEnumerator<Request> MyEnumerator()
+			private JsExecutionContext.JavaScriptSide executionContext =>
+				browsingContext.RunningExecutionContext?.JavaScript
+				?? throw new InvalidOperationException();
+
+			public void Run()
 			{
-				var channel = duplexChannel ?? throw new Exception();
-				var jschannel = channel.GetJavaScriptChannel();
+				_ = Flow.JavaScriptStart;
 
-				while (true)
-				{
-					channel.DispatcherPushFrame();
+				var success = browsingContext.callbacksChannel.Reader.TryRead(out var action);
+				if (!success) { throw new Exception(); }
 
-					while (true)
+				RunBothLoops(action.d, action.state);
+			}
+
+			public void RaiseEvent(string eventTargetJson, string @event, string argsJson)
+			{
+				_ = Flow.JavaScriptStart;
+
+				var eventTarget = JsonSerializer.Deserialize<EventTarget>(eventTargetJson, JSON.Options);
+				var args = JsonSerializer.Deserialize<Event>(argsJson, JSON.Options);
+
+				RunBothLoops(
+					state: Pool.Box((eventTarget, @event, args)),
+					d: static obj =>
 					{
-						if (jschannel.Requests.TryRead(out var request))
-						{
-							yield return request;
-						}
-						else if (jschannel.Requests.Completion.IsCompleted)
-						{
-							_ = Flow.JavaScriptEnd;
+						var (eventTarget, @event, args) = Pool.UnboxAndReturn<(EventTarget, string, Event)>(obj);
 
-							_ = jschannel.Responses.TryComplete();
-							duplexChannel = null;
-							enumerator = null;
-							yield break;
-						}
-						else
+						Events.Raise(eventTarget, @event, args);
+
+						References2.Forget(args);
+					});
+			}
+
+			public void Call(string callbackId, string parametersJson)
+			{
+				_ = Flow.JavaScriptStart;
+
+				RunBothLoops(
+					state: Pool.Box((callbackId, parametersJson)),
+					d: static obj =>
+					{
+						var (callbackId, parametersJson) = Pool.UnboxAndReturn<(string, string)>(obj);
+
+						Callbacks.Call(callbackId, parametersJson);
+					});
+			}
+
+			private void RunBothLoops(SendOrPostCallback d, object? state)
+			{
+				enumerator = MyInnerEnumerator();
+				IEnumerator<Request> MyInnerEnumerator()
+				{
+					using var executionContext = browsingContext.StartNewExecutionContext();
+
+					browsingContext.browsingSyncContext.PostInternal(
+						state: Pool.Box((executionContext, d, state)),
+						d: static param =>
 						{
-							DoEvents();
+							var (executionContext, d, state) = Pool.UnboxAndReturn<(JsExecutionContext, SendOrPostCallback, object?)>(param);
+
+							using var __ = executionContext.CSharp;
+
+							try
+							{
+								d(state);
+							}
+							finally
+							{
+								executionContext.CSharp.taskCompletionSource.SetResult();
+							}
+						});
+
+					using var javaScript = executionContext.JavaScript;
+
+					while (javaScript.Requests.Completion.IsCompleted == false)
+					{
+						javaScript.DispatcherPushFrame();
+
+						javaScript.cancellationToken.ThrowIfCancellationRequested();
+
+						while (true)
+						{
+							if (javaScript.Requests.TryRead(out var request))
+							{
+								yield return request;
+								break;
+							}
+							else if (javaScript.Requests.Completion.IsCompleted)
+							{
+								break;
+							}
+							else
+							{
+								javaScript.DoEvents();
+							}
+
+							javaScript.cancellationToken.ThrowIfCancellationRequested();
 						}
 					}
+
+					enumerator = null;
+					yield break;
 				}
 			}
 
-			public void iterator2()
-			{
-				enumerator = MyEnumerator();
-			}
+			public void iterator() { }
 
-			public string next2()
+			public string next()
 			{
-				var enumerator = (this.enumerator ?? throw new Exception());
+				var enumerator = this.enumerator ?? throw new Exception();
 
 				var done = enumerator.MoveNext() == false;
 
@@ -134,133 +150,27 @@ namespace WebView2.DOM
 
 			public void ReturnVoid()
 			{
-				var channel = (duplexChannel ?? throw new Exception()).GetJavaScriptChannel();
-				var success = channel.Responses.TryWrite(@null.Value);
-
-				if (success == false)
-				{
-					Debugger.Break();
-					throw new Exception();
-				}
+				executionContext.WriteResponse(@null.Value);
 			}
 
 			public void ReturnValue(string? json)
 			{
-				var channel = (duplexChannel ?? throw new Exception()).GetJavaScriptChannel();
-				var success = channel.Responses.TryWrite(json ?? "null");
-
-				if (success == false)
-				{
-					Debugger.Break();
-					throw new Exception();
-				}
+				if (json is null) { Debugger.Break(); }
+				executionContext.WriteResponse(json ?? "null");
 			}
 
 			public void Throw(string? json)
 			{
 				var errorWrapper = JsonSerializer.Deserialize<ErrorWrapper>(json ?? "null", JSON.Options);
+				var exception = errorWrapper?.GetException() ?? (Exception)new NullReferenceException();
 
-				var channel = (duplexChannel ?? throw new Exception()).GetJavaScriptChannel();
-				var success = channel.Responses.TryWrite(errorWrapper?.GetException() ?? (Exception)new NullReferenceException());
-
-				if (success == false)
-				{
-					Debugger.Break();
-					throw new Exception();
-				}
-			}
-
-			public void Run()
-			{
-				_ = Flow.JavaScriptStart;
-
-				var success = browsingContext.callbacksChannel.Reader.TryRead(out var action);
-
-				if (!success) { throw new Exception(); }
-
-				var channel = browsingContext.innerSyncContext.RunJsCallback(action.d, action.state);
-
-				this.duplexChannel = channel;
-			}
-
-			public void RaiseEvent(string eventTargetJson, string @event, string argsJson)
-			{
-				_ = Flow.JavaScriptStart;
-
-				var eventTarget = JsonSerializer.Deserialize<EventTarget>(eventTargetJson, JSON.Options);
-				var args = JsonSerializer.Deserialize<Event>(argsJson, JSON.Options);
-
-				var channel = browsingContext.innerSyncContext.RunJsCallback(
-					state: Pool.Box((eventTarget, @event, args)),
-					d: static obj =>
-					{
-						var (eventTarget, @event, args) = Pool.UnboxAndReturn<(EventTarget, string, Event)>(obj);
-
-						Events.Raise(eventTarget, @event, args);
-
-						References2.Forget(args);
-					});
-
-				this.duplexChannel = channel;
-			}
-
-			public void Call(string callbackId, string parametersJson)
-			{
-				_ = Flow.JavaScriptStart;
-
-				var channel = browsingContext.innerSyncContext.RunJsCallback(
-					state: Pool.Box((callbackId, parametersJson)),
-					d: static obj =>
-					{
-						var (callbackId, parametersJson) = Pool.UnboxAndReturn<(string, string)>(obj);
-
-						Callbacks.Call(callbackId, parametersJson);
-					});
-
-				this.duplexChannel = channel;
+				executionContext.WriteResponse(exception);
 			}
 
 			public void ForgetCallback(string callbackId)
 			{
 				Callbacks.Forget(callbackId);
 			}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 			public void References_Remove() => throw new NotImplementedException();
 		}

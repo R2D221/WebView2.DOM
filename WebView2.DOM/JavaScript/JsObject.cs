@@ -1,4 +1,6 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace WebView2.DOM
 {
@@ -54,64 +56,83 @@ namespace WebView2.DOM
 		//			}
 		//		}
 
+		private protected JsExecutionContext.CSharpSide executionContext
+		{
+			get
+			{
+				var x = BrowsingContext.Current.RunningExecutionContext?.CSharp;
+
+				if (x is null)
+				{
+					Debugger.Break();
+
+					throw new InvalidOperationException();
+				}
+				else
+				{
+					return x;
+				}
+			}
+		}
+
 		internal void Construct(params object?[] args)
 		{
-			BrowsingContext.Current.Construct(this, GetType().Name, args);
+			executionContext.Construct(this, GetType().Name, args);
 		}
 
 		internal T Get<T>([CallerMemberName] string property = "")
 		{
-			return BrowsingContext.Current.Get<T>(this, property);
+			return executionContext.Get<T>(this, property);
 		}
 
 		internal void Set<T>(T value, [CallerMemberName] string property = "")
 		{
-			BrowsingContext.Current.Set(this, property, value);
+			executionContext.Set(this, property, value);
 		}
 
 		internal T IndexerGet<T>(string index)
 		{
-			return BrowsingContext.Current.Get<T>(this, index);
+			return executionContext.Get<T>(this, index);
 		}
 
 		internal T IndexerGet<T>(uint index)
 		{
-			return BrowsingContext.Current.Get<T>(this, index);
+			return executionContext.Get<T>(this, index);
 		}
 
 		internal T IndexerGet<T>(int index)
 		{
-			return BrowsingContext.Current.Get<T>(this, index);
+			return executionContext.Get<T>(this, index);
 		}
 
 		internal void IndexerSet<T>(string index, T value)
 		{
-			BrowsingContext.Current.Set(this, index, value);
+			executionContext.Set(this, index, value);
 		}
 
 		internal void IndexerSet<T>(uint index, T value)
 		{
-			BrowsingContext.Current.Set(this, index, value);
+			executionContext.Set(this, index, value);
 		}
 
 		internal void IndexerSet<T>(int index, T value)
 		{
-			BrowsingContext.Current.Set(this, index, value);
+			executionContext.Set(this, index, value);
 		}
 
 		internal void IndexerDelete(string index)
 		{
-			BrowsingContext.Current.Delete(this, index);
+			executionContext.Delete(this, index);
 		}
 
 		internal void IndexerDelete(uint index)
 		{
-			BrowsingContext.Current.Delete(this, index);
+			executionContext.Delete(this, index);
 		}
 
 		internal void IndexerDelete(int index)
 		{
-			BrowsingContext.Current.Delete(this, index);
+			executionContext.Delete(this, index);
 		}
 
 		internal Invoker Method([CallerMemberName] string method = "")
@@ -125,7 +146,7 @@ namespace WebView2.DOM
 
 			public void Invoke(params object?[] args)
 			{
-				BrowsingContext.Current.InvokeVoid(@this, method, args);
+				@this.executionContext.InvokeVoid(@this, method, args);
 			}
 		}
 
@@ -140,7 +161,7 @@ namespace WebView2.DOM
 
 			public T Invoke(params object?[] args)
 			{
-				return BrowsingContext.Current.Invoke<T>(@this, method, args);
+				return @this.executionContext.Invoke<T>(@this, method, args);
 			}
 		}
 
@@ -155,7 +176,7 @@ namespace WebView2.DOM
 
 			public T Invoke(params object?[] args)
 			{
-				return BrowsingContext.Current.SymbolInvoke<T>(@this, method, args);
+				return @this.executionContext.SymbolInvoke<T>(@this, method, args);
 			}
 		}
 	}

@@ -2,58 +2,115 @@
 using System;
 using System.Diagnostics;
 using System.Text.Json;
+using System.Threading;
+using System.Threading.Channels;
+using System.Threading.Tasks;
+using System.Windows.Threading;
 using WebView2.DOM.Helpers;
+using static WebView2.DOM.BrowsingContext;
 
 namespace WebView2.DOM
 {
-	public sealed partial class BrowsingContext
+	internal sealed class JsExecutionContext : IDisposable
 	{
-		public static WebView2DOMObject Current =>
-			threadLocalBrowsingContext.Value is { } bc
-			? new WebView2DOMObject(bc)
-			: throw new InvalidOperationException("The current thread doesn't have a browsing context.")
-			;
+		private static Channel<T> CreateChannel<T>() => Channel.CreateBounded<T>(options: new(capacity: 1) { SingleReader = true, SingleWriter = true, AllowSynchronousContinuations = true });
 
-		public struct WebView2DOMObject
+		private BrowsingContext browsingContext;
+		private readonly DispatcherFrame? dispatcherFrame;
+		private readonly TaskCompletionSource tcs = new();
+		private readonly CancellationTokenSource cts = new();
+		private Channel<Request> requests = CreateChannel<Request>();
+		private Channel<OneOf<string, Exception, @null>> responses = CreateChannel<OneOf<string, Exception, @null>>();
+
+		internal CSharpSide CSharp { get; }
+		internal JavaScriptSide JavaScript { get; }
+
+		public JsExecutionContext(BrowsingContext browsingContext)
 		{
-			private readonly BrowsingContext browsingContext;
+			this.browsingContext = browsingContext;
 
-			public WebView2DOMObject(BrowsingContext browsingContext) => this.browsingContext = browsingContext;
+			dispatcherFrame =
+				browsingContext.uiSyncContext is DispatcherSynchronizationContext
+				? new DispatcherFrame()
+				: null
+				;
 
-			public Window Window => browsingContext.Window;
+			CSharp = new(this);
+			JavaScript = new(this);
+		}
+
+		public void Dispose()
+		{
+			cts.Cancel();
+			if (dispatcherFrame is not null) { dispatcherFrame.Continue = true; }
+
+			CSharp.Dispose();
+			JavaScript.Dispose();
+
+			tcs.Task.GetAwaiter().GetResult();
+
+			browsingContext.EndExecutionContext(this);
+		}
+
+		internal sealed class CSharpSide : IDisposable
+		{
+			private readonly Lazy<object?> disposeLazy;
+			private readonly JsExecutionContext jsExecutionContext;
+			private DispatcherFrame? dispatcherFrame => jsExecutionContext.dispatcherFrame;
+			private CancellationToken cancellationToken => jsExecutionContext.cts.Token;
+			internal TaskCompletionSource taskCompletionSource => jsExecutionContext.tcs;
+
+			public ChannelWriter<Request> Requests =>
+				jsExecutionContext.requests.Writer;
+
+			public ChannelReader<OneOf<string, Exception, @null>> Responses =>
+				jsExecutionContext.responses.Reader;
+
+			public CSharpSide(JsExecutionContext jsExecutionContext)
+			{
+				this.jsExecutionContext = jsExecutionContext;
+				disposeLazy = new(() => { DisposeInner(); return null; });
+			}
+
+			private void SetDispatcherFrameContinueFalse()
+			{
+				if (dispatcherFrame is null) { return; }
+
+				dispatcherFrame.Continue = false;
+			}
 
 			private OneOf<string, Exception, @null> Request(Request request)
 			{
 				Debugger.NotifyOfCrossThreadDependency();
 
-				var channel = DuplexChannel.ThreadLocal.Value ?? throw new Exception();
-				var cschannel = channel.GetCSharpChannel();
+				cancellationToken.ThrowIfCancellationRequested();
 
-				var success = cschannel.Requests.TryWrite(request);
+				var success = Requests.TryWrite(request);
 
 				if (success == false)
 				{
-					Debugger.Break();
-					throw new Exception();
+					throw new OperationCanceledException();
 				}
 
-				channel.SetDispatcherFrameContinueFalse();
+				SetDispatcherFrameContinueFalse();
 
-				var @continue = cschannel.Responses.WaitToReadAsync(channel.cts.Token).AsTask().Result;
+				var @continue = Responses.WaitToReadAsync(cancellationToken).AsTask().GetAwaiter().GetResult();
 
 				if (@continue)
 				{
 					while (true)
 					{
-						if (cschannel.Responses.TryRead(out var response))
+						if (Responses.TryRead(out var response))
 						{
 							return response;
 						}
+
+						cancellationToken.ThrowIfCancellationRequested();
 					}
 				}
 				else
 				{
-					throw new Exception();
+					throw new OperationCanceledException();
 				}
 			}
 
@@ -263,6 +320,67 @@ namespace WebView2.DOM
 						);
 				}
 			}
+
+			public void DisposeInner()
+			{
+				_ = Requests.TryComplete();
+				SetDispatcherFrameContinueFalse();
+			}
+
+			public void Dispose() => _ = disposeLazy.Value;
+		}
+
+		internal sealed class JavaScriptSide : IDisposable
+		{
+			private readonly Lazy<object?> disposeLazy;
+			private readonly JsExecutionContext jsExecutionContext;
+			private DispatcherFrame? dispatcherFrame => jsExecutionContext.dispatcherFrame;
+			internal CancellationToken cancellationToken => jsExecutionContext.cts.Token;
+
+			public ChannelReader<Request> Requests =>
+				jsExecutionContext.requests.Reader;
+
+			public ChannelWriter<OneOf<string, Exception, @null>> Responses =>
+				jsExecutionContext.responses.Writer;
+
+			public JavaScriptSide(JsExecutionContext jsExecutionContext)
+			{
+				this.jsExecutionContext = jsExecutionContext;
+				disposeLazy = new(() => { DisposeInner(); return null; });
+			}
+
+			internal void WriteResponse(OneOf<string, Exception, @null> value)
+			{
+				var success = Responses.TryWrite(value);
+
+				if (success == false)
+				{
+					Debugger.Break();
+					throw new Exception();
+				}
+			}
+
+			internal void DispatcherPushFrame()
+			{
+				if (dispatcherFrame is null) { return; }
+
+				Dispatcher.PushFrame(dispatcherFrame);
+				dispatcherFrame.Continue = true;
+			}
+
+			internal void DoEvents()
+			{
+				if (SynchronizationContext.Current is not System.Windows.Forms.WindowsFormsSynchronizationContext) { return; }
+
+				System.Windows.Forms.Application.DoEvents();
+			}
+
+			public void DisposeInner()
+			{
+				_ = Responses.TryComplete();
+			}
+
+			public void Dispose() => _ = disposeLazy.Value;
 		}
 	}
 }

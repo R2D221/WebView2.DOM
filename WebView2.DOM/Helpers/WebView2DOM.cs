@@ -1,4 +1,5 @@
-﻿using Microsoft.Web.WebView2.Core;
+﻿using System;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace WebView2.DOM
@@ -6,18 +7,21 @@ namespace WebView2.DOM
 	public static class WebView2DOM
 	{
 		public static async Task InitAsync(Microsoft.Web.WebView2.WinForms.WebView2 webView) =>
-			await InitAsync(webView.GetCoreWebView());
+			await InitAsync(Unsafe.As<IWebView2>(webView));
 
 		public static async Task InitAsync(Microsoft.Web.WebView2.Wpf.WebView2 webView) =>
-			await InitAsync(webView.GetCoreWebView());
+			await InitAsync(Unsafe.As<IWebView2>(webView));
 
-		public static async Task InitAsync(CoreWebView2 coreWebView)
+		private static async Task InitAsync(IWebView2 webView)
 		{
-			coreWebView.ContentLoading += (sender, args) =>
+			webView.ContentLoading_Add(static (sender, args) =>
 			{
-				var coreWebView = (CoreWebView2)(sender ?? throw new System.Exception());
+				if (sender is null) { throw new Exception(); }
 
-				var prevContext = BrowsingContext.For(coreWebView);
+				var webView = Unsafe.As<IWebView2>(sender);
+				var coreWebView = webView.GetCoreWebView2();
+
+				var prevContext = BrowsingContext.For(webView);
 
 				if (prevContext is not null)
 				{
@@ -25,13 +29,13 @@ namespace WebView2.DOM
 					coreWebView.RemoveHostObjectFromScript("Coordinator");
 				}
 
-				var newContext = new BrowsingContext(coreWebView, args.NavigationId);
+				var newContext = new BrowsingContext(webView, args.NavigationId);
 
-				BrowsingContext.Set(coreWebView, newContext);
+				BrowsingContext.Set(webView, newContext);
 				coreWebView.AddHostObjectToScript("Coordinator", newContext.HostObject);
-			};
+			});
 
-			_ = await coreWebView.AddScriptToExecuteOnDocumentCreatedAsync($@"
+			_ = await webView.GetCoreWebView2().AddScriptToExecuteOnDocumentCreatedAsync($@"
 
 				//const GetCoordinator = () => window.chrome.webview.hostObjects.sync.Coordinator;
 				//const _Coordinator = window.chrome.webview.hostObjects.sync.Coordinator;
@@ -310,8 +314,8 @@ namespace WebView2.DOM
 						alreadyInLoop = true;
 
 						const myIterator = {{
-							[Symbol.iterator]: function() {{ Coordinator.{nameof(BrowsingContext._HostObject.iterator2)}(); return this; }},
-							next: function() {{ return JSON.parse(Coordinator.{nameof(BrowsingContext._HostObject.next2)}()); }}
+							[Symbol.iterator]: function() {{ Coordinator.{nameof(BrowsingContext._HostObject.iterator)}(); return this; }},
+							next: function() {{ return JSON.parse(Coordinator.{nameof(BrowsingContext._HostObject.next)}()); }}
 						}};
 
 						for (const item of myIterator)

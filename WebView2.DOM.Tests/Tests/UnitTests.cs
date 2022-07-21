@@ -200,6 +200,8 @@ namespace WebView2.DOM.Tests
 		[TestMethod("Object persistent in JS doesn't kill C# reference")]
 		public async Task ObjectPersistentInJsDoesntKillCsharpReference()
 		{
+			throw new NotImplementedException();
+
 			await wpfSyncContext;
 			await webView.InvokeInBrowserContextAsync(async window =>
 			{
@@ -225,6 +227,8 @@ namespace WebView2.DOM.Tests
 		[TestMethod("Object persistent in C# doesn't kill JS reference")]
 		public async Task ObjectPersistentInCsharpDoesntKillJsReference()
 		{
+			throw new NotImplementedException();
+
 			await wpfSyncContext;
 			await webView.InvokeInBrowserContextAsync(async window =>
 			{

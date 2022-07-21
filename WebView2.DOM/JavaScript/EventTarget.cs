@@ -12,13 +12,13 @@ namespace WebView2.DOM
 		public void AddEvent<T>(EventHandler<T>? value, [CallerMemberName] string @event = "")
 			where T : Event
 		{
-			BrowsingContext.Current.AddEvent(this, @event, value);
+			executionContext.AddEvent(this, @event, value);
 		}
 
 		internal void RemoveEvent<T>(EventHandler<T>? value, [CallerMemberName] string @event = "")
 			where T : Event
 		{
-			BrowsingContext.Current.RemoveEvent(this, @event, value);
+			executionContext.RemoveEvent(this, @event, value);
 		}
 	}
 }
