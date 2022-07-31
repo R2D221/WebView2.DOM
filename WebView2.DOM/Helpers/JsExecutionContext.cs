@@ -30,9 +30,9 @@ namespace WebView2.DOM
 			this.browsingContext = browsingContext;
 
 			dispatcherFrame =
-				browsingContext.uiSyncContext is DispatcherSynchronizationContext
+				/*browsingContext.uiSyncContext is DispatcherSynchronizationContext
 				? new DispatcherFrame()
-				: null
+				: */null
 				;
 
 			CSharp = new(this);
@@ -74,9 +74,9 @@ namespace WebView2.DOM
 
 			private void SetDispatcherFrameContinueFalse()
 			{
-				if (dispatcherFrame is null) { return; }
+				//if (dispatcherFrame is null) { return; }
 
-				dispatcherFrame.Continue = false;
+				//dispatcherFrame.Continue = false;
 			}
 
 			private OneOf<string, Exception, @null> Request(Request request)
@@ -362,10 +362,10 @@ namespace WebView2.DOM
 
 			internal void DispatcherPushFrame()
 			{
-				if (dispatcherFrame is null) { return; }
+				//if (dispatcherFrame is null) { return; }
 
-				Dispatcher.PushFrame(dispatcherFrame);
-				dispatcherFrame.Continue = true;
+				//Dispatcher.PushFrame(dispatcherFrame);
+				//dispatcherFrame.Continue = true;
 			}
 
 			internal void DoEvents()

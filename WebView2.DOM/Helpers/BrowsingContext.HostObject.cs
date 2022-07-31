@@ -99,26 +99,40 @@ namespace WebView2.DOM
 
 					using var javaScript = executionContext.JavaScript;
 
-					while (javaScript.Requests.Completion.IsCompleted == false)
+					//while (javaScript.Requests.Completion.IsCompleted == false)
+					//{
+					//	javaScript.DispatcherPushFrame();
+
+					//	javaScript.cancellationToken.ThrowIfCancellationRequested();
+
+					//	while (true)
+					//	{
+					//		if (javaScript.Requests.TryRead(out var request))
+					//		{
+					//			yield return request;
+					//			break;
+					//		}
+					//		else if (javaScript.Requests.Completion.IsCompleted)
+					//		{
+					//			break;
+					//		}
+					//		else
+					//		{
+					//			javaScript.DoEvents();
+					//		}
+
+					//		javaScript.cancellationToken.ThrowIfCancellationRequested();
+					//	}
+					//}
+
+					while (javaScript.Requests.WaitToReadAsync(javaScript.cancellationToken).AsTask().GetAwaiter().GetResult())
 					{
-						javaScript.DispatcherPushFrame();
-
-						javaScript.cancellationToken.ThrowIfCancellationRequested();
-
 						while (true)
 						{
 							if (javaScript.Requests.TryRead(out var request))
 							{
 								yield return request;
 								break;
-							}
-							else if (javaScript.Requests.Completion.IsCompleted)
-							{
-								break;
-							}
-							else
-							{
-								javaScript.DoEvents();
 							}
 
 							javaScript.cancellationToken.ThrowIfCancellationRequested();
@@ -132,20 +146,28 @@ namespace WebView2.DOM
 
 			public void iterator() { }
 
+			struct next_response
+			{
+				public bool done { get; set; }
+				public object? value { get; set; }
+			}
+
 			public string next()
 			{
 				var enumerator = this.enumerator ?? throw new Exception();
 
-				var done = enumerator.MoveNext() == false;
+				var response = new next_response();
+
+				response.done = enumerator.MoveNext() == false;
 
 				// Type is declared as object? since we need properties
 				// of derived classes to be serialized. This is the
 				// accepted solution according to
 				// https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-polymorphism
 
-				object? value = done ? null : enumerator.Current;
+				response.value = response.done ? null : enumerator.Current;
 
-				return JsonSerializer.Serialize(new { done, value }, JSON.Options);
+				return JsonSerializer.Serialize(response, JSON.Options);
 			}
 
 			public void ReturnVoid()
