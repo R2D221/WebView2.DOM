@@ -1,4 +1,5 @@
 ﻿using Microsoft.Web.WebView2.Core;
+using System;
 
 namespace WebView2.DOM
 {
@@ -7,6 +8,9 @@ namespace WebView2.DOM
 	public sealed class SubmitEvent : Event
 	{
 		private SubmitEvent() { }
+
+		internal override void Invoke(EventTarget eventTarget, Delegate handler) =>
+			GenericInvoke(eventTarget, handler, this);
 
 		public HTMLElement? submitter => Get<HTMLElement?>();
 	}

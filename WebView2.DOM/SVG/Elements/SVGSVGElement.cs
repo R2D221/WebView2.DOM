@@ -8,10 +8,10 @@ namespace WebView2.DOM
 	{
 		private SVGSVGElement() { }
 
-		public SVGAnimatedLength x => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength y => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength width => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength height => Get<SVGAnimatedLength>();
+		public SVGAnimatedLength x => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength y => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength width => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength height => GetCached<SVGAnimatedLength>();
 
 		public float currentScale { get => Get<float>(); set => Set(value); }
 		public SVGPoint currentTranslate => Get<SVGPoint>();

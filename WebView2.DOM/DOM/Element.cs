@@ -17,14 +17,12 @@ namespace WebView2.DOM
 
 		public string id { get => Get<string>(); set => Set(value); }
 		public string className { get => Get<string>(); set => Set(value); }
-		public DOMTokenList classList => _classList ??= Get<DOMTokenList>();
-		private DOMTokenList? _classList;
+		public DOMTokenList classList => GetCached<DOMTokenList>();
 		public string slot { get => Get<string>(); set => Set(value); }
 
 		public bool hasAttributes()
 		  => Method<bool>().Invoke();
-		public NamedNodeMap attributes => _attributes ??= Get<NamedNodeMap>();
-		private NamedNodeMap? _attributes;
+		public NamedNodeMap attributes => GetCached<NamedNodeMap>();
 		public IReadOnlyList<string> getAttributeNames()
 			=> Method<ImmutableArray<string>>().Invoke();
 		public string? getAttribute(string name)
@@ -81,8 +79,7 @@ namespace WebView2.DOM
 		  => Method().Invoke(where, data);
 
 		// CSS Shadow Parts
-		public DOMTokenList part => _part ??= Get<DOMTokenList>();
-		private DOMTokenList? _part;
+		public DOMTokenList part => GetCached<DOMTokenList>();
 
 		// Pointer Events
 		public void setPointerCapture(int pointerId)
@@ -149,8 +146,7 @@ namespace WebView2.DOM
 		public int clientHeight => Get<int>();
 
 		// Typed OM
-		public StylePropertyMap attributeStyleMap => _attributeStyleMap ??= Get<StylePropertyMap>();
-		private StylePropertyMap? _attributeStyleMap;
+		public StylePropertyMap attributeStyleMap => GetCached<StylePropertyMap>();
 
 		// Non-standard API
 		public void scrollIntoViewIfNeeded()

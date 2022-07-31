@@ -7,7 +7,7 @@
 		private protected SVGGraphicsElement() { }
 
 		public SVGAnimatedTransformList transform =>
-			Get<SVGAnimatedTransformList>();
+			GetCached<SVGAnimatedTransformList>();
 
 		public SVGRect getBBox() => Method<SVGRect>().Invoke();
 		public SVGMatrix getCTM() => Method<SVGMatrix>().Invoke();

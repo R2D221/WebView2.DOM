@@ -7,17 +7,17 @@
 		private SVGFilterElement() { }
 
 		public SVGAnimatedEnumeration<SVGUnitType> filterUnits =>
-			Get<SVGAnimatedEnumeration<SVGUnitType>>();
+			GetCached<SVGAnimatedEnumeration<SVGUnitType>>();
 		public SVGAnimatedEnumeration<SVGUnitType> primitiveUnits =>
-			Get<SVGAnimatedEnumeration<SVGUnitType>>();
-		public SVGAnimatedLength x => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength y => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength width => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength height => Get<SVGAnimatedLength>();
+			GetCached<SVGAnimatedEnumeration<SVGUnitType>>();
+		public SVGAnimatedLength x => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength y => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength width => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength height => GetCached<SVGAnimatedLength>();
 	}
 
 	public partial class SVGFilterElement : SVGURIReference
 	{
-		public SVGAnimatedString href => Get<SVGAnimatedString>();
+		public SVGAnimatedString href => GetCached<SVGAnimatedString>();
 	}
 }

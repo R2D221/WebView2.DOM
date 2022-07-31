@@ -21,19 +21,19 @@
 		private SVGMarkerElement() { }
 
 		public SVGAnimatedLength refX =>
-			Get<SVGAnimatedLength>();
+			GetCached<SVGAnimatedLength>();
 		public SVGAnimatedLength refY =>
-			Get<SVGAnimatedLength>();
+			GetCached<SVGAnimatedLength>();
 		public SVGAnimatedEnumeration<SVGMarkerUnits> markerUnits =>
-			Get<SVGAnimatedEnumeration<SVGMarkerUnits>>();
+			GetCached<SVGAnimatedEnumeration<SVGMarkerUnits>>();
 		public SVGAnimatedLength markerWidth =>
-			Get<SVGAnimatedLength>();
+			GetCached<SVGAnimatedLength>();
 		public SVGAnimatedLength markerHeight =>
-			Get<SVGAnimatedLength>();
+			GetCached<SVGAnimatedLength>();
 		public SVGAnimatedEnumeration<SVGMarkerOrientType> orientType =>
-			Get<SVGAnimatedEnumeration<SVGMarkerOrientType>>();
+			GetCached<SVGAnimatedEnumeration<SVGMarkerOrientType>>();
 		public SVGAnimatedAngle orientAngle =>
-			Get<SVGAnimatedAngle>();
+			GetCached<SVGAnimatedAngle>();
 
 		public void setOrientToAuto() => Method().Invoke();
 		public void setOrientToAngle(SVGAngle angle) => Method().Invoke(angle);
@@ -41,8 +41,7 @@
 
 	public partial class SVGMarkerElement : SVGFitToViewBox
 	{
-		public SVGAnimatedRect viewBox => Get<SVGAnimatedRect>();
-
-		public SVGAnimatedPreserveAspectRatio preserveAspectRatio => Get<SVGAnimatedPreserveAspectRatio>();
+		public SVGAnimatedRect viewBox => GetCached<SVGAnimatedRect>();
+		public SVGAnimatedPreserveAspectRatio preserveAspectRatio => GetCached<SVGAnimatedPreserveAspectRatio>();
 	}
 }

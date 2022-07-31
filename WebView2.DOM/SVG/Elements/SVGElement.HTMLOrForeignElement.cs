@@ -2,8 +2,7 @@
 {
 	public partial class SVGElement : HTMLOrForeignElement
 	{
-		public DOMStringMap dataset => _dataset ??= Get<DOMStringMap>();
-		private DOMStringMap? _dataset;
+		public DOMStringMap dataset => GetCached<DOMStringMap>();
 		public string nonce { get => Get<string>(); set => Set(value); }
 
 		public bool autofocus { get => Get<bool>(); set => Set(value); }

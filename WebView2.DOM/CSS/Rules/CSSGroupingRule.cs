@@ -6,8 +6,7 @@
 	{
 		private protected CSSGroupingRule() { }
 
-		public CSSRuleList cssRules => _cssRules ??= Get<CSSRuleList>();
-		private CSSRuleList? _cssRules;
+		public CSSRuleList cssRules => GetCached<CSSRuleList>();
 		public uint insertRule(string rule, uint index) => Method<uint>().Invoke(rule, index);
 		public void deleteRule(uint index) => Method().Invoke(index);
 	}

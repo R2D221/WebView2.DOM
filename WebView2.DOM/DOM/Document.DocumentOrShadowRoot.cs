@@ -8,8 +8,7 @@ namespace WebView2.DOM
 	public partial class Document : DocumentOrShadowRoot
 	{
 		public Element? activeElement => Get<Element?>();
-		public StyleSheetList styleSheets => _styleSheets ??= Get<StyleSheetList>();
-		private StyleSheetList? _styleSheets;
+		public StyleSheetList styleSheets => GetCached<StyleSheetList>();
 		public Element? pointerLockElement => Get<Element?>();
 		public Element? fullscreenElement => Get<Element?>();
 		public IReadOnlyList<CSSStyleSheet> adoptedStyleSheets

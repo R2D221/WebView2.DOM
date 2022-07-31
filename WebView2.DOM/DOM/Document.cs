@@ -15,8 +15,7 @@ namespace WebView2.DOM
 		private protected Document() { }
 
 		#region url
-		public DOMImplementation implementation => _implementation ??= Get<DOMImplementation>();
-		private DOMImplementation? _implementation;
+		public DOMImplementation implementation => GetCached<DOMImplementation>();
 		public string URL => Get<string>();
 		public string? documentURI => Get<string?>();
 		public string compatMode => Get<string>();
@@ -104,18 +103,12 @@ namespace WebView2.DOM
 		public string dir { get => Get<string>(); set => Set(value); }
 		public HTMLBodyElement/*?*/ body { get => Get<HTMLBodyElement/*?*/>(); set => Set(value); }
 		public HTMLHeadElement/*?*/ head => Get<HTMLHeadElement/*?*/>();
-		public HTMLCollection<HTMLImageElement> images => _images ??= Get<HTMLCollection<HTMLImageElement>>();
-		private HTMLCollection<HTMLImageElement>? _images;
-		public HTMLCollection<HTMLEmbedElement> embeds => _embeds ??= Get<HTMLCollection<HTMLEmbedElement>>();
-		private HTMLCollection<HTMLEmbedElement>? _embeds;
-		public HTMLCollection<HTMLEmbedElement> plugins => _plugins ??= Get<HTMLCollection<HTMLEmbedElement>>();
-		private HTMLCollection<HTMLEmbedElement>? _plugins;
-		public HTMLCollection<HTMLHyperlinkElementUtils> links => _links ??= Get<HTMLCollection<HTMLHyperlinkElementUtils>>();
-		private HTMLCollection<HTMLHyperlinkElementUtils>? _links;
-		public HTMLCollection<HTMLFormElement> forms => _forms ??= Get<HTMLCollection<HTMLFormElement>>();
-		private HTMLCollection<HTMLFormElement>? _forms;
-		public HTMLCollection<HTMLScriptElement> scripts => _scripts ??= Get<HTMLCollection<HTMLScriptElement>>();
-		private HTMLCollection<HTMLScriptElement>? _scripts;
+		public HTMLCollection<HTMLImageElement> images => GetCached<HTMLCollection<HTMLImageElement>>();
+		public HTMLCollection<HTMLEmbedElement> embeds => GetCached<HTMLCollection<HTMLEmbedElement>>();
+		public HTMLCollection<HTMLEmbedElement> plugins => GetCached<HTMLCollection<HTMLEmbedElement>>();
+		public HTMLCollection<HTMLHyperlinkElementUtils> links => GetCached<HTMLCollection<HTMLHyperlinkElementUtils>>();
+		public HTMLCollection<HTMLFormElement> forms => GetCached<HTMLCollection<HTMLFormElement>>();
+		public HTMLCollection<HTMLScriptElement> scripts => GetCached<HTMLCollection<HTMLScriptElement>>();
 		public NodeList<HTMLElement> getElementsByName(string elementName)
 		  => Method<NodeList<HTMLElement>>().Invoke(elementName);
 		//public HTMLOrSVGScriptElement? currentScript => Get2<HTMLOrSVGScriptElement?>();
@@ -173,8 +166,7 @@ namespace WebView2.DOM
 		//  => ReturnVoid().Invoke();
 		//public void releaseEvents()
 		//  => ReturnVoid().Invoke();
-		//public HTMLAllCollection all => _all ??= GetObject<HTMLAllCollection>();
-		//private HTMLAllCollection? _all;
+		//public HTMLAllCollection all => GetCached<HTMLAllCollection>();
 		#endregion
 
 		#region CSSOM View Module
@@ -220,8 +212,7 @@ namespace WebView2.DOM
 		#endregion
 
 		#region Text fragment directive API
-		//public FragmentDirective fragmentDirective => _fragmentDirective ??= GetObject<FragmentDirective>();
-		//private FragmentDirective? _fragmentDirective;
+		//public FragmentDirective fragmentDirective => GetCached<FragmentDirective>();
 		#endregion
 
 		#region Feature policy

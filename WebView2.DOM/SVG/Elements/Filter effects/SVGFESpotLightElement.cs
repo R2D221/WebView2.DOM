@@ -6,13 +6,13 @@
 	{
 		private SVGFESpotLightElement() { }
 
-		public SVGAnimatedNumber x => Get<SVGAnimatedNumber>();
-		public SVGAnimatedNumber y => Get<SVGAnimatedNumber>();
-		public SVGAnimatedNumber z => Get<SVGAnimatedNumber>();
-		public SVGAnimatedNumber pointsAtX => Get<SVGAnimatedNumber>();
-		public SVGAnimatedNumber pointsAtY => Get<SVGAnimatedNumber>();
-		public SVGAnimatedNumber pointsAtZ => Get<SVGAnimatedNumber>();
-		public SVGAnimatedNumber specularExponent => Get<SVGAnimatedNumber>();
-		public SVGAnimatedNumber limitingConeAngle => Get<SVGAnimatedNumber>();
+		public SVGAnimatedNumber x => GetCached<SVGAnimatedNumber>();
+		public SVGAnimatedNumber y => GetCached<SVGAnimatedNumber>();
+		public SVGAnimatedNumber z => GetCached<SVGAnimatedNumber>();
+		public SVGAnimatedNumber pointsAtX => GetCached<SVGAnimatedNumber>();
+		public SVGAnimatedNumber pointsAtY => GetCached<SVGAnimatedNumber>();
+		public SVGAnimatedNumber pointsAtZ => GetCached<SVGAnimatedNumber>();
+		public SVGAnimatedNumber specularExponent => GetCached<SVGAnimatedNumber>();
+		public SVGAnimatedNumber limitingConeAngle => GetCached<SVGAnimatedNumber>();
 	}
 }

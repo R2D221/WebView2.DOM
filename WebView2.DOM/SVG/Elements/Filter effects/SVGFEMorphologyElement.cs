@@ -14,21 +14,21 @@
 		private SVGFEMorphologyElement() { }
 
 		public SVGAnimatedString in1 =>
-			Get<SVGAnimatedString>();
+			GetCached<SVGAnimatedString>();
 		public SVGAnimatedEnumeration<SVGMorphologyOperator> @operator =>
-			Get<SVGAnimatedEnumeration<SVGMorphologyOperator>>();
+			GetCached<SVGAnimatedEnumeration<SVGMorphologyOperator>>();
 		public SVGAnimatedNumber radiusX =>
-			Get<SVGAnimatedNumber>();
+			GetCached<SVGAnimatedNumber>();
 		public SVGAnimatedNumber radiusY =>
-			Get<SVGAnimatedNumber>();
+			GetCached<SVGAnimatedNumber>();
 	}
 
 	public partial class SVGFEMorphologyElement : SVGFilterPrimitiveStandardAttributes
 	{
-		public SVGAnimatedLength x => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength y => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength width => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength height => Get<SVGAnimatedLength>();
-		public SVGAnimatedString result => Get<SVGAnimatedString>();
+		public SVGAnimatedLength x => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength y => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength width => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength height => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedString result => GetCached<SVGAnimatedString>();
 	}
 }

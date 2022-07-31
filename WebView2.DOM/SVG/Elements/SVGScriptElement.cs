@@ -11,6 +11,6 @@
 
 	public partial class SVGScriptElement : SVGURIReference
 	{
-		public SVGAnimatedString href => Get<SVGAnimatedString>();
+		public SVGAnimatedString href => GetCached<SVGAnimatedString>();
 	}
 }

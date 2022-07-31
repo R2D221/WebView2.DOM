@@ -6,6 +6,6 @@
 	{
 		private SVGStopElement() { }
 
-		public SVGAnimatedNumber offset => Get<SVGAnimatedNumber>();
+		public SVGAnimatedNumber offset => GetCached<SVGAnimatedNumber>();
 	}
 }

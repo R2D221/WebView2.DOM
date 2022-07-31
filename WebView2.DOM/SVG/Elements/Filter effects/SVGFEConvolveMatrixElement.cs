@@ -15,37 +15,37 @@
 		private SVGFEConvolveMatrixElement() { }
 
 		public SVGAnimatedString in1 =>
-			Get<SVGAnimatedString>();
+			GetCached<SVGAnimatedString>();
 		public SVGAnimatedInteger orderX =>
-			Get<SVGAnimatedInteger>();
+			GetCached<SVGAnimatedInteger>();
 		public SVGAnimatedInteger orderY =>
-			Get<SVGAnimatedInteger>();
+			GetCached<SVGAnimatedInteger>();
 		public SVGAnimatedNumberList kernelMatrix =>
-			Get<SVGAnimatedNumberList>();
+			GetCached<SVGAnimatedNumberList>();
 		public SVGAnimatedNumber divisor =>
-			Get<SVGAnimatedNumber>();
+			GetCached<SVGAnimatedNumber>();
 		public SVGAnimatedNumber bias =>
-			Get<SVGAnimatedNumber>();
+			GetCached<SVGAnimatedNumber>();
 		public SVGAnimatedInteger targetX =>
-			Get<SVGAnimatedInteger>();
+			GetCached<SVGAnimatedInteger>();
 		public SVGAnimatedInteger targetY =>
-			Get<SVGAnimatedInteger>();
+			GetCached<SVGAnimatedInteger>();
 		public SVGAnimatedEnumeration<SVGEdgeMode> edgeMode =>
-			Get<SVGAnimatedEnumeration<SVGEdgeMode>>();
+			GetCached<SVGAnimatedEnumeration<SVGEdgeMode>>();
 		public SVGAnimatedNumber kernelUnitLengthX =>
-			Get<SVGAnimatedNumber>();
+			GetCached<SVGAnimatedNumber>();
 		public SVGAnimatedNumber kernelUnitLengthY =>
-			Get<SVGAnimatedNumber>();
+			GetCached<SVGAnimatedNumber>();
 		public SVGAnimatedBoolean preserveAlpha =>
-			Get<SVGAnimatedBoolean>();
+			GetCached<SVGAnimatedBoolean>();
 	}
 
 	public partial class SVGFEConvolveMatrixElement : SVGFilterPrimitiveStandardAttributes
 	{
-		public SVGAnimatedLength x => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength y => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength width => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength height => Get<SVGAnimatedLength>();
-		public SVGAnimatedString result => Get<SVGAnimatedString>();
+		public SVGAnimatedLength x => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength y => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength width => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength height => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedString result => GetCached<SVGAnimatedString>();
 	}
 }

@@ -10,7 +10,6 @@ namespace WebView2.DOM
 		private CSSKeyframeRule() { }
 
 		public string keyText { get => Get<string>(); set => Set(value); }
-		public CSSStyleDeclaration style => _style ??= Get<CSSStyleDeclaration>();
-		private CSSStyleDeclaration? _style;
+		public CSSStyleDeclaration style => GetCached<CSSStyleDeclaration>();
 	}
 }

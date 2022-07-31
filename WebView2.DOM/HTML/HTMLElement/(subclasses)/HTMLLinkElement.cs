@@ -13,8 +13,7 @@ namespace WebView2.DOM
 		public Uri href { get => Get<Uri>(); set => Set(value); }
 		public CrossOrigin? crossOrigin { get => Get<CrossOrigin?>(); set => Set(value); }
 		public string rel { get => Get<string>(); set => Set(value); }
-		public DOMTokenList relList => _relList ??= Get<DOMTokenList>();
-		private DOMTokenList? _relList;
+		public DOMTokenList relList => GetCached<DOMTokenList>();
 		public string media { get => Get<string>(); set => Set(value); }
 		public string hreflang { get => Get<string>(); set => Set(value); }
 		public string type { get => Get<string>(); set => Set(value); }

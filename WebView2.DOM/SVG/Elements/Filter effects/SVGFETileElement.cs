@@ -6,15 +6,15 @@
 	{
 		private SVGFETileElement() { }
 
-		public SVGAnimatedString in1 => Get<SVGAnimatedString>();
+		public SVGAnimatedString in1 => GetCached<SVGAnimatedString>();
 	}
 
 	public partial class SVGFETileElement : SVGFilterPrimitiveStandardAttributes
 	{
-		public SVGAnimatedLength x => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength y => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength width => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength height => Get<SVGAnimatedLength>();
-		public SVGAnimatedString result => Get<SVGAnimatedString>();
+		public SVGAnimatedLength x => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength y => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength width => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength height => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedString result => GetCached<SVGAnimatedString>();
 	}
 }

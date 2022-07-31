@@ -17,18 +17,18 @@
 		private protected SVGComponentTransferFunctionElement() { }
 
 		public SVGAnimatedEnumeration<SVGFEComponentTransferType> type =>
-			Get<SVGAnimatedEnumeration<SVGFEComponentTransferType>>();
+			GetCached<SVGAnimatedEnumeration<SVGFEComponentTransferType>>();
 		public SVGAnimatedNumberList tableValues =>
-			Get<SVGAnimatedNumberList>();
+			GetCached<SVGAnimatedNumberList>();
 		public SVGAnimatedNumber slope =>
-			Get<SVGAnimatedNumber>();
+			GetCached<SVGAnimatedNumber>();
 		public SVGAnimatedNumber intercept =>
-			Get<SVGAnimatedNumber>();
+			GetCached<SVGAnimatedNumber>();
 		public SVGAnimatedNumber amplitude =>
-			Get<SVGAnimatedNumber>();
+			GetCached<SVGAnimatedNumber>();
 		public SVGAnimatedNumber exponent =>
-			Get<SVGAnimatedNumber>();
+			GetCached<SVGAnimatedNumber>();
 		public SVGAnimatedNumber offset =>
-			Get<SVGAnimatedNumber>();
+			GetCached<SVGAnimatedNumber>();
 	}
 }

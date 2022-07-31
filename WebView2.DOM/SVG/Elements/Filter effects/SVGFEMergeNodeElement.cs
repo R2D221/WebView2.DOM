@@ -6,6 +6,6 @@
 	{
 		private SVGFEMergeNodeElement() { }
 
-		public SVGAnimatedString in1 => Get<SVGAnimatedString>();
+		public SVGAnimatedString in1 => GetCached<SVGAnimatedString>();
 	}
 }

@@ -11,6 +11,8 @@ using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Tact;
+using Tact.Reflection;
 using WebView2.DOM.Helpers;
 
 namespace WebView2.DOM
@@ -149,7 +151,7 @@ namespace WebView2.DOM
 			{
 				foreach (var handler in handlers.Keys)
 				{
-					_ = handler.DynamicInvoke(eventTarget, args);
+					args.Invoke(eventTarget, handler);
 				}
 			}
 			catch (TargetInvocationException ex)
@@ -211,7 +213,13 @@ namespace WebView2.DOM
 
 			try
 			{
-				_ = callback.DynamicInvoke(args: final);
+				var result = EfficientInvoker.ForDelegate(callback).Invoke(callback, args: final);
+				//var result = callback.DynamicInvoke(args: final);
+
+				if (result is not null)
+				{
+					throw new NotSupportedException("Only callbacks that don't return a value are supported for now");
+				}
 			}
 			catch (TargetInvocationException ex)
 			{

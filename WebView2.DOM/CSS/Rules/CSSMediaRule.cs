@@ -6,7 +6,6 @@
 	{
 		private CSSMediaRule() { }
 
-		public MediaList media => _media ??= Get<MediaList>();
-		private MediaList? _media;
+		public MediaList media => GetCached<MediaList>();
 	}
 }

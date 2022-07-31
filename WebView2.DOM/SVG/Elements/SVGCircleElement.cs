@@ -6,8 +6,8 @@
 	{
 		private SVGCircleElement() { }
 
-		public SVGAnimatedLength cx => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength cy => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength r => Get<SVGAnimatedLength>();
+		public SVGAnimatedLength cx => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength cy => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength r => GetCached<SVGAnimatedLength>();
 	}
 }

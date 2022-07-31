@@ -6,8 +6,7 @@
 	{
 		private protected SVGGeometryElement() { }
 
-		public SVGAnimatedNumber pathLength => _pathLength ??= Get<SVGAnimatedNumber>();
-		private SVGAnimatedNumber? _pathLength;
+		public SVGAnimatedNumber pathLength => GetCached<SVGAnimatedNumber>();
 
 		public bool isPointInFill(SVGPoint point) => Method<bool>().Invoke(point);
 		public bool isPointInStroke(SVGPoint point) => Method<bool>().Invoke(point);

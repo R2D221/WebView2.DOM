@@ -1,4 +1,5 @@
 ﻿using Microsoft.Web.WebView2.Core;
+using System;
 
 namespace WebView2.DOM
 {
@@ -14,6 +15,9 @@ namespace WebView2.DOM
 	public sealed class WheelEvent : MouseEvent
 	{
 		private WheelEvent() { }
+
+		internal override void Invoke(EventTarget eventTarget, Delegate handler) =>
+			GenericInvoke(eventTarget, handler, this);
 
 		public double deltaX => Get<double>();
 		public double deltaY => Get<double>();

@@ -27,18 +27,18 @@
 	{
 		private SVGFEBlendElement() { }
 
-		public SVGAnimatedString in1 => Get<SVGAnimatedString>();
-		public SVGAnimatedString in2 => Get<SVGAnimatedString>();
+		public SVGAnimatedString in1 => GetCached<SVGAnimatedString>();
+		public SVGAnimatedString in2 => GetCached<SVGAnimatedString>();
 		public SVGAnimatedEnumeration<SVGFEBlendMode> mode =>
-			Get<SVGAnimatedEnumeration<SVGFEBlendMode>>();
+			GetCached<SVGAnimatedEnumeration<SVGFEBlendMode>>();
 	}
 
 	public partial class SVGFEBlendElement : SVGFilterPrimitiveStandardAttributes
 	{
-		public SVGAnimatedLength x => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength y => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength width => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength height => Get<SVGAnimatedLength>();
-		public SVGAnimatedString result => Get<SVGAnimatedString>();
+		public SVGAnimatedLength x => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength y => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength width => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength height => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedString result => GetCached<SVGAnimatedString>();
 	}
 }

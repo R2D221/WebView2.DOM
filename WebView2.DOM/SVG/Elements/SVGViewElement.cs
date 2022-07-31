@@ -9,8 +9,8 @@
 
 	public partial class SVGViewElement : SVGFitToViewBox
 	{
-		public SVGAnimatedRect viewBox => Get<SVGAnimatedRect>();
-		public SVGAnimatedPreserveAspectRatio preserveAspectRatio => Get<SVGAnimatedPreserveAspectRatio>();
+		public SVGAnimatedRect viewBox => GetCached<SVGAnimatedRect>();
+		public SVGAnimatedPreserveAspectRatio preserveAspectRatio => GetCached<SVGAnimatedPreserveAspectRatio>();
 	}
 
 	public partial class SVGViewElement : SVGZoomAndPan

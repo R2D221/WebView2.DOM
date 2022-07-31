@@ -14,9 +14,9 @@
 		private protected SVGTextContentElement() { }
 
 		public SVGAnimatedLength textLength =>
-			Get<SVGAnimatedLength>();
+			GetCached<SVGAnimatedLength>();
 		public SVGAnimatedEnumeration<SVGTextContentLengthAdjust> lengthAdjust =>
-			Get<SVGAnimatedEnumeration<SVGTextContentLengthAdjust>>();
+			GetCached<SVGAnimatedEnumeration<SVGTextContentLengthAdjust>>();
 
 		public int getNumberOfChars() => Method<int>().Invoke();
 		public float getComputedTextLength() => Method<float>().Invoke();

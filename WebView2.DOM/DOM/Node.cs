@@ -45,8 +45,7 @@ namespace WebView2.DOM
 		public Node? parentNode => Get<Node?>();
 		public Element? parentElement => Get<Element?>();
 		public bool hasChildNodes() => Method<bool>().Invoke();
-		public NodeList<Node> childNodes => /*_childNodes ??=*/ Get<NodeList<Node>>();
-		//private NodeList<Node>? _childNodes;
+		public NodeList<Node> childNodes => Get/*Cached*/<NodeList<Node>>();
 		public Node? firstChild => Get<Node?>();
 		public Node? lastChild => Get<Node?>();
 		public Node? previousSibling => Get<Node?>();

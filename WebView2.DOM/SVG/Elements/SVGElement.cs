@@ -6,9 +6,8 @@
 	{
 		private protected SVGElement() { }
 
-		new public SVGAnimatedString className => Get<SVGAnimatedString>();
-		public CSSStyleDeclaration style => _style ??= Get<CSSStyleDeclaration>();
-		private CSSStyleDeclaration? _style;
+		new public SVGAnimatedString className => GetCached<SVGAnimatedString>();
+		public CSSStyleDeclaration style => GetCached<CSSStyleDeclaration>();
 
 		public SVGSVGElement? ownerSVGElement => Get<SVGSVGElement>();
 		public SVGElement? viewportElement => Get<SVGElement>();

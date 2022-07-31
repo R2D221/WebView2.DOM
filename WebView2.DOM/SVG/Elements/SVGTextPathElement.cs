@@ -21,15 +21,15 @@
 		private SVGTextPathElement() { }
 
 		public SVGAnimatedLength startOffset =>
-			Get<SVGAnimatedLength>();
+			GetCached<SVGAnimatedLength>();
 		public SVGAnimatedEnumeration<SVGTextContentLengthAdjust> method =>
-			Get<SVGAnimatedEnumeration<SVGTextContentLengthAdjust>>();
+			GetCached<SVGAnimatedEnumeration<SVGTextContentLengthAdjust>>();
 		public SVGAnimatedEnumeration<SVGTextPathSpacingType> spacing =>
-			Get<SVGAnimatedEnumeration<SVGTextPathSpacingType>>();
+			GetCached<SVGAnimatedEnumeration<SVGTextPathSpacingType>>();
 	}
 
 	public partial class SVGTextPathElement : SVGURIReference
 	{
-		public SVGAnimatedString href => Get<SVGAnimatedString>();
+		public SVGAnimatedString href => GetCached<SVGAnimatedString>();
 	}
 }

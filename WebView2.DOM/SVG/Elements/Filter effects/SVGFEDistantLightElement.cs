@@ -6,7 +6,7 @@
 	{
 		private SVGFEDistantLightElement() { }
 
-		public SVGAnimatedNumber azimuth => Get<SVGAnimatedNumber>();
-		public SVGAnimatedNumber elevation => Get<SVGAnimatedNumber>();
+		public SVGAnimatedNumber azimuth => GetCached<SVGAnimatedNumber>();
+		public SVGAnimatedNumber elevation => GetCached<SVGAnimatedNumber>();
 	}
 }

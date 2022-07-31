@@ -29,6 +29,9 @@ namespace WebView2.DOM
 	{
 		private protected MouseEvent() { }
 
+		internal override void Invoke(EventTarget eventTarget, Delegate handler) =>
+			GenericInvoke(eventTarget, handler, this);
+
 		public double screenX => Get<double>();
 		public double screenY => Get<double>();
 		public double clientX => Get<double>();

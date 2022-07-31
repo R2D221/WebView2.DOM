@@ -21,25 +21,25 @@
 		private SVGFETurbulenceElement() { }
 
 		public SVGAnimatedNumber baseFrequencyX =>
-			Get<SVGAnimatedNumber>();
+			GetCached<SVGAnimatedNumber>();
 		public SVGAnimatedNumber baseFrequencyY =>
-			Get<SVGAnimatedNumber>();
+			GetCached<SVGAnimatedNumber>();
 		public SVGAnimatedInteger numOctaves =>
-			Get<SVGAnimatedInteger>();
+			GetCached<SVGAnimatedInteger>();
 		public SVGAnimatedNumber seed =>
-			Get<SVGAnimatedNumber>();
+			GetCached<SVGAnimatedNumber>();
 		public SVGAnimatedEnumeration<SVGStitchType> stitchTiles =>
-			Get<SVGAnimatedEnumeration<SVGStitchType>>();
+			GetCached<SVGAnimatedEnumeration<SVGStitchType>>();
 		public SVGAnimatedEnumeration<SVGTurbulenceType> type =>
-			Get<SVGAnimatedEnumeration<SVGTurbulenceType>>();
+			GetCached<SVGAnimatedEnumeration<SVGTurbulenceType>>();
 	}
 
 	public partial class SVGFETurbulenceElement : SVGFilterPrimitiveStandardAttributes
 	{
-		public SVGAnimatedLength x => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength y => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength width => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength height => Get<SVGAnimatedLength>();
-		public SVGAnimatedString result => Get<SVGAnimatedString>();
+		public SVGAnimatedLength x => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength y => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength width => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength height => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedString result => GetCached<SVGAnimatedString>();
 	}
 }

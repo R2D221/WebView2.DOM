@@ -12,8 +12,7 @@ namespace WebView2.DOM
 		public string dropEffect { get => Get<string>(); set => Set(value); }
 		public string effectAllowed { get => Get<string>(); set => Set(value); }
 
-		public DataTransferItemList items => _items ??= Get<DataTransferItemList>();
-		private DataTransferItemList? _items;
+		public DataTransferItemList items => GetCached<DataTransferItemList>();
 
 		public void setDragImage(Element image, int x, int y) => Method().Invoke(image, x, y);
 
@@ -22,7 +21,6 @@ namespace WebView2.DOM
 		public void setData(string format, string data) => Method().Invoke(format, data);
 		public void clearData() => Method().Invoke();
 		public void clearData(string format) => Method().Invoke(format);
-		public FileList files => _files ??= Get<FileList>();
-		private FileList? _files;
+		public FileList files => GetCached<FileList>();
 	}
 }

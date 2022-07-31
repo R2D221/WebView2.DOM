@@ -6,10 +6,10 @@
 	{
 		private protected SVGTextPositioningElement() { }
 
-		public SVGAnimatedLengthList x => Get<SVGAnimatedLengthList>();
-		public SVGAnimatedLengthList y => Get<SVGAnimatedLengthList>();
-		public SVGAnimatedLengthList dx => Get<SVGAnimatedLengthList>();
-		public SVGAnimatedLengthList dy => Get<SVGAnimatedLengthList>();
-		public SVGAnimatedNumberList rotate => Get<SVGAnimatedNumberList>();
+		public SVGAnimatedLengthList x => GetCached<SVGAnimatedLengthList>();
+		public SVGAnimatedLengthList y => GetCached<SVGAnimatedLengthList>();
+		public SVGAnimatedLengthList dx => GetCached<SVGAnimatedLengthList>();
+		public SVGAnimatedLengthList dy => GetCached<SVGAnimatedLengthList>();
+		public SVGAnimatedNumberList rotate => GetCached<SVGAnimatedNumberList>();
 	}
 }

@@ -6,20 +6,20 @@
 	{
 		private SVGFESpecularLightingElement() { }
 
-		public SVGAnimatedString in1 => Get<SVGAnimatedString>();
-		public SVGAnimatedNumber surfaceScale => Get<SVGAnimatedNumber>();
-		public SVGAnimatedNumber specularConstant => Get<SVGAnimatedNumber>();
-		public SVGAnimatedNumber specularExponent => Get<SVGAnimatedNumber>();
-		public SVGAnimatedNumber kernelUnitLengthX => Get<SVGAnimatedNumber>();
-		public SVGAnimatedNumber kernelUnitLengthY => Get<SVGAnimatedNumber>();
+		public SVGAnimatedString in1 => GetCached<SVGAnimatedString>();
+		public SVGAnimatedNumber surfaceScale => GetCached<SVGAnimatedNumber>();
+		public SVGAnimatedNumber specularConstant => GetCached<SVGAnimatedNumber>();
+		public SVGAnimatedNumber specularExponent => GetCached<SVGAnimatedNumber>();
+		public SVGAnimatedNumber kernelUnitLengthX => GetCached<SVGAnimatedNumber>();
+		public SVGAnimatedNumber kernelUnitLengthY => GetCached<SVGAnimatedNumber>();
 	}
 
 	public partial class SVGFESpecularLightingElement : SVGFilterPrimitiveStandardAttributes
 	{
-		public SVGAnimatedLength x => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength y => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength width => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength height => Get<SVGAnimatedLength>();
-		public SVGAnimatedString result => Get<SVGAnimatedString>();
+		public SVGAnimatedLength x => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength y => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength width => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength height => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedString result => GetCached<SVGAnimatedString>();
 	}
 }

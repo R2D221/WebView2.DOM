@@ -52,8 +52,7 @@ namespace WebView2.DOM
 		public int offsetHeight => Get<int>();
 
 		// CSS Object Model (CSSOM)
-		public CSSStyleDeclaration style => _style ??= Get<CSSStyleDeclaration>();
-		private CSSStyleDeclaration? _style;
+		public CSSStyleDeclaration style => GetCached<CSSStyleDeclaration>();
 		public string innerText { get => Get<string>(); set => Set(value); }
 		public string outerText { get => Get<string>(); set => Set(value); }
 

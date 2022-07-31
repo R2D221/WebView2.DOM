@@ -145,8 +145,7 @@ namespace WebView2.DOM
 		// CSSOM View Module
 		public MediaQueryList matchMedia(string query)
 			=> Method<MediaQueryList>().Invoke(query);
-		public Screen screen => _screen ??= Get<Screen>();
-		private Screen? _screen;
+		public Screen screen => GetCached<Screen>();
 
 		// browsing context
 		public void moveTo(int x, int y)
@@ -187,8 +186,7 @@ namespace WebView2.DOM
 			=> Method().Invoke(x, y);
 
 		// Visual Viewport API
-		public VisualViewport visualViewport => _visualViewport ??= Get<VisualViewport>();
-		private VisualViewport? _visualViewport;
+		public VisualViewport visualViewport => GetCached<VisualViewport>();
 
 		// client
 		public int screenX => Get<int>();

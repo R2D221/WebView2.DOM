@@ -6,9 +6,9 @@
 	{
 		private SVGFEGaussianBlurElement() { }
 
-		public SVGAnimatedString in1 => Get<SVGAnimatedString>();
-		public SVGAnimatedNumber stdDeviationX => Get<SVGAnimatedNumber>();
-		public SVGAnimatedNumber stdDeviationY => Get<SVGAnimatedNumber>();
+		public SVGAnimatedString in1 => GetCached<SVGAnimatedString>();
+		public SVGAnimatedNumber stdDeviationX => GetCached<SVGAnimatedNumber>();
+		public SVGAnimatedNumber stdDeviationY => GetCached<SVGAnimatedNumber>();
 
 		public void setStdDeviation(float stdDeviationX, float stdDeviationY) =>
 			Method().Invoke(stdDeviationX, stdDeviationY);
@@ -16,10 +16,10 @@
 
 	public partial class SVGFEGaussianBlurElement : SVGFilterPrimitiveStandardAttributes
 	{
-		public SVGAnimatedLength x => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength y => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength width => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength height => Get<SVGAnimatedLength>();
-		public SVGAnimatedString result => Get<SVGAnimatedString>();
+		public SVGAnimatedLength x => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength y => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength width => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength height => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedString result => GetCached<SVGAnimatedString>();
 	}
 }

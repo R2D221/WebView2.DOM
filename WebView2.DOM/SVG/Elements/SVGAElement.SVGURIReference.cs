@@ -2,6 +2,6 @@
 {
 	public partial class SVGAElement : SVGURIReference
 	{
-		public SVGAnimatedString href => Get<SVGAnimatedString>();
+		public SVGAnimatedString href => GetCached<SVGAnimatedString>();
 	}
 }

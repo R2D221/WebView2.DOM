@@ -6,6 +6,6 @@
 	{
 		private SVGAElement() { }
 
-		public SVGAnimatedString target => Get<SVGAnimatedString>();
+		public SVGAnimatedString target => GetCached<SVGAnimatedString>();
 	}
 }

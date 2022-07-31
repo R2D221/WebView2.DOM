@@ -46,8 +46,7 @@ namespace WebView2.DOM
 		public static /*restricted*/double pageYOffset => Instance.Get</*restricted*/double>();
 		public static Window? parent => Instance.Get<Window?>();
 		public static BarProp personalbar => Instance.Get<BarProp>();
-		public static Screen screen => _screen ??= Instance.Get<Screen>();
-		private static Screen? _screen;
+		public static Screen screen => Instance.GetCached<Screen>();
 		public static int screenLeft => Instance.Get<int>();
 		public static int screenTop => Instance.Get<int>();
 		public static int screenX => Instance.Get<int>();
@@ -61,8 +60,7 @@ namespace WebView2.DOM
 		public static BarProp statusbar => Instance.Get<BarProp>();
 		public static StyleMedia styleMedia => Instance.Get<StyleMedia>();
 		public static BarProp toolbar => Instance.Get<BarProp>();
-		public static VisualViewport visualViewport => _visualViewport ??= Instance.Get<VisualViewport>();
-		private static VisualViewport? _visualViewport;
+		public static VisualViewport visualViewport => Instance.GetCached<VisualViewport>();
 		public static void alert()
 			=> Instance.Method().Invoke();
 		public static void alert(string message)

@@ -74,19 +74,15 @@ namespace WebView2.DOM
 
 		// controls
 		public bool controls { get => Get<bool>(); set => Set(value); }
-		public DOMTokenList controlsList => _controlsList ??= Get<DOMTokenList>();
-		private DOMTokenList? _controlsList;
+		public DOMTokenList controlsList => GetCached<DOMTokenList>();
 		public double volume { get => Get<double>(); set => Set(value); }
 		public bool muted { get => Get<bool>(); set => Set(value); }
 		public bool defaultMuted { get => Get<bool>(); set => Set(value); }
 
 		// tracks
-		//public AudioTrackList audioTracks => _audioTracks ??= Get<AudioTrackList>();
-		//private AudioTrackList? _audioTracks;
-		//public VideoTrackList videoTracks => _videoTracks ??= Get<VideoTrackList>();
-		//private VideoTrackList? _videoTracks;
-		public TextTrackList textTracks => _textTracks ??= Get<TextTrackList>();
-		private TextTrackList? _textTracks;
+		//public AudioTrackList audioTracks => GetCached<AudioTrackList>();
+		//public VideoTrackList videoTracks => GetCached<VideoTrackList>();
+		public TextTrackList textTracks => GetCached<TextTrackList>();
 		public TextTrack addTextTrack(TextTrackKind kind, string label = "", string language = "") =>
 			Method<TextTrack>().Invoke(kind, label, language);
 

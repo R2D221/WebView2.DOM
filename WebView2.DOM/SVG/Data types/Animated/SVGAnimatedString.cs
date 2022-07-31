@@ -2,11 +2,8 @@
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/svg/svg_animated_string.idl
 
-	public sealed class SVGAnimatedString : JsObject
+	public sealed class SVGAnimatedString : SVGAnimatedPrimitive<string>
 	{
 		private SVGAnimatedString() { }
-
-		public string baseVal { get => Get<string>(); set => Set(value); }
-		public string animVal => Get<string>();
 	}
 }

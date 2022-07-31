@@ -6,8 +6,8 @@
 	{
 		private SVGFEPointLightElement() { }
 
-		public SVGAnimatedNumber x => Get<SVGAnimatedNumber>();
-		public SVGAnimatedNumber y => Get<SVGAnimatedNumber>();
-		public SVGAnimatedNumber z => Get<SVGAnimatedNumber>();
+		public SVGAnimatedNumber x => GetCached<SVGAnimatedNumber>();
+		public SVGAnimatedNumber y => GetCached<SVGAnimatedNumber>();
+		public SVGAnimatedNumber z => GetCached<SVGAnimatedNumber>();
 	}
 }

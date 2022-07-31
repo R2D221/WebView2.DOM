@@ -7,23 +7,22 @@
 		private SVGMaskElement() { }
 
 		public SVGAnimatedEnumeration<SVGUnitType> maskUnits =>
-			Get<SVGAnimatedEnumeration<SVGUnitType>>();
+			GetCached<SVGAnimatedEnumeration<SVGUnitType>>();
 		public SVGAnimatedEnumeration<SVGUnitType> maskContentUnits =>
-			Get<SVGAnimatedEnumeration<SVGUnitType>>();
+			GetCached<SVGAnimatedEnumeration<SVGUnitType>>();
 		public SVGAnimatedLength x =>
-			Get<SVGAnimatedLength>();
+			GetCached<SVGAnimatedLength>();
 		public SVGAnimatedLength y =>
-			Get<SVGAnimatedLength>();
+			GetCached<SVGAnimatedLength>();
 		public SVGAnimatedLength width =>
-			Get<SVGAnimatedLength>();
+			GetCached<SVGAnimatedLength>();
 		public SVGAnimatedLength height =>
-			Get<SVGAnimatedLength>();
+			GetCached<SVGAnimatedLength>();
 	}
 
 	public partial class SVGMaskElement : SVGTests
 	{
-		public SVGStringList requiredExtensions => Get<SVGStringList>();
-
-		public SVGStringList systemLanguage => Get<SVGStringList>();
+		public SVGStringList requiredExtensions => GetCached<SVGStringList>();
+		public SVGStringList systemLanguage => GetCached<SVGStringList>();
 	}
 }

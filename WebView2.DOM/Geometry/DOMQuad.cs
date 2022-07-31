@@ -32,15 +32,10 @@ namespace WebView2.DOM
 		public static DOMQuad fromQuad(DOMQuad other) =>
 			@static.Method<DOMQuad>().Invoke(other);
 
-		private DOMPoint? _p1;
-		private DOMPoint? _p2;
-		private DOMPoint? _p3;
-		private DOMPoint? _p4;
-
-		public DOMPoint p1 => _p1 ??= Get<DOMPoint>();
-		public DOMPoint p2 => _p2 ??= Get<DOMPoint>();
-		public DOMPoint p3 => _p3 ??= Get<DOMPoint>();
-		public DOMPoint p4 => _p4 ??= Get<DOMPoint>();
+		public DOMPoint p1 => GetCached<DOMPoint>();
+		public DOMPoint p2 => GetCached<DOMPoint>();
+		public DOMPoint p3 => GetCached<DOMPoint>();
+		public DOMPoint p4 => GetCached<DOMPoint>();
 
 		public DOMRect getBounds() => Method<DOMRect>().Invoke();
 

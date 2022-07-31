@@ -2,7 +2,7 @@
 {
 	public partial class SVGGraphicsElement : SVGTests
 	{
-		public SVGStringList requiredExtensions => Get<SVGStringList>();
-		public SVGStringList systemLanguage => Get<SVGStringList>();
+		public SVGStringList requiredExtensions => GetCached<SVGStringList>();
+		public SVGStringList systemLanguage => GetCached<SVGStringList>();
 	}
 }

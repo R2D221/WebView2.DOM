@@ -9,9 +9,7 @@ namespace WebView2.DOM
 		private CSSImportRule() { }
 
 		public Uri href => Get<Uri>();
-		public MediaList media => _media ??= Get<MediaList>();
-		private MediaList? _media;
-		public CSSStyleSheet styleSheet => _styleSheet ??= Get<CSSStyleSheet>();
-		private CSSStyleSheet? _styleSheet;
+		public MediaList media => GetCached<MediaList>();
+		public CSSStyleSheet styleSheet => GetCached<CSSStyleSheet>();
 	}
 }

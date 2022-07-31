@@ -6,9 +6,9 @@
 	{
 		private SVGLinearGradientElement() { }
 
-		public SVGAnimatedLength x1 => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength y1 => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength x2 => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength y2 => Get<SVGAnimatedLength>();
+		public SVGAnimatedLength x1 => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength y1 => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength x2 => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength y2 => GetCached<SVGAnimatedLength>();
 	}
 }

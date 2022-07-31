@@ -6,11 +6,11 @@
 	{
 		private SVGImageElement() { }
 
-		public SVGAnimatedLength x => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength y => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength width => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength height => Get<SVGAnimatedLength>();
-		public SVGAnimatedPreserveAspectRatio preserveAspectRatio => Get<SVGAnimatedPreserveAspectRatio>();
+		public SVGAnimatedLength x => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength y => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength width => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength height => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedPreserveAspectRatio preserveAspectRatio => GetCached<SVGAnimatedPreserveAspectRatio>();
 
 		public ImageDecodingHint decoding { get => Get<ImageDecodingHint>(); set => Set(value); }
 		public VoidPromise decode() => Method<VoidPromise>().Invoke();
@@ -18,6 +18,6 @@
 
 	public partial class SVGImageElement : SVGURIReference
 	{
-		public SVGAnimatedString href => Get<SVGAnimatedString>();
+		public SVGAnimatedString href => GetCached<SVGAnimatedString>();
 	}
 }

@@ -24,8 +24,7 @@ namespace WebView2.DOM
 			set => Set(string.Join(" ", value));
 		}
 		public string rel { get => Get<string>(); set => Set(value); }
-		public DOMTokenList relList => _relList ??= Get<DOMTokenList>();
-		private DOMTokenList? _relList;
+		public DOMTokenList relList => GetCached<DOMTokenList>();
 		public string hreflang { get => Get<string>(); set => Set(value); }
 		public string hrefTranslate { get => Get<string>(); set => Set(value); }
 		public string type { get => Get<string>(); set => Set(value); }

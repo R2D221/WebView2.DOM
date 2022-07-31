@@ -9,8 +9,8 @@
 
 	public partial class SVGSymbolElement : SVGFitToViewBox
 	{
-		public SVGAnimatedRect viewBox => Get<SVGAnimatedRect>();
+		public SVGAnimatedRect viewBox => GetCached<SVGAnimatedRect>();
 
-		public SVGAnimatedPreserveAspectRatio preserveAspectRatio => Get<SVGAnimatedPreserveAspectRatio>();
+		public SVGAnimatedPreserveAspectRatio preserveAspectRatio => GetCached<SVGAnimatedPreserveAspectRatio>();
 	}
 }

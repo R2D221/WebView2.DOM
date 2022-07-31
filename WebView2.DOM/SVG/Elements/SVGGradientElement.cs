@@ -15,15 +15,15 @@
 		private protected SVGGradientElement() { }
 
 		public SVGAnimatedEnumeration<SVGUnitType> gradientUnits =>
-			Get<SVGAnimatedEnumeration<SVGUnitType>>();
+			GetCached<SVGAnimatedEnumeration<SVGUnitType>>();
 		public SVGAnimatedTransformList gradientTransform =>
-			Get<SVGAnimatedTransformList>();
+			GetCached<SVGAnimatedTransformList>();
 		public SVGAnimatedEnumeration<SVGSpreadMethod> spreadMethod =>
-			Get<SVGAnimatedEnumeration<SVGSpreadMethod>>();
+			GetCached<SVGAnimatedEnumeration<SVGSpreadMethod>>();
 	}
 
 	public partial class SVGGradientElement : SVGURIReference
 	{
-		public SVGAnimatedString href => Get<SVGAnimatedString>();
+		public SVGAnimatedString href => GetCached<SVGAnimatedString>();
 	}
 }

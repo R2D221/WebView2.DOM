@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 
 namespace WebView2.DOM
@@ -8,6 +9,9 @@ namespace WebView2.DOM
 	public sealed class PointerEvent : MouseEvent
 	{
 		private PointerEvent() { }
+
+		internal override void Invoke(EventTarget eventTarget, Delegate handler) =>
+			GenericInvoke(eventTarget, handler, this);
 
 		public int pointerId => Get<int>();
 		public double width => Get<double>();

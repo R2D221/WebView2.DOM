@@ -1,4 +1,6 @@
-﻿namespace WebView2.DOM
+﻿using System;
+
+namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/events/security_policy_violation_event.idl
 
@@ -10,6 +12,9 @@
 	public sealed class SecurityPolicyViolationEvent : Event
 	{
 		private SecurityPolicyViolationEvent() { }
+
+		internal override void Invoke(EventTarget eventTarget, Delegate handler) =>
+			GenericInvoke(eventTarget, handler, this);
 
 		public string documentURI => Get<string>();
 		public string referrer => Get<string>();

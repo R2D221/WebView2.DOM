@@ -6,9 +6,9 @@
 	{
 		private SVGEllipseElement() { }
 
-		public SVGAnimatedLength cx => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength cy => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength rx => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength ry => Get<SVGAnimatedLength>();
+		public SVGAnimatedLength cx => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength cy => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength rx => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength ry => GetCached<SVGAnimatedLength>();
 	}
 }

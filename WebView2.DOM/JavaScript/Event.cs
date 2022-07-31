@@ -19,6 +19,15 @@ namespace WebView2.DOM
 	{
 		private protected Event() { }
 
+		private protected static void GenericInvoke<TEvent>(EventTarget eventTarget, Delegate handler, TEvent args)
+			where TEvent : Event
+		{
+			((EventHandler<TEvent>)handler).Invoke(eventTarget, args);
+		}
+
+		internal virtual void Invoke(EventTarget eventTarget, Delegate handler) =>
+			GenericInvoke(eventTarget, handler, this);
+
 		public string type => Get<string>();
 		public EventTarget? target => Get<EventTarget?>();
 		public EventTarget? currentTarget => Get<EventTarget?>();

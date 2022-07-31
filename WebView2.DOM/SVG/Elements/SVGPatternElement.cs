@@ -6,31 +6,29 @@
 	{
 		private SVGPatternElement() { }
 
-		public SVGAnimatedEnumeration<SVGUnitType> patternUnits => Get<SVGAnimatedEnumeration<SVGUnitType>>();
-		public SVGAnimatedEnumeration<SVGUnitType> patternContentUnits => Get<SVGAnimatedEnumeration<SVGUnitType>>();
-		public SVGAnimatedTransformList patternTransform => Get<SVGAnimatedTransformList>();
-		public SVGAnimatedLength x => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength y => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength width => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength height => Get<SVGAnimatedLength>();
+		public SVGAnimatedEnumeration<SVGUnitType> patternUnits => GetCached<SVGAnimatedEnumeration<SVGUnitType>>();
+		public SVGAnimatedEnumeration<SVGUnitType> patternContentUnits => GetCached<SVGAnimatedEnumeration<SVGUnitType>>();
+		public SVGAnimatedTransformList patternTransform => GetCached<SVGAnimatedTransformList>();
+		public SVGAnimatedLength x => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength y => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength width => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength height => GetCached<SVGAnimatedLength>();
 	}
 
 	public partial class SVGPatternElement : SVGFitToViewBox
 	{
-		public SVGAnimatedRect viewBox => Get<SVGAnimatedRect>();
-
-		public SVGAnimatedPreserveAspectRatio preserveAspectRatio => Get<SVGAnimatedPreserveAspectRatio>();
+		public SVGAnimatedRect viewBox => GetCached<SVGAnimatedRect>();
+		public SVGAnimatedPreserveAspectRatio preserveAspectRatio => GetCached<SVGAnimatedPreserveAspectRatio>();
 	}
 
 	public partial class SVGPatternElement : SVGURIReference
 	{
-		public SVGAnimatedString href => Get<SVGAnimatedString>();
+		public SVGAnimatedString href => GetCached<SVGAnimatedString>();
 	}
 
 	public partial class SVGPatternElement : SVGTests
 	{
-		public SVGStringList requiredExtensions => Get<SVGStringList>();
-
-		public SVGStringList systemLanguage => Get<SVGStringList>();
+		public SVGStringList requiredExtensions => GetCached<SVGStringList>();
+		public SVGStringList systemLanguage => GetCached<SVGStringList>();
 	}
 }

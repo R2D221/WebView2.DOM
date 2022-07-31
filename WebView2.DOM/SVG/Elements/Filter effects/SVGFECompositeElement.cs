@@ -18,27 +18,27 @@
 		private SVGFECompositeElement() { }
 
 		public SVGAnimatedString in2 =>
-			Get<SVGAnimatedString>();
+			GetCached<SVGAnimatedString>();
 		public SVGAnimatedString in1 =>
-			Get<SVGAnimatedString>();
+			GetCached<SVGAnimatedString>();
 		public SVGAnimatedEnumeration<SVGFECompositeOperator> @operator =>
-			Get<SVGAnimatedEnumeration<SVGFECompositeOperator>>();
+			GetCached<SVGAnimatedEnumeration<SVGFECompositeOperator>>();
 		public SVGAnimatedNumber k1 =>
-			Get<SVGAnimatedNumber>();
+			GetCached<SVGAnimatedNumber>();
 		public SVGAnimatedNumber k2 =>
-			Get<SVGAnimatedNumber>();
+			GetCached<SVGAnimatedNumber>();
 		public SVGAnimatedNumber k3 =>
-			Get<SVGAnimatedNumber>();
+			GetCached<SVGAnimatedNumber>();
 		public SVGAnimatedNumber k4 =>
-			Get<SVGAnimatedNumber>();
+			GetCached<SVGAnimatedNumber>();
 	}
 
 	public partial class SVGFECompositeElement : SVGFilterPrimitiveStandardAttributes
 	{
-		public SVGAnimatedLength x => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength y => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength width => Get<SVGAnimatedLength>();
-		public SVGAnimatedLength height => Get<SVGAnimatedLength>();
-		public SVGAnimatedString result => Get<SVGAnimatedString>();
+		public SVGAnimatedLength x => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength y => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength width => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedLength height => GetCached<SVGAnimatedLength>();
+		public SVGAnimatedString result => GetCached<SVGAnimatedString>();
 	}
 }

@@ -7,6 +7,6 @@
 		private SVGClipPathElement() { }
 
 		public SVGAnimatedEnumeration<SVGUnitType> clipPathUnits =>
-			Get<SVGAnimatedEnumeration<SVGUnitType>>();
+			GetCached<SVGAnimatedEnumeration<SVGUnitType>>();
 	}
 }

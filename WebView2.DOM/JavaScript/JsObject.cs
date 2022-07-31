@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
@@ -78,6 +79,18 @@ namespace WebView2.DOM
 		internal void Construct(params object?[] args)
 		{
 			executionContext.Construct(this, GetType().Name, args);
+		}
+
+		private static class Cache<T>
+		{
+			public static ConditionalWeakTable<JsObject, ConcurrentDictionary<string, T>> caches = new();
+		}
+
+		internal T GetCached<T>([CallerMemberName] string property = "")
+		{
+			return Cache<T>.caches
+				.GetValue(this, _ => new())
+				.GetOrAdd(property, _property => Get<T>(_property));
 		}
 
 		internal T Get<T>([CallerMemberName] string property = "")

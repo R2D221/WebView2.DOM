@@ -12,8 +12,7 @@ namespace WebView2.DOM
 			Construct();
 
 		public CSSRule? ownerRule => Get<CSSRule?>();
-		public CSSRuleList cssRules => _cssRules ??= Get<CSSRuleList>();
-		private CSSRuleList? _cssRules;
+		public CSSRuleList cssRules => GetCached<CSSRuleList>();
 		public uint insertRule(string rule, uint index = 0) =>
 			Method<uint>().Invoke(rule, index);
 		public void deleteRule(uint index) =>
