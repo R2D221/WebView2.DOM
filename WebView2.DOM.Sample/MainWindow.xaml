@@ -10,6 +10,20 @@
         WindowState="Maximized"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <wv2:WebView2 x:Name="webView"/>
+    </Grid>
+</Window>
+
+
+
+
+
+
+
+
+
+<!--
+    XAML TEST
         <wv2:WebView2 x:Name="webView">
             <wv2d:WebView2.Document>
                 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -17,11 +31,14 @@
                         <title>This is a test</title>
                     </head>
                     <body>
-                        <h1 style="color: red;" onclick="h1_onclick"><!--Hello, World!--></h1>
-                        <p><!--Hello, indeed.--></p>
+                        <h1 style="color: red;" onclick="h1_onclick">
+                            Hello, World!
+                        </h1>
+                        <p>
+                            Hello, indeed.
+                        </p>
                     </body>
                 </html>
             </wv2d:WebView2.Document>
         </wv2:WebView2>
-    </Grid>
-</Window>
+-->
