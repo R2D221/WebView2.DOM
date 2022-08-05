@@ -9,72 +9,10 @@ namespace WebView2.DOM
 	{
 		private protected JsObject() { }
 
-		//		~JsObject()
-		//		{
-		//			try
-		//			{
-		//				var syncContext = coreWebView.GetSynchronizationContext();
-		//				if (syncContext == SynchronizationContext.Current)
-		//				{
-		//					f(coreWebView, referenceId);
-		//				}
-		//				else
-		//				{
-		////#error esto no me gusta
-		//					syncContext.Post(
-		//						state: Tuple.Create(coreWebView, referenceId),
-		//						d: static x =>
-		//						{
-		//#pragma warning disable CS8600 // Se va a convertir un literal nulo o un posible valor nulo en un tipo que no acepta valores NULL
-		//							var tuple = (Tuple<CoreWebView2, string>)x;
-		//#pragma warning restore CS8600 // Se va a convertir un literal nulo o un posible valor nulo en un tipo que no acepta valores NULL
-
-		//							(var coreWebView, var referenceId) = tuple;
-
-		//							f(coreWebView, referenceId);
-		//						});
-		//				}
-
-		//				static async void f(CoreWebView2 coreWebView, string referenceId)
-		//				{
-		//					try
-		//					{
-		//						_ = await coreWebView.ExecuteScriptAsync($@"
-		//							(() => {{
-		//								WebView2DOM.RemoveId('{referenceId}');
-		//							}})()
-		//						");
-		//					}
-		//					catch
-		//					{
-		//						// Don't want bad things to happen
-		//					}
-		//				}
-		//			}
-		//			catch
-		//			{
-		//				// Don't want bad things to happen
-		//			}
-		//		}
-
-		private protected JsExecutionContext.CSharpSide executionContext
-		{
-			get
-			{
-				var x = BrowsingContext.Current.RunningExecutionContext?.CSharp;
-
-				if (x is null)
-				{
-					Debugger.Break();
-
-					throw new InvalidOperationException();
-				}
-				else
-				{
-					return x;
-				}
-			}
-		}
+		private protected static JsExecutionContext.CSharpSide executionContext =>
+			BrowsingContext.Current.RunningExecutionContext?.CSharp
+			??
+			throw new InvalidOperationException();
 
 		internal void Construct(params object?[] args)
 		{
@@ -159,7 +97,7 @@ namespace WebView2.DOM
 
 			public void Invoke(params object?[] args)
 			{
-				@this.executionContext.InvokeVoid(@this, method, args);
+				executionContext.InvokeVoid(@this, method, args);
 			}
 		}
 
@@ -174,7 +112,7 @@ namespace WebView2.DOM
 
 			public T Invoke(params object?[] args)
 			{
-				return @this.executionContext.Invoke<T>(@this, method, args);
+				return executionContext.Invoke<T>(@this, method, args);
 			}
 		}
 
@@ -189,7 +127,7 @@ namespace WebView2.DOM
 
 			public T Invoke(params object?[] args)
 			{
-				return @this.executionContext.SymbolInvoke<T>(@this, method, args);
+				return executionContext.SymbolInvoke<T>(@this, method, args);
 			}
 		}
 	}

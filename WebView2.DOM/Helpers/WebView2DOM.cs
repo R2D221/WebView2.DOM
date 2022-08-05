@@ -66,6 +66,7 @@ namespace WebView2.DOM
 
 					const objToId = new WeakMap();
 					const idToObj = {{}};
+					const refsHeldInCSharp = new Set();
 
 					const idToCallback = {{}};
 
@@ -73,7 +74,7 @@ namespace WebView2.DOM
 
 					const registry = new FinalizationRegistry(id =>
 					{{
-						//Coordinator.{nameof(BrowsingContext._HostObject.References_Remove)}(id);
+						Coordinator.{nameof(BrowsingContext._HostObject.Forget)}(id);
 					}});
 
 					const callbackRegistry = new FinalizationRegistry(id =>
@@ -92,8 +93,8 @@ namespace WebView2.DOM
 						}}
 
 						objToId.set(obj, newId);
-						idToObj[newId] = obj;
-						registry.register(obj, newId);
+						idToObj[newId] = new WeakRef(obj);
+						registry.register(obj, newId, obj);
 					}};
 
 					x.GetId = function (obj)
@@ -107,7 +108,7 @@ namespace WebView2.DOM
 
 						if (existingId != null)
 						{{
-							idToObj[existingId] = obj;
+							idToObj[existingId] = new WeakRef(obj);
 							return existingId;
 						}}
 
@@ -123,8 +124,8 @@ namespace WebView2.DOM
 						//}}
 
 						objToId.set(obj, newId);
-						idToObj[newId] = obj;
-						registry.register(obj, newId);
+						idToObj[newId] = new WeakRef(obj);
+						registry.register(obj, newId, obj);
 						return newId;
 					}};
 
@@ -136,19 +137,37 @@ namespace WebView2.DOM
 						objToId.delete(obj);
 						delete idToObj[id];
 						registry.unregister(obj);
-					}}
+						refsHeldInCSharp.delete(obj);
+					}};
+
+					x.ForgetId = function (id)
+					{{
+						const obj = WebView2DOM.GetObject(id);
+
+						delete idToObj[id];
+
+						if (obj == null) {{ return; }}
+
+						objToId.delete(obj);
+						registry.unregister(obj);
+						refsHeldInCSharp.delete(obj);
+					}};
 
 					x.GetObject = function (id)
 					{{
 						if (id == null) {{ return null; }}
-						if (idToObj[id] == null) {{ return null; }}
-						return idToObj[id];
-					}};
 
-					x.RemoveId = function (id)
-					{{
-						var obj = idToObj[id];
-						delete idToObj[id];
+						var weakRef = idToObj[id];
+						if (weakRef == null) {{ return null; }}
+
+						var obj = weakRef.deref();
+						if (obj == null)
+						{{
+							//alert('Something is wrong');
+							return null;
+						}}
+
+						return obj;
 					}};
 
 					x.ExtendPromise = function (promise)
@@ -223,10 +242,15 @@ namespace WebView2.DOM
 						else if (obj instanceof Promise)
 						{{
 							obj = WebView2DOM.ExtendPromise(obj);
+
+							refsHeldInCSharp.add(obj);
+
 							return {{ referenceId: WebView2DOM.GetId(obj), referenceType: obj.constructor.name }};
 						}}
 						else if (obj != null && typeof obj === 'object' && Object.getPrototypeOf(obj) !== Object.prototype)
 						{{
+							refsHeldInCSharp.add(obj);
+
 							if (obj instanceof HTMLInputElement)
 							{{
 								return {{ referenceId: WebView2DOM.GetId(obj), referenceType: obj.constructor.name + '+' + obj.type.replace('-', '_') }};
@@ -238,6 +262,8 @@ namespace WebView2.DOM
 						}}
 						else if (obj != null && typeof obj === 'object' && obj[Symbol.toStringTag] != null)
 						{{
+							refsHeldInCSharp.add(obj);
+
 							return {{ referenceId: WebView2DOM.GetId(obj), referenceType: obj[Symbol.toStringTag] }};
 						}}
 						else if (obj != null && typeof obj === 'object' && Object.getPrototypeOf(obj) === Object.prototype)
@@ -334,6 +360,7 @@ namespace WebView2.DOM
 									(() => {{
 										const typeName = current.{nameof(BrowsingContext.Request.Constructor.typeName)};
 										const result = new window[typeName](...WebView2DOM.post_parse(current.{nameof(BrowsingContext.Request.Constructor.args)}));
+										refsHeldInCSharp.add(result);
 										Coordinator.{nameof(BrowsingContext._HostObject.ReturnValue)}(
 											WebView2DOM.GetId(result)
 										);

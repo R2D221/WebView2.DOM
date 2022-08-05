@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Tact;
 using Tact.Reflection;
@@ -39,8 +40,20 @@ namespace WebView2.DOM
 				type => type
 			);
 
-		private static readonly ConditionalWeakTable<JsObject, string> objToId = new();
-		private static readonly ConcurrentDictionary<string, WeakReference<JsObject>> idToObj = new();
+		private static readonly ConditionalWeakTable<JsObject, string>
+			objToId = new();
+		private static readonly ConcurrentDictionary<string, WeakReference<JsObject>>
+			idToObj = new();
+		private static readonly FinalizationRegistry<JsObject, (IWebView2 webView, string referenceId)>
+			registry = new(x =>
+			{
+				x.webView.InvokeAsync(() =>
+				{
+					_ =
+						x.webView.GetCoreWebView2()
+						.ExecuteScriptAsync($"WebView2DOM.ForgetId({JsonSerializer.Serialize(x.referenceId)})");
+				});
+			});
 
 		public static TJsObject Load<TJsObject>(string referenceId, string typeName)
 			where TJsObject : JsObject
@@ -74,6 +87,7 @@ namespace WebView2.DOM
 				weakRef.SetTarget(target);
 
 				objToId.Add(target, referenceId);
+				registry.Register(target, (BrowsingContext.Current.webView, referenceId));
 			}
 
 			return (TJsObject)target;
@@ -102,6 +116,23 @@ namespace WebView2.DOM
 			var id = GetId(obj);
 			_ = objToId.Remove(obj);
 			_ = idToObj.TryRemove(id, out _);
+			registry.Unregister(obj);
+		}
+
+		public static void Forget(string referenceId)
+		{
+			if (!idToObj.TryRemove(referenceId, out var weakRef))
+			{
+				return;
+			}
+
+			if (weakRef.TryGetTarget(out var target))
+			{
+				Debugger.Break();
+
+				_ = objToId.Remove(target);
+				registry.Unregister(target);
+			}
 		}
 	}
 

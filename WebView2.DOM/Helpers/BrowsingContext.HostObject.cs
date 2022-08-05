@@ -43,14 +43,14 @@ namespace WebView2.DOM
 			{
 				_ = Flow.JavaScriptStart;
 
-				var eventTarget = JsonSerializer.Deserialize<EventTarget>(eventTargetJson, JSON.Options);
-				var args = JsonSerializer.Deserialize<Event>(argsJson, JSON.Options);
-
 				RunBothLoops(
-					state: Pool.Box((eventTarget, @event, args)),
+					state: Pool.Box((eventTargetJson, @event, argsJson)),
 					d: static obj =>
 					{
-						var (eventTarget, @event, args) = Pool.UnboxAndReturn<(EventTarget, string, Event)>(obj);
+						var (eventTargetJson, @event, argsJson) = Pool.UnboxAndReturn<(string, string, string)>(obj);
+
+						var eventTarget = JsonSerializer.Deserialize<EventTarget>(eventTargetJson, JSON.Options) ?? throw new Exception();
+						var args = JsonSerializer.Deserialize<Event>(argsJson, JSON.Options) ?? throw new Exception();
 
 						Events.Raise(eventTarget, @event, args);
 
@@ -194,7 +194,8 @@ namespace WebView2.DOM
 				Callbacks.Forget(callbackId);
 			}
 
-			public void References_Remove() => throw new NotImplementedException();
+			public void Forget(string referenceId) =>
+				References2.Forget(referenceId);
 		}
 	}
 }
