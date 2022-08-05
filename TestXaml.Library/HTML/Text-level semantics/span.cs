@@ -9,7 +9,8 @@ namespace WebView2.Markup
 	[ContentProperty(nameof(spanChildNodes))]
 	public sealed class span : HTMLElement, PhrasingContent, addressContent, header_footer_Content, dtContent
 	{
-		public PhrasingContentNodeList spanChildNodes { get; } = new();
+		public span() { spanChildNodes = new(this); }
+		public PhrasingContentNodeList spanChildNodes { get; }
 		public override NodeList childNodes => spanChildNodes;
 	}
 }

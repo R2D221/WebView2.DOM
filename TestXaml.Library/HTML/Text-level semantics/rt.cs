@@ -7,10 +7,11 @@ namespace WebView2.Markup
 	/// ruby element, it doesn't represent anything itself, but the ruby element uses it as part of
 	/// determining what it represents.
 	/// </summary>
-	[ContentProperty(nameof(pChildNodes))]
+	[ContentProperty(nameof(rtChildNodes))]
 	public sealed class rt : HTMLElement
 	{
-		public PhrasingContentNodeList pChildNodes { get; } = new();
-		public override NodeList childNodes => pChildNodes;
+		public rt() { rtChildNodes = new(this); }
+		public PhrasingContentNodeList rtChildNodes { get; }
+		public override NodeList childNodes => rtChildNodes;
 	}
 }

@@ -12,7 +12,9 @@ namespace WebView2.Markup
 	[ContentProperty(nameof(rubyChildNodes))]
 	public sealed class ruby : HTMLElement, PhrasingContent, addressContent, header_footer_Content, dtContent
 	{
-		public rubyNodeList rubyChildNodes { get; } = new();
+//#error Test this
+		public ruby() { rubyChildNodes = new(this); }
+		public rubyNodeList rubyChildNodes { get; }
 		public override NodeList childNodes => rubyChildNodes;
 
 #warning ruby content model:
@@ -33,6 +35,8 @@ namespace WebView2.Markup
 		[WhitespaceSignificantCollection]
 		public sealed class rubyNodeList : NodeList
 		{
+			public rubyNodeList(Node owner) : base(owner) { }
+
 			public void Add(PhrasingContent node) => _ = ((IList)this).Add(node);
 
 			protected override bool Validate(Node node)

@@ -9,7 +9,8 @@ namespace WebView2.Markup
 	[ContentProperty(nameof(figcaptionChildNodes))]
 	public sealed class figcaption : HTMLElement
 	{
-		public FlowContentNodeList figcaptionChildNodes { get; } = new();
+		public figcaption() { figcaptionChildNodes = new(this); }
+		public FlowContentNodeList figcaptionChildNodes { get; }
 		public override NodeList childNodes => figcaptionChildNodes;
 	}
 }

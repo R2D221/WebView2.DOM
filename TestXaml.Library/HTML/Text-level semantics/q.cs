@@ -9,7 +9,8 @@ namespace WebView2.Markup
 	[ContentProperty(nameof(qChildNodes))]
 	public sealed class q : HTMLElement, PhrasingContent, addressContent, header_footer_Content, dtContent
 	{
-		public PhrasingContentNodeList qChildNodes { get; } = new();
+		public q() { qChildNodes = new(this); }
+		public PhrasingContentNodeList qChildNodes { get; }
 		public override NodeList childNodes => qChildNodes;
 
 		/// <summary>

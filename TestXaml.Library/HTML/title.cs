@@ -6,7 +6,8 @@ namespace WebView2.Markup
 	[ContentProperty(nameof(text))]
 	public sealed class title : HTMLElement, MetadataContent
 	{
-		public override NodeList childNodes { get; } = new TextNodeList();
+		public title() { childNodes = new TextNodeList(this); }
+		public override NodeList childNodes { get; }
 
 		public string text
 		{

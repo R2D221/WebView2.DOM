@@ -10,7 +10,8 @@ namespace WebView2.Markup
 	[ContentProperty(nameof(bdoChildNodes))]
 	public sealed class bdo : HTMLElement, PhrasingContent, addressContent, header_footer_Content, dtContent
 	{
-		public PhrasingContentNodeList bdoChildNodes { get; } = new();
+		public bdo() { bdoChildNodes = new(this); }
+		public PhrasingContentNodeList bdoChildNodes { get; }
 		public override NodeList childNodes => bdoChildNodes;
 	}
 }

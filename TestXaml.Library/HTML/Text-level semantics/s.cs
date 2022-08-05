@@ -8,7 +8,8 @@ namespace WebView2.Markup
 	[ContentProperty(nameof(sChildNodes))]
 	public sealed class s : HTMLElement, PhrasingContent, addressContent, header_footer_Content, dtContent
 	{
-		public PhrasingContentNodeList sChildNodes { get; } = new();
+		public s() { sChildNodes = new(this); }
+		public PhrasingContentNodeList sChildNodes { get; }
 		public override NodeList childNodes => sChildNodes;
 	}
 }

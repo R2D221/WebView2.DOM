@@ -10,7 +10,8 @@ namespace WebView2.Markup
 	[ContentProperty(nameof(articleChildNodes))]
 	public sealed class article : HTMLElement, FlowContent, SectioningContent, header_footer_Content
 	{
-		public FlowContentNodeList articleChildNodes { get; } = new();
+		public article() { articleChildNodes = new(this); }
+		public FlowContentNodeList articleChildNodes { get; }
 		public override NodeList childNodes => articleChildNodes;
 	}
 }

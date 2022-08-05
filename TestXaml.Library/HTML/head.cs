@@ -7,11 +7,14 @@ namespace WebView2.Markup
 	[ContentProperty(nameof(headChildNodes))]
 	public sealed class head : HTMLElement, head_or_body
 	{
-		public headNodeList headChildNodes { get; } = new();
+		public head() { headChildNodes = new(this); }
+		public headNodeList headChildNodes { get; }
 		public override NodeList childNodes => headChildNodes;
 
 		public sealed class headNodeList : NodeList
 		{
+			public headNodeList(Node owner) : base(owner) { }
+
 			public void Add(MetadataContent node) => _ = ((IList)this).Add(node);
 
 			protected override bool Validate(Node node)

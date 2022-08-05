@@ -10,7 +10,8 @@ namespace WebView2.Markup
 	[ContentProperty(nameof(timeChildNodes))]
 	public sealed class time : HTMLElement, PhrasingContent, addressContent, header_footer_Content, dtContent
 	{
-		public PhrasingContentNodeList timeChildNodes { get; } = new();
+		public time() { timeChildNodes = new(this); }
+		public PhrasingContentNodeList timeChildNodes { get; }
 		public override NodeList childNodes => timeChildNodes;
 
 		/// <summary>

@@ -9,7 +9,8 @@ namespace WebView2.Markup
 	[ContentProperty(nameof(dfnChildNodes))]
 	public sealed class dfn : HTMLElement, PhrasingContent, addressContent, header_footer_Content, dtContent
 	{
-		public PhrasingContentNodeList dfnChildNodes { get; } = new();
+		public dfn() { dfnChildNodes = new(this); }
+		public PhrasingContentNodeList dfnChildNodes { get; }
 		public override NodeList childNodes => dfnChildNodes;
 
 		#warning Content model: Phrasing content, but there must be no dfn element descendants.

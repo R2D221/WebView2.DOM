@@ -8,7 +8,8 @@ namespace WebView2.Markup
 	[ContentProperty(nameof(navChildNodes))]
 	public sealed class nav : HTMLElement, FlowContent, SectioningContent, header_footer_Content
 	{
-		public FlowContentNodeList navChildNodes { get; } = new();
+		public nav() { navChildNodes = new(this); }
+		public FlowContentNodeList navChildNodes { get; }
 		public override NodeList childNodes => navChildNodes;
 	}
 }

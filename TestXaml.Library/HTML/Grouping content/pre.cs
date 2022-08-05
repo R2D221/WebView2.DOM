@@ -9,7 +9,8 @@ namespace WebView2.Markup
 	[ContentProperty(nameof(preChildNodes))]
 	public sealed class pre : HTMLElement, FlowContent, addressContent, header_footer_Content, dtContent
 	{
-		public PhrasingContentNodeList preChildNodes { get; } = new();
+		public pre() { preChildNodes = new(this); }
+		public PhrasingContentNodeList preChildNodes { get; }
 		public override NodeList childNodes => preChildNodes;
 	}
 }

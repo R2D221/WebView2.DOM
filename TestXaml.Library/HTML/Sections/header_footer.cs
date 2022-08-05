@@ -9,6 +9,8 @@ namespace WebView2.Markup
 	[WhitespaceSignificantCollection]
 	public sealed class header_footer_NodeList : NodeList
 	{
+		public header_footer_NodeList(Node owner) : base(owner) { }
+
 		public void Add(header_footer_Content node) => _ = ((IList)this).Add(node);
 
 		protected override bool Validate(Node node)

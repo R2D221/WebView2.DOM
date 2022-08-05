@@ -11,13 +11,16 @@ namespace WebView2.Markup
 	[ContentProperty(nameof(dtChildNodes))]
 	public sealed class dt : HTMLElement, dlContent
 	{
-		public dtNodeList dtChildNodes { get; } = new();
+		public dt() { dtChildNodes = new(this); }
+		public dtNodeList dtChildNodes { get; }
 		public override NodeList childNodes => dtChildNodes;
 
 		[ContentWrapper(typeof(Text))]
 		[WhitespaceSignificantCollection]
 		public sealed class dtNodeList : NodeList
 		{
+			public dtNodeList(Node owner) : base(owner) { }
+
 			public void Add(dtContent node) => _ = ((IList)this).Add(node);
 
 			protected override bool Validate(Node node)

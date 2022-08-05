@@ -15,11 +15,14 @@ namespace WebView2.Markup
 	[ContentProperty(nameof(dlChildNodes))]
 	public sealed class dl : HTMLElement, FlowContent, addressContent, header_footer_Content, dtContent
 	{
-		public dlNodeList dlChildNodes { get; } = new();
+		public dl() { dlChildNodes = new(this); }
+		public dlNodeList dlChildNodes { get; }
 		public override NodeList childNodes => dlChildNodes;
 
 		public sealed class dlNodeList : NodeList
 		{
+			public dlNodeList(Node owner) : base(owner) { }
+
 			public void Add(dlContent node) => _ = ((IList)this).Add(node);
 
 			protected override bool Validate(Node node)

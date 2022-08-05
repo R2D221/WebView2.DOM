@@ -9,7 +9,8 @@ namespace WebView2.Markup
 	[ContentProperty(nameof(bdiChildNodes))]
 	public sealed class bdi : HTMLElement, PhrasingContent, addressContent, header_footer_Content, dtContent
 	{
-		public PhrasingContentNodeList bdiChildNodes { get; } = new();
+		public bdi() { bdiChildNodes = new(this); }
+		public PhrasingContentNodeList bdiChildNodes { get; }
 		public override NodeList childNodes => bdiChildNodes;
 	}
 }

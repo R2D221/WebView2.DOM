@@ -9,7 +9,8 @@ namespace WebView2.Markup
 	[ContentProperty(nameof(blockquoteChildNodes))]
 	public sealed class blockquote : HTMLElement, FlowContent, addressContent, header_footer_Content, dtContent
 	{
-		public FlowContentNodeList blockquoteChildNodes { get; } = new();
+		public blockquote() { blockquoteChildNodes = new(this); }
+		public FlowContentNodeList blockquoteChildNodes { get; }
 		public override NodeList childNodes => blockquoteChildNodes;
 
 		/// <summary>

@@ -11,7 +11,8 @@ namespace WebView2.Markup
 	[ContentProperty(nameof(figureChildNodes))]
 	public sealed class figure : HTMLElement, FlowContent, addressContent, header_footer_Content, dtContent
 	{
-		public figureNodeList figureChildNodes { get; } = new();
+		public figure() { figureChildNodes = new(this); }
+		public figureNodeList figureChildNodes { get; }
 		public override NodeList childNodes => figureChildNodes;
 
 		[ContentWrapper(typeof(Text))]
@@ -19,6 +20,8 @@ namespace WebView2.Markup
 		[WhitespaceSignificantCollection]
 		public sealed class figureNodeList : NodeList
 		{
+			public figureNodeList(Node owner) : base(owner) { }
+
 			public void Add(FlowContent node) => _ = ((IList)this).Add(node);
 
 			protected override bool Validate(Node node)

@@ -15,7 +15,8 @@ namespace WebView2.Markup
 	[ContentProperty(nameof(markChildNodes))]
 	public sealed class mark : HTMLElement, PhrasingContent, addressContent, header_footer_Content, dtContent
 	{
-		public PhrasingContentNodeList markChildNodes { get; } = new();
+		public mark() { markChildNodes = new(this); }
+		public PhrasingContentNodeList markChildNodes { get; }
 		public override NodeList childNodes => markChildNodes;
 	}
 }

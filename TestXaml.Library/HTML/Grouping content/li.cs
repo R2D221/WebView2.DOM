@@ -11,7 +11,8 @@ namespace WebView2.Markup
 	[ContentProperty(nameof(liChildNodes))]
 	public sealed class li : HTMLElement
 	{
-		public FlowContentNodeList liChildNodes { get; } = new();
+		public li() { liChildNodes = new(this); }
+		public FlowContentNodeList liChildNodes { get; }
 		public override NodeList childNodes => liChildNodes;
 
 		/// <summary>

@@ -10,7 +10,8 @@ namespace WebView2.Markup
 	[ContentProperty(nameof(varChildNodes))]
 	public sealed class var : HTMLElement, PhrasingContent, addressContent, header_footer_Content, dtContent
 	{
-		public PhrasingContentNodeList varChildNodes { get; } = new();
+		public var() { varChildNodes = new(this); }
+		public PhrasingContentNodeList varChildNodes { get; }
 		public override NodeList childNodes => varChildNodes;
 	}
 }

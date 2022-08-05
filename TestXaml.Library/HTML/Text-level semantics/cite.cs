@@ -11,7 +11,8 @@ namespace WebView2.Markup
 	[ContentProperty(nameof(citeChildNodes))]
 	public sealed class cite : HTMLElement, PhrasingContent, addressContent, header_footer_Content, dtContent
 	{
-		public PhrasingContentNodeList citeChildNodes { get; } = new();
+		public cite() { citeChildNodes = new(this); }
+		public PhrasingContentNodeList citeChildNodes { get; }
 		public override NodeList childNodes => citeChildNodes;
 	}
 }

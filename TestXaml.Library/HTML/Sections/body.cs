@@ -8,7 +8,8 @@ namespace WebView2.Markup
 	[ContentProperty(nameof(bodyChildNodes))]
 	public sealed class body : HTMLElement, head_or_body
 	{
-		public FlowContentNodeList bodyChildNodes { get; } = new();
+		public body() { bodyChildNodes = new(this); }
+		public FlowContentNodeList bodyChildNodes { get; }
 		public override NodeList childNodes => bodyChildNodes;
 	}
 }

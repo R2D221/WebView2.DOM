@@ -10,7 +10,8 @@ namespace WebView2.Markup
 	[ContentProperty(nameof(text))]
 	public sealed class rp : HTMLElement
 	{
-		public override NodeList childNodes { get; } = new TextNodeList();
+		public rp() { childNodes = new TextNodeList(this); }
+		public override NodeList childNodes { get; }
 
 		public string text
 		{

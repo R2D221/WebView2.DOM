@@ -9,7 +9,8 @@ namespace WebView2.Markup
 	[ContentProperty(nameof(ulChildNodes))]
 	public sealed class ul : HTMLElement, FlowContent, addressContent, header_footer_Content, dtContent
 	{
-		public ol_ul_NodeList ulChildNodes { get; } = new();
+		public ul() { ulChildNodes = new(this); }
+		public ol_ul_NodeList ulChildNodes { get; }
 		public override NodeList childNodes => ulChildNodes;
 	}
 }

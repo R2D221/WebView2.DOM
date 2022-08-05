@@ -9,7 +9,8 @@ namespace WebView2.Markup
 	[ContentProperty(nameof(kbdChildNodes))]
 	public sealed class kbd : HTMLElement, PhrasingContent, addressContent, header_footer_Content, dtContent
 	{
-		public PhrasingContentNodeList kbdChildNodes { get; } = new();
+		public kbd() { kbdChildNodes = new(this); }
+		public PhrasingContentNodeList kbdChildNodes { get; }
 		public override NodeList childNodes => kbdChildNodes;
 	}
 }

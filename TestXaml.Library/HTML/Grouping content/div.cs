@@ -10,7 +10,8 @@ namespace WebView2.Markup
 	[ContentProperty(nameof(divChildNodes))]
 	public sealed class div : HTMLElement, FlowContent, addressContent, header_footer_Content, dlContent, dtContent
 	{
-		public FlowContentNodeList divChildNodes { get; } = new();
+		public div() { divChildNodes = new(this); }
+		public FlowContentNodeList divChildNodes { get; }
 		public override NodeList childNodes => divChildNodes;
 
 		// The spec says that if div is a child of dl, it can only receive dt and dd elements.

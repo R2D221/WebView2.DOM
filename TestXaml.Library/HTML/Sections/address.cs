@@ -12,13 +12,16 @@ namespace WebView2.Markup
 	[ContentProperty(nameof(addressChildNodes))]
 	public sealed class address : HTMLElement, FlowContent, header_footer_Content, dtContent
 	{
-		public addressNodeList addressChildNodes { get; } = new();
+		public address() { addressChildNodes = new(this); }
+		public addressNodeList addressChildNodes { get; }
 		public override NodeList childNodes => addressChildNodes;
 
 		[ContentWrapper(typeof(Text))]
 		[WhitespaceSignificantCollection]
 		public sealed class addressNodeList : NodeList
 		{
+			public addressNodeList(Node owner) : base(owner) { }
+
 			public void Add(addressContent node) => _ = ((IList)this).Add(node);
 
 			protected override bool Validate(Node node)

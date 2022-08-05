@@ -8,7 +8,8 @@ namespace WebView2.Markup
 	[ContentProperty(nameof(ddChildNodes))]
 	public sealed class dd : HTMLElement, dlContent
 	{
-		public FlowContentNodeList ddChildNodes { get; } = new();
+		public dd() { ddChildNodes = new(this); }
+		public FlowContentNodeList ddChildNodes { get; }
 		public override NodeList childNodes => ddChildNodes;
 	}
 }

@@ -6,13 +6,16 @@ namespace WebView2.Markup
 	[ContentProperty(nameof(hgroupChildNodes))]
 	public sealed class hgroup : HTMLElement, FlowContent, HeadingContent, header_footer_Content
 	{
-		public hgroupNodeList hgroupChildNodes { get; } = new();
+		public hgroup() { hgroupChildNodes = new(this); }
+		public hgroupNodeList hgroupChildNodes { get; }
 		public override NodeList childNodes => hgroupChildNodes;
 
 		public class hgroupNodeList : NodeList
 		{
 			// The spec says the content model for hgroup can be “optionally intermixed with script-supporting elements”,
 			// but I don't see the point of adding them.
+
+			public hgroupNodeList(Node owner) : base(owner) { }
 
 			public void Add(HTMLHeadingElement node) => _ = ((IList)this).Add(node);
 

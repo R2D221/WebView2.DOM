@@ -9,7 +9,8 @@ namespace WebView2.Markup
 	[ContentProperty(nameof(codeChildNodes))]
 	public sealed class code : HTMLElement, PhrasingContent, addressContent, header_footer_Content, dtContent
 	{
-		public PhrasingContentNodeList codeChildNodes { get; } = new();
+		public code() { codeChildNodes = new(this); }
+		public PhrasingContentNodeList codeChildNodes { get; }
 		public override NodeList childNodes => codeChildNodes;
 	}
 }

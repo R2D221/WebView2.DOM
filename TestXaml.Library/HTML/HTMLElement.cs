@@ -25,10 +25,18 @@ namespace WebView2.Markup
 		}
 	}
 
-	[DebuggerDisplay("{DebuggerDisplay,nq}")]
+	//[DebuggerDisplay("{DebuggerDisplay,nq}")]
 	[XmlLangProperty(nameof(lang))]
 	public abstract class HTMLElement : Element
 	{
+		public HTMLElement()
+		{
+			//if (NodeList.IsRunningInVisualStudioDesigner)
+			//{
+			//	_ = System.Windows.MessageBox.Show($"new {GetType().Name}()");
+			//}
+		}
+
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
 		public override string namespaceURI => "http://www.w3.org/1999/xhtml";
 

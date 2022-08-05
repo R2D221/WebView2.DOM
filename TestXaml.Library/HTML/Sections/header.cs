@@ -8,7 +8,8 @@ namespace WebView2.Markup
 	[ContentProperty(nameof(headerChildNodes))]
 	public sealed class header : HTMLElement, FlowContent
 	{
-		public header_footer_NodeList headerChildNodes { get; } = new();
+		public header() { headerChildNodes = new(this); }
+		public header_footer_NodeList headerChildNodes { get; }
 		public override NodeList childNodes => headerChildNodes;
 	}
 }
