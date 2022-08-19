@@ -2,7 +2,6 @@
 using NodaTime.Extensions;
 using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Threading;
 
 namespace WebView2.DOM.Sample
@@ -23,7 +22,6 @@ namespace WebView2.DOM.Sample
 
 		private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
 		{
-			return;
 			await webView.EnsureCoreWebView2Async();
 			await WebView2DOM.InitAsync(webView);
 			webView.CoreWebView2.DOMContentLoaded += async (s, e) =>
@@ -32,26 +30,82 @@ namespace WebView2.DOM.Sample
 			};
 			webView.NavigateToString(@"
 				<h1>Welcome to C# DOM</h1>
+				<p id='mouse-coords'>Mouse coords: (<span id='x'></span>, <span id='y'></span>)</p>
 				<p>The current time is <span id='current-time'></span></p>
 				<p>requestAnimationFrame FPS (called from C#) is <span id='fps'></span></p>
 				<p>
-					<button id='jsAlertButton'>(JS) Show alert</button>
+					<button id='jsAlertButton'>(JS) window.alert</button>
 					<br />
-					<button id='csAlertButton'>(C#) Change window size</button>
+					<button id='csAlertButton'>(C#) MessageBox.Show</button>
 				</p>
 			");
 		}
 
 		private void DOMContentLoaded(WebView2.DOM.Window window)
 		{
-			var jsAlertButton = (HTMLButtonElement)window.document.getElementById("jsAlertButton");
-			var csAlertButton = (HTMLButtonElement)window.document.getElementById("csAlertButton");
+			var document = window.document;
 
-			jsAlertButton.onclick += JsAlertButton_onclick;
-			csAlertButton.onclick += CsAlertButton_onclick;
+			InitMouseEvent(document);
+			InitButtonClicks(document);
+			InitAnimationLoop(document);
+		}
 
-			var currentTime_span = (HTMLElement)window.document.getElementById("current-time");
-			var fps = (HTMLElement)window.document.getElementById("fps");
+		private void InitMouseEvent(Document document)
+		{
+			var mouse_coords = document.getElementById("mouse-coords") as HTMLParagraphElement;
+			var x = document.getElementById("x") as HTMLSpanElement;
+			var y = document.getElementById("y") as HTMLSpanElement;
+
+			if (mouse_coords is null) { throw new KeyNotFoundException(); }
+			if (x is null) { throw new KeyNotFoundException(); }
+			if (y is null) { throw new KeyNotFoundException(); }
+
+			mouse_coords.style.position = "absolute";
+
+			window.onmousemove += (s, e) =>
+			{
+				mouse_coords.style.top = $"{e.y}";
+				mouse_coords.style.left = $"{e.x}";
+
+				x.innerText = $"{e.x}";
+				y.innerText = $"{e.y}";
+			};
+		}
+
+		private void InitButtonClicks(Document document)
+		{
+			var jsAlertButton = document.getElementById("jsAlertButton") as HTMLButtonElement;
+			var csAlertButton = document.getElementById("csAlertButton") as HTMLButtonElement;
+
+			if (jsAlertButton is null) { throw new KeyNotFoundException(); }
+			if (csAlertButton is null) { throw new KeyNotFoundException(); }
+
+			jsAlertButton.onclick += (s, e) =>
+			{
+				window.alert("Hello! You invoked window.alert()");
+			};
+
+			csAlertButton.onclick += async (s, e) =>
+			{
+				/*
+				Never NEVER use Dispatcher.Invoke() while in the browsing context.
+				I'll break your knees if you do.
+				*/
+
+				await Dispatcher.InvokeAsync(() =>
+				{
+					_ = MessageBox.Show("Hello! You invoked MessageBox.Show()");
+				});
+			};
+		}
+
+		private void InitAnimationLoop(Document document)
+		{
+			var currentTime_span = document.getElementById("current-time") as HTMLElement;
+			var fps = document.getElementById("fps") as HTMLElement;
+
+			if (currentTime_span is null) { throw new KeyNotFoundException(); }
+			if (fps is null) { throw new KeyNotFoundException(); }
 
 			callback(Duration.Zero);
 			void callback(Duration timestamp)
@@ -59,43 +113,8 @@ namespace WebView2.DOM.Sample
 				currentTime_span.innerText = GetCurrentDateTime();
 				fps.innerText = $"{calculateFps(timestamp)}";
 
-				_ = window.requestAnimationFrame(callback);
+				_ = window.requestAnimationFrame(x => callback(x));
 			}
-		}
-
-		private void JsAlertButton_onclick(object sender, MouseEvent e)
-		{
-			window.alert("Hello! You invoked window.alert()");
-		}
-
-		/*
-		 * I disabled this method because, now with the new Dispatch.PushFrame mechanism, sending an InvokeAsync
-		 * from within the browser context makes the web view hang for several seconds, which the component then
-		 * interprets as a CoreWebView2ProcessFailedReason.Unresponsive event.
-		 * I'm trying to see if there's a way to disable this timeout, but for now it's best not to invoke anything
-		 * that takes several seconds from within the browser context.
-		 */
-		//private async void CsAlertButton_onclick(object sender, MouseEvent e)
-		//{
-		//	var result = await Dispatcher.InvokeAsync(() => MessageBox.Show("Hello! You invoked MessageBox.Show()"));
-
-		//	switch (result)
-		//	{
-		//	case MessageBoxResult.OK: Debugger.Break(); break;
-		//	}
-		//}
-
-		private void CsAlertButton_onclick(object sender, MouseEvent e)
-		{
-			Dispatcher.Invoke(() =>
-			{
-				WindowState = WindowState switch
-				{
-					WindowState.Maximized => WindowState.Normal,
-					WindowState.Normal => WindowState.Maximized,
-					_ => WindowState.Minimized,
-				};
-			});
 		}
 
 		private static string GetCurrentDateTime() =>
@@ -104,8 +123,7 @@ namespace WebView2.DOM.Sample
 			.GetCurrentLocalDateTime()
 			.ToString("o", null);
 
-		private static readonly Queue<Duration> timestamps =
-			new Queue<Duration>();
+		private static readonly Queue<Duration> timestamps = new();
 
 		private static int calculateFps(Duration timestamp)
 		{
@@ -117,11 +135,6 @@ namespace WebView2.DOM.Sample
 			timestamps.Enqueue(timestamp);
 
 			return timestamps.Count;
-		}
-
-		private void h1_onclick(object sender, MouseEvent e)
-		{
-			window.alert("Hello from XAML!");
 		}
 	}
 }

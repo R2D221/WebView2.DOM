@@ -14,7 +14,7 @@
 /WebView2.DOM.Tests.NetCore3_1/obj
 /WebView2.DOM.Sample.NetFx/bin
 /WebView2.DOM.Sample.NetFx/obj
-/TestXaml.App/bin/Debug/net6.0-windows
+/TestXaml.App/bin
 /TestXaml.App/obj
-/TestXaml.Library/bin/Debug
+/TestXaml.Library/bin
 /TestXaml.Library/obj
