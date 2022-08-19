@@ -146,15 +146,15 @@ namespace WebView2.DOM
 		public static event EventHandler<AnimationEvent/*	*/>? onanimationend/*	*/{ add => Instance.AddEvent(value); remove => Instance.RemoveEvent(value); }
 		public static event EventHandler<AnimationEvent/*	*/>? onanimationiteration/*	*/{ add => Instance.AddEvent(value); remove => Instance.RemoveEvent(value); }
 		public static event EventHandler<AnimationEvent/*	*/>? onanimationstart/*	*/{ add => Instance.AddEvent(value); remove => Instance.RemoveEvent(value); }
-		public static event EventHandler<MouseEvent/*	*/>? onauxclick/*	*/{ add => Instance.AddEvent(value); remove => Instance.RemoveEvent(value); }
+		public static event EventHandler<PointerEvent/*	*/>? onauxclick/*	*/{ add => Instance.AddEvent(value); remove => Instance.RemoveEvent(value); }
 		public static event EventHandler<FocusEvent/*	*/>? onblur/*	*/{ add => Instance.AddEvent(value); remove => Instance.RemoveEvent(value); }
 		public static event EventHandler<Event/*	*/>? oncancel/*	*/{ add => Instance.AddEvent(value); remove => Instance.RemoveEvent(value); }
 		public static event EventHandler<Event/*	*/>? oncanplay/*	*/{ add => Instance.AddEvent(value); remove => Instance.RemoveEvent(value); }
 		public static event EventHandler<Event/*	*/>? oncanplaythrough/*	*/{ add => Instance.AddEvent(value); remove => Instance.RemoveEvent(value); }
 		public static event EventHandler<Event/*	*/>? onchange/*	*/{ add => Instance.AddEvent(value); remove => Instance.RemoveEvent(value); }
-		public static event EventHandler<MouseEvent/*	*/>? onclick/*	*/{ add => Instance.AddEvent(value); remove => Instance.RemoveEvent(value); }
+		public static event EventHandler<PointerEvent/*	*/>? onclick/*	*/{ add => Instance.AddEvent(value); remove => Instance.RemoveEvent(value); }
 		public static event EventHandler<Event/*	*/>? onclose/*	*/{ add => Instance.AddEvent(value); remove => Instance.RemoveEvent(value); }
-		public static event EventHandler<MouseEvent/*	*/>? oncontextmenu/*	*/{ add => Instance.AddEvent(value); remove => Instance.RemoveEvent(value); }
+		public static event EventHandler<PointerEvent/*	*/>? oncontextmenu/*	*/{ add => Instance.AddEvent(value); remove => Instance.RemoveEvent(value); }
 		public static event EventHandler<Event/*	*/>? oncuechange/*	*/{ add => Instance.AddEvent(value); remove => Instance.RemoveEvent(value); }
 		public static event EventHandler<MouseEvent/*	*/>? ondblclick/*	*/{ add => Instance.AddEvent(value); remove => Instance.RemoveEvent(value); }
 		public static event EventHandler<DragEvent/*	*/>? ondrag/*	*/{ add => Instance.AddEvent(value); remove => Instance.RemoveEvent(value); }

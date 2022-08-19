@@ -8,15 +8,15 @@ namespace WebView2.DOM
 		public event EventHandler<AnimationEvent/*	*/>? onanimationend/*	*/{ add => AddEvent(value); remove => RemoveEvent(value); }
 		public event EventHandler<AnimationEvent/*	*/>? onanimationiteration/*	*/{ add => AddEvent(value); remove => RemoveEvent(value); }
 		public event EventHandler<AnimationEvent/*	*/>? onanimationstart/*	*/{ add => AddEvent(value); remove => RemoveEvent(value); }
-		public event EventHandler<MouseEvent/*	*/>? onauxclick/*	*/{ add => AddEvent(value); remove => RemoveEvent(value); }
+		public event EventHandler<PointerEvent/*	*/>? onauxclick/*	*/{ add => AddEvent(value); remove => RemoveEvent(value); }
 		public event EventHandler<FocusEvent/*	*/>? onblur/*	*/{ add => AddEvent(value); remove => RemoveEvent(value); }
 		public event EventHandler<Event/*	*/>? oncancel/*	*/{ add => AddEvent(value); remove => RemoveEvent(value); }
 		public event EventHandler<Event/*	*/>? oncanplay/*	*/{ add => AddEvent(value); remove => RemoveEvent(value); }
 		public event EventHandler<Event/*	*/>? oncanplaythrough/*	*/{ add => AddEvent(value); remove => RemoveEvent(value); }
 		public event EventHandler<Event/*	*/>? onchange/*	*/{ add => AddEvent(value); remove => RemoveEvent(value); }
-		public event EventHandler<MouseEvent/*	*/>? onclick/*	*/{ add => AddEvent(value); remove => RemoveEvent(value); }
+		public event EventHandler<PointerEvent/*	*/>? onclick/*	*/{ add => AddEvent(value); remove => RemoveEvent(value); }
 		public event EventHandler<Event/*	*/>? onclose/*	*/{ add => AddEvent(value); remove => RemoveEvent(value); }
-		public event EventHandler<MouseEvent/*	*/>? oncontextmenu/*	*/{ add => AddEvent(value); remove => RemoveEvent(value); }
+		public event EventHandler<PointerEvent/*	*/>? oncontextmenu/*	*/{ add => AddEvent(value); remove => RemoveEvent(value); }
 		public event EventHandler<Event/*	*/>? oncuechange/*	*/{ add => AddEvent(value); remove => RemoveEvent(value); }
 		public event EventHandler<MouseEvent/*	*/>? ondblclick/*	*/{ add => AddEvent(value); remove => RemoveEvent(value); }
 		public event EventHandler<DragEvent/*	*/>? ondrag/*	*/{ add => AddEvent(value); remove => RemoveEvent(value); }

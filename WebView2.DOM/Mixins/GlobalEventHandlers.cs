@@ -3,6 +3,7 @@
 namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/dom/global_event_handlers.idl
+	// https://w3c.github.io/uievents/#event-types-list
 
 	public interface GlobalEventHandlers
 	{
@@ -12,9 +13,9 @@ namespace WebView2.DOM
 		event EventHandler<Event/*	*/>? oncanplay/*	*/;
 		event EventHandler<Event/*	*/>? oncanplaythrough/*	*/;
 		event EventHandler<Event/*	*/>? onchange/*	*/;
-		event EventHandler<MouseEvent/*	*/>? onclick/*	*/;
+		event EventHandler<PointerEvent/*	*/>? onclick/*	*/;
 		event EventHandler<Event/*	*/>? onclose/*	*/;
-		event EventHandler<MouseEvent/*	*/>? oncontextmenu/*	*/;
+		event EventHandler<PointerEvent/*	*/>? oncontextmenu/*	*/;
 		event EventHandler<Event/*	*/>? oncuechange/*	*/;
 		event EventHandler<MouseEvent/*	*/>? ondblclick/*	*/;
 		event EventHandler<DragEvent/*	*/>? ondrag/*	*/;
@@ -72,7 +73,7 @@ namespace WebView2.DOM
 		event EventHandler<WheelEvent/*	*/>? onwheel/*	*/;
 
 		// auxclick
-		event EventHandler<MouseEvent/*	*/>? onauxclick/*	*/;
+		event EventHandler<PointerEvent/*	*/>? onauxclick/*	*/;
 
 		// Pointer Events
 		event EventHandler<PointerEvent/*	*/>? ongotpointercapture/*	*/;
