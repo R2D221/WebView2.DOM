@@ -51,7 +51,7 @@ namespace WebView2.DOM
 				{
 					_ =
 						x.webView.GetCoreWebView2()
-						.ExecuteScriptAsync($"WebView2DOM.ForgetId({JsonSerializer.Serialize(x.referenceId)})");
+						.ExecuteScriptAsync($"WebView2DOM.FreeCSharpRef({JsonSerializer.Serialize(x.referenceId)})");
 				});
 			});
 

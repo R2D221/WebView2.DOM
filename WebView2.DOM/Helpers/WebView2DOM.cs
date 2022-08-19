@@ -74,6 +74,7 @@ namespace WebView2.DOM
 
 					const registry = new FinalizationRegistry(id =>
 					{{
+						delete idToObj[id];
 						Coordinator.{nameof(BrowsingContext._HostObject.Forget)}(id);
 					}});
 
@@ -140,16 +141,12 @@ namespace WebView2.DOM
 						refsHeldInCSharp.delete(obj);
 					}};
 
-					x.ForgetId = function (id)
+					x.FreeCSharpRef = function (id)
 					{{
 						const obj = WebView2DOM.GetObject(id);
 
-						delete idToObj[id];
-
 						if (obj == null) {{ return; }}
 
-						objToId.delete(obj);
-						registry.unregister(obj);
 						refsHeldInCSharp.delete(obj);
 					}};
 
