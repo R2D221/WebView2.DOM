@@ -1,7 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace WebView2.DOM

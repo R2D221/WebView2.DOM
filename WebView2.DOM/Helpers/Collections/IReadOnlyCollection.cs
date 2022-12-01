@@ -62,7 +62,7 @@ namespace WebView2.DOM
 		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 	}
 
-	public partial class CSSRuleList : JsObject, IReadOnlyCollection<CSSRule>, ICollection
+	public partial class CSSRuleList : IReadOnlyCollection<CSSRule>, ICollection
 	{
 		bool ICollection.IsSynchronized => false;
 		object ICollection.SyncRoot => null!;
@@ -132,7 +132,17 @@ namespace WebView2.DOM
 		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 	}
 
-	public partial class TextTrackList : EventTarget, IReadOnlyCollection<TextTrack>, ICollection
+	public partial class TextTrackList : IReadOnlyCollection<TextTrack>, ICollection
+	{
+		bool ICollection.IsSynchronized => false;
+		object ICollection.SyncRoot => null!;
+		void ICollection.CopyTo(Array array, int index) =>
+			throw new NotSupportedException();
+
+		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+	}
+
+	public partial class FrameCollection : IReadOnlyCollection<Window?>, ICollection
 	{
 		bool ICollection.IsSynchronized => false;
 		object ICollection.SyncRoot => null!;

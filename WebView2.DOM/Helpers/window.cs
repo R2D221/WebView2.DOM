@@ -26,6 +26,7 @@ namespace WebView2.DOM
 		public static /*restricted*/double devicePixelRatio => Instance.Get</*restricted*/double>();
 		public static Document document => Instance.Get<Document>();
 		public static Element? frameElement => Instance.Get<Element?>();
+		public static FrameCollection frames => Instance.frames;
 		public static History history => Instance.Get<History>();
 		public static int innerHeight => Instance.Get<int>();
 		public static int innerWidth => Instance.Get<int>();

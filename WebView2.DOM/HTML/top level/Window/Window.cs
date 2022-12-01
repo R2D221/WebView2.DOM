@@ -26,7 +26,7 @@ namespace WebView2.DOM
 		} = "/";
 	}
 
-	public sealed partial class Window : EventTarget
+	public partial class Window : EventTarget
 	{
 		internal Window() { }
 
@@ -55,7 +55,7 @@ namespace WebView2.DOM
 			=> Method().Invoke();
 
 		// other browsing contexts
-		//public Window frames => Get<Window>();
+		public FrameCollection frames => Unsafe.As<FrameCollection>(Get<Window>());
 		//public uint length => GetPrimitive<uint>();
 		//public Window? top => GetNullableObject<Window>();
 		public Window opener { get => Get<Window>(); set => Set(value); }
