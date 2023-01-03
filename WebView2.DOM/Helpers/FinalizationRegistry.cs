@@ -37,7 +37,7 @@ namespace WebView2.DOM
 			if (callbacks.TryGetValue(obj, out var callback))
 			{
 				_ = callbacks.Remove(obj);
-				callback.Inactivate();
+				callback.Dispose();
 			}
 		}
 	}
@@ -163,40 +163,49 @@ namespace WebView2.DOM
 					if (callbacks.TryGetValue(target, out var callback))
 					{
 						_ = callbacks.Remove(target);
-						callback.Inactivate();
+						callback.Dispose();
 					}
 				}
 			}
 		}
 	}
 
-	internal class FinalizerCallback<THeldValue>
+	internal sealed class FinalizerCallback<THeldValue> : IDisposable
 	{
-		private bool active;
-		private readonly Action<THeldValue> action;
-		private readonly THeldValue value;
+		private (Action<THeldValue> action, THeldValue value)? callback;
 
 		public FinalizerCallback(Action<THeldValue> action, THeldValue value)
 		{
-			this.active = true;
-			this.action = action;
-			this.value = value;
+			callback = (action, value);
 		}
 
-		public void Inactivate() => active = false;
+		private void Dispose(bool disposing)
+		{
+			if (callback is not (var action, var value)) { return; }
+			callback = null;
+
+			if (!disposing)
+			{
+				try
+				{
+					action(value);
+				}
+				catch
+				{
+					// Intentionally swallow exception
+				}
+			}
+		}
 
 		~FinalizerCallback()
 		{
-			try
-			{
-				if (!active) { return; }
+			Dispose(disposing: false);
+		}
 
-				action(value);
-			}
-			catch
-			{
-				// Intentionally swallow exception
-			}
+		public void Dispose()
+		{
+			Dispose(disposing: true);
+			GC.SuppressFinalize(this);
 		}
 	}
 }
