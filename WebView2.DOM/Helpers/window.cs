@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace WebView2.DOM
 {
-	public static class window
+	public static class @window
 	{
 		//private static AsyncLocal<Window?> _window = new AsyncLocal<Window?>();
 

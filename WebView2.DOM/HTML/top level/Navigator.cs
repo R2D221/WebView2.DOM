@@ -1,5 +1,4 @@
-﻿using SmartAnalyzers.CSharpExtensions.Annotations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 
@@ -81,83 +80,25 @@ namespace WebView2.DOM
 
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/frame/navigator_ua_brand_version.idl
 
-	[InitOnly]
 	public record NavigatorUABrandVersion
 	{
-		public string brand
-		{
-			get;
-#if NET5_0_OR_GREATER
-			init;
-#else
-			set;
-#endif
-		}
+		public required string brand { get; init; }
 
-		public string version
-		{
-			get;
-#if NET5_0_OR_GREATER
-			init;
-#else
-			set;
-#endif
-		}
+		public required string version { get; init; }
 	}
 
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/frame/ua_data_values.idl
 
-	[InitOnly]
 	public record UADataValues
 	{
-		public string platform
-		{
-			get;
-#if NET5_0_OR_GREATER
-			init;
-#else
-			set;
-#endif
-		}
+		public required string platform { get; init; }
 
-		public string platformVersion
-		{
-			get;
-#if NET5_0_OR_GREATER
-			init;
-#else
-			set;
-#endif
-		}
+		public required string platformVersion { get; init; }
 
-		public string architecture
-		{
-			get;
-#if NET5_0_OR_GREATER
-			init;
-#else
-			set;
-#endif
-		}
+		public required string architecture { get; init; }
 
-		public string model
-		{
-			get;
-#if NET5_0_OR_GREATER
-			init;
-#else
-			set;
-#endif
-		}
+		public required string model { get; init; }
 
-		public string uaFullVersion
-		{
-			get;
-#if NET5_0_OR_GREATER
-			init;
-#else
-			set;
-#endif
-		}
+		public required string uaFullVersion { get; init; }
 	}
 }

@@ -1,5 +1,4 @@
 ﻿using NodaTime;
-using SmartAnalyzers.CSharpExtensions.Annotations;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Text.Json.Serialization;
@@ -11,29 +10,15 @@ namespace WebView2.DOM
 	public record IdleRequestOptions
 	{
 		[JsonIgnore]
-		[InitOnly]
-		public Duration timeout
+		public required Duration timeout
 		{
 			get => Duration.FromMilliseconds(_timeout);
-#if NET5_0_OR_GREATER
-			init
-#else
-			set
-#endif
-				=> _timeout = (uint)value.TotalMilliseconds;
+			init => _timeout = (uint)value.TotalMilliseconds;
 		}
 
 		[JsonPropertyName(nameof(timeout))]
 		[EditorBrowsable(EditorBrowsableState.Never)]
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		public uint _timeout
-		{
-			get;
-#if NET5_0_OR_GREATER
-			init;
-#else
-			set;
-#endif
-		}
+		public uint _timeout { get; init; }
 	}
 }

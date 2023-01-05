@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net461;netcoreapp3.1-windows;net6.0-windows</TargetFrameworks>
-    <LangVersion>9.0</LangVersion>
+    <TargetFrameworks>net461;net6.0-windows;net7.0-windows</TargetFrameworks>
+    <LangVersion>11.0</LangVersion>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>True</UseWindowsForms>
     <Nullable>enable</Nullable>
@@ -11,12 +11,12 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/R2D221/WebView2.DOM</PackageProjectUrl>
     <Description>C# DOM bindings to be used with WebView2</Description>
+    <!-- TunnelVisionLabs.ReferenceAssemblyAnnotator -->
+    <GenerateNullableAttributes>false</GenerateNullableAttributes>
+    <!-- PolySharp -->
+    <PolySharpUsePublicAccessibilityForGeneratedTypes>true</PolySharpUsePublicAccessibilityForGeneratedTypes>
+    <PolySharpIncludeGeneratedTypes>System.Runtime.CompilerServices.RequiredMemberAttribute;System.Diagnostics.CodeAnalysis.SetsRequiredMembersAttribute;System.Runtime.CompilerServices.CompilerFeatureRequiredAttribute</PolySharpIncludeGeneratedTypes>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Include=".NET Core 3.1\IsExternalInit.cs" />
-    <Compile Include=".NET Core 3.1\TaskCompletionSource.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
@@ -32,12 +32,16 @@
     <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.*" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1264.42" />
     <PackageReference Include="NodaTime" Version="3.*" />
+    <PackageReference Include="PolySharp" Version="1.8.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <!--<PackageReference Include="PartialMixin" Version="1.0.54" />-->
     <PackageReference Include="Range" Version="3.0.6" />
-    <PackageReference Include="SmartAnalyzers.CSharpExtensions.Annotations" Version="4.2.5" />
     <PackageReference Include="System.Collections.Immutable" Version="6.*" />
     <PackageReference Include="System.Text.Json" Version="6.*" />
     <PackageReference Include="System.Threading.Channels" Version="6.*" />
+    <PackageReference Include="Theraot.Core" Version="3.2.11" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
@@ -45,8 +49,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageDownload Include="Microsoft.NETCore.App.Ref" Version="[6.0.0]" />
-    <PackageReference Include="Contrib.Bcl.Ranges" Version="1.0.0" />
+    <PackageDownload Include="Microsoft.NETCore.App.Ref" Version="[7.0.0]" />
   </ItemGroup>
 
 </Project>

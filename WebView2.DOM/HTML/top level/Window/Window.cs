@@ -1,8 +1,10 @@
 ﻿using NodaTime;
-using SmartAnalyzers.CSharpExtensions.Annotations;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Text.Json.Serialization;
 
 namespace WebView2.DOM
 {
@@ -12,18 +14,18 @@ namespace WebView2.DOM
 
 	public record WindowPostMessageOptions : PostMessageOptions
 	{
-#if !NET5_0_OR_GREATER
-		[InitOnlyOptional]
-#endif
+		[JsonIgnore]
 		public string targetOrigin
 		{
-			get;
-#if NET5_0_OR_GREATER
-			init;
-#else
-			set;
-#endif
-		} = "/";
+			get => _targetOrigin ?? "/";
+			init => _targetOrigin = value;
+		}
+
+		[JsonPropertyName(nameof(targetOrigin))]
+		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
+		public string? _targetOrigin { get; init; }
 	}
 
 	public partial class Window : EventTarget

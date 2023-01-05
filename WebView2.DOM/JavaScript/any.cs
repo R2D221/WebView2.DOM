@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace WebView2.DOM
 {
-	public class any : DynamicObject
+	public class @any : DynamicObject
 	{
 		public JsonElement json { get; set; }
 		public JsonSerializerOptions? options { get; set; }

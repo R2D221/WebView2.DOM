@@ -1,5 +1,4 @@
-﻿using SmartAnalyzers.CSharpExtensions.Annotations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
@@ -9,44 +8,11 @@ namespace WebView2.DOM
 {
 	public record SrcSetItem
 	{
-		[InitOnly]
-		public Uri src
-		{
-			get;
-#if NET5_0_OR_GREATER
-			init;
-#else
-			set;
-#endif
-		}
+		public required Uri src { get; init; }
 
-#if !NET5_0_OR_GREATER
-		[InitOnlyOptional]
-#endif
-		public int? width
-		{
-			get;
-#if NET5_0_OR_GREATER
-			init;
-#else
-			set;
-#endif
-		}
-			= default;
+		public int? width { get; init; }
 
-#if !NET5_0_OR_GREATER
-		[InitOnlyOptional]
-#endif
-		public double? density
-		{
-			get;
-#if NET5_0_OR_GREATER
-			init;
-#else
-			set;
-#endif
-		}
-			= default;
+		public double? density { get; init; }
 
 		public static IReadOnlyList<SrcSetItem> Parse(string value) =>
 			value.Split(',')

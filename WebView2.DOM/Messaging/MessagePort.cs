@@ -1,6 +1,8 @@
-﻿using SmartAnalyzers.CSharpExtensions.Annotations;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Text.Json.Serialization;
 
 namespace WebView2.DOM
 {
@@ -9,33 +11,31 @@ namespace WebView2.DOM
 
 	public record PostMessageOptions
 	{
-#if !NET5_0_OR_GREATER
-		[InitOnlyOptional]
-#endif
+		[JsonIgnore]
 		public IReadOnlyList<Transferable> transfer
 		{
-			get;
-#if NET5_0_OR_GREATER
-			init;
-#else
-			set;
-#endif
+			get => _transfer ?? Array.Empty<Transferable>();
+			init => _transfer = value;
 		}
-			= Array.Empty<Transferable>();
 
-#if !NET5_0_OR_GREATER
-		[InitOnlyOptional]
-#endif
+		[JsonIgnore]
 		public bool includeUserActivation
 		{
-			get;
-#if NET5_0_OR_GREATER
-			init;
-#else
-			set;
-#endif
+			get => _includeUserActivation ?? false;
+			init => _includeUserActivation = value;
 		}
-			= false;
+
+		[JsonPropertyName(nameof(transfer))]
+		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
+		public IReadOnlyList<Transferable>? _transfer { get; init; }
+
+		[JsonPropertyName(nameof(includeUserActivation))]
+		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
+		public bool? _includeUserActivation { get; init; }
 	}
 
 	[Obsolete("not tested")]

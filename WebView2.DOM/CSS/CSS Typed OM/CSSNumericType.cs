@@ -1,6 +1,4 @@
-﻿using SmartAnalyzers.CSharpExtensions.Annotations;
-
-namespace WebView2.DOM
+﻿namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/css/cssom/css_numeric_type.idl
 
@@ -17,116 +15,20 @@ namespace WebView2.DOM
 
 	public record CSSNumericType
 	{
-#if !NET5_0_OR_GREATER
-		[InitOnlyOptional]
-#endif
-		public int length
-		{
-			get;
-#if NET5_0_OR_GREATER
-			init;
-#else
-			set;
-#endif
-		}
-			= default;
+		public required int length { get; init; }
 
-#if !NET5_0_OR_GREATER
-		[InitOnlyOptional]
-#endif
-		public int angle
-		{
-			get;
-#if NET5_0_OR_GREATER
-			init;
-#else
-			set;
-#endif
-		}
-			= default;
+		public required int angle { get; init; }
 
-#if !NET5_0_OR_GREATER
-		[InitOnlyOptional]
-#endif
-		public int time
-		{
-			get;
-#if NET5_0_OR_GREATER
-			init;
-#else
-			set;
-#endif
-		}
-			= default;
+		public required int time { get; init; }
 
-#if !NET5_0_OR_GREATER
-		[InitOnlyOptional]
-#endif
-		public int frequency
-		{
-			get;
-#if NET5_0_OR_GREATER
-			init;
-#else
-			set;
-#endif
-		}
-			= default;
+		public required int frequency { get; init; }
 
-#if !NET5_0_OR_GREATER
-		[InitOnlyOptional]
-#endif
-		public int resolution
-		{
-			get;
-#if NET5_0_OR_GREATER
-			init;
-#else
-			set;
-#endif
-		}
-			= default;
+		public required int resolution { get; init; }
 
-#if !NET5_0_OR_GREATER
-		[InitOnlyOptional]
-#endif
-		public int flex
-		{
-			get;
-#if NET5_0_OR_GREATER
-			init;
-#else
-			set;
-#endif
-		}
-			= default;
+		public required int flex { get; init; }
 
-#if !NET5_0_OR_GREATER
-		[InitOnlyOptional]
-#endif
-		public int percent
-		{
-			get;
-#if NET5_0_OR_GREATER
-			init;
-#else
-			set;
-#endif
-		}
-			= default;
+		public required int percent { get; init; }
 
-#if !NET5_0_OR_GREATER
-		[InitOnlyOptional]
-#endif
-		public CSSNumericBaseType percentHint
-		{
-			get;
-#if NET5_0_OR_GREATER
-			init;
-#else
-			set;
-#endif
-		}
-			= default;
+		public required CSSNumericBaseType percentHint { get; init; }
 	}
 }

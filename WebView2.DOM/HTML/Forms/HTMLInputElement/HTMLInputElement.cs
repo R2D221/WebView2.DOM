@@ -53,9 +53,9 @@ namespace WebView2.DOM
 
 		#region hidden input
 
-		new public sealed class hidden : HTMLInputElement
+		new public sealed class @hidden : HTMLInputElement
 		{
-			private hidden() { }
+			private @hidden() { }
 
 			public string autocomplete { get => Get<string>(); set => Set(value); }
 		}
@@ -97,46 +97,46 @@ namespace WebView2.DOM
 				Method().Invoke(start, end, direction);
 		}
 
-		public sealed class text : WithSelectableText
+		public sealed class @text : WithSelectableText
 		{
-			private text() { }
+			private @text() { }
 
 			public string dirName { get => Get<string>(); set => Set(value); }
 			public HTMLDataListElement? list => Get<HTMLDataListElement?>();
 		}
 
-		public sealed class search : WithSelectableText
+		public sealed class @search : WithSelectableText
 		{
-			private search() { }
+			private @search() { }
 
 			public string dirName { get => Get<string>(); set => Set(value); }
 			public HTMLDataListElement? list => Get<HTMLDataListElement?>();
 		}
 
-		public sealed class tel : WithSelectableText
+		public sealed class @tel : WithSelectableText
 		{
-			private tel() { }
+			private @tel() { }
 
 			public HTMLDataListElement? list => Get<HTMLDataListElement?>();
 		}
 
-		public sealed class url : WithSelectableText
+		public sealed class @url : WithSelectableText
 		{
-			private url() { }
+			private @url() { }
 
 			public HTMLDataListElement? list => Get<HTMLDataListElement?>();
 		}
 
-		public sealed class email : WithText
+		public sealed class @email : WithText
 		{
-			private email() { }
+			private @email() { }
 
 			public HTMLDataListElement? list => Get<HTMLDataListElement?>();
 		}
 
-		public sealed class password : WithSelectableText
+		public sealed class @password : WithSelectableText
 		{
-			private password() { }
+			private @password() { }
 		}
 
 		#endregion
@@ -234,9 +234,9 @@ namespace WebView2.DOM
 			}
 		}
 
-		public sealed class date : WithValue<LocalDate>
+		public sealed class @date : WithValue<LocalDate>
 		{
-			private date() { }
+			private @date() { }
 
 			protected override IPattern<LocalDate> Pattern => DatesAndTimes.datePattern;
 
@@ -244,9 +244,9 @@ namespace WebView2.DOM
 			public bool required { get => Get<bool>(); set => Set(value); }
 		}
 
-		public sealed class month : WithValue<YearMonth>
+		public sealed class @month : WithValue<YearMonth>
 		{
-			private month() { }
+			private @month() { }
 
 			protected override IPattern<YearMonth> Pattern => DatesAndTimes.monthPattern;
 
@@ -254,9 +254,9 @@ namespace WebView2.DOM
 			public bool required { get => Get<bool>(); set => Set(value); }
 		}
 
-		public sealed class week : WithValue<IsoWeek>
+		public sealed class @week : WithValue<IsoWeek>
 		{
-			private week() { }
+			private @week() { }
 
 			protected override IPattern<IsoWeek> Pattern => DatesAndTimes.weekPattern;
 
@@ -264,9 +264,9 @@ namespace WebView2.DOM
 			public bool required { get => Get<bool>(); set => Set(value); }
 		}
 
-		public sealed class time : WithValue<LocalTime>
+		public sealed class @time : WithValue<LocalTime>
 		{
-			private time() { }
+			private @time() { }
 
 			protected override IPattern<LocalTime> Pattern => DatesAndTimes.timePattern;
 
@@ -274,9 +274,9 @@ namespace WebView2.DOM
 			public bool required { get => Get<bool>(); set => Set(value); }
 		}
 
-		public sealed class datetime_local : WithValue<LocalDateTime>
+		public sealed class @datetime_local : WithValue<LocalDateTime>
 		{
-			private datetime_local() { }
+			private @datetime_local() { }
 
 			protected override IPattern<LocalDateTime> Pattern => DatesAndTimes.localDateAndTimePattern;
 
@@ -284,9 +284,9 @@ namespace WebView2.DOM
 			public bool required { get => Get<bool>(); set => Set(value); }
 		}
 
-		public sealed class number : WithValue<double>
+		public sealed class @number : WithValue<double>
 		{
-			private number() { }
+			private @number() { }
 
 			protected override IPattern<double> Pattern => new Pattern<double>
 			{
@@ -310,9 +310,9 @@ namespace WebView2.DOM
 			public bool required { get => Get<bool>(); set => Set(value); }
 		}
 
-		public sealed class range : WithValue<double>
+		public sealed class @range : WithValue<double>
 		{
-			private range() { }
+			private @range() { }
 
 			protected override IPattern<double> Pattern => new Pattern<double>
 			{
@@ -332,9 +332,9 @@ namespace WebView2.DOM
 			};
 		}
 
-		public sealed class color : HTMLInputElement
+		public sealed class @color : HTMLInputElement
 		{
-			private color() { }
+			private @color() { }
 
 			public string autocomplete { get => Get<string>(); set => Set(value); }
 			public HTMLDataListElement? list => Get<HTMLDataListElement?>();
@@ -353,25 +353,25 @@ namespace WebView2.DOM
 			public bool required { get => Get<bool>(); set => Set(value); }
 		}
 
-		public sealed class checkbox : WithCheckedness
+		public sealed class @checkbox : WithCheckedness
 		{
-			private checkbox() { }
+			private @checkbox() { }
 
 			public bool indeterminate { get => Get<bool>(); set => Set(value); }
 		}
 
-		public sealed class radio : WithCheckedness
+		public sealed class @radio : WithCheckedness
 		{
-			private radio() { }
+			private @radio() { }
 		}
 
 		#endregion
 
 		#region file input
 
-		public sealed class file : HTMLInputElement
+		public sealed class @file : HTMLInputElement
 		{
-			private file() { }
+			private @file() { }
 
 			public string accept { get => Get<string>(); set => Set(value); }
 			public bool multiple { get => Get<bool>(); set => Set(value); }
@@ -386,9 +386,9 @@ namespace WebView2.DOM
 
 		#region button inputs
 
-		public sealed class submit : HTMLInputElement
+		public sealed class @submit : HTMLInputElement
 		{
-			private submit() { }
+			private @submit() { }
 
 			public Uri formAction { get => Get<Uri>(); set => Set(value); }
 			public Enctype formEnctype { get => Get<Enctype>(); set => Set(value); }
@@ -397,9 +397,9 @@ namespace WebView2.DOM
 			public string formTarget { get => Get<string>(); set => Set(value); }
 		}
 
-		public sealed class image : HTMLInputElement
+		public sealed class @image : HTMLInputElement
 		{
-			private image() { }
+			private @image() { }
 
 			public Uri formAction { get => Get<Uri>(); set => Set(value); }
 			public Enctype formEnctype { get => Get<Enctype>(); set => Set(value); }
@@ -413,14 +413,14 @@ namespace WebView2.DOM
 			public uint height { get => Get<uint>(); set => Set(value); }
 		}
 
-		public sealed class reset : HTMLInputElement
+		public sealed class @reset : HTMLInputElement
 		{
-			private reset() { }
+			private @reset() { }
 		}
 
-		public sealed class button : HTMLInputElement
+		public sealed class @button : HTMLInputElement
 		{
-			private button() { }
+			private @button() { }
 		}
 
 		#endregion

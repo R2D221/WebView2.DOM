@@ -1,22 +1,11 @@
-﻿using SmartAnalyzers.CSharpExtensions.Annotations;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 
 namespace WebView2.DOM
 {
-	[InitOnly]
 	public record AssignedNodesOptions
 	{
-		public bool flatten
-		{
-			get;
-#if NET5_0_OR_GREATER
-			init;
-#else
-			set;
-#endif
-		}
-			= false;
+		public required bool flatten { get; init; }
 	}
 
 	public sealed class HTMLSlotElement : HTMLElement

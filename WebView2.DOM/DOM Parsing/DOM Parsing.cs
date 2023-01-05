@@ -1,5 +1,4 @@
-﻿using SmartAnalyzers.CSharpExtensions.Annotations;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace WebView2.DOM
 {
@@ -16,19 +15,9 @@ namespace WebView2.DOM
 
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/xml/parse_from_string_options.idl
 
-	[InitOnly]
 	public record ParseFromStringOptions
 	{
-		public bool includeShadowRoots
-		{
-			get;
-#if NET5_0_OR_GREATER
-			init;
-#else
-			set;
-#endif
-		}
-			= false;
+		public required bool includeShadowRoots { get; init; }
 	}
 
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/xml/dom_parser.idl
