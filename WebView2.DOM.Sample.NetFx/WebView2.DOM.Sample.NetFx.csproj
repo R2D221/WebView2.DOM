@@ -12,4 +12,6 @@
     <ProjectReference Include="..\WebView2.DOM\WebView2.DOM.csproj" />
   </ItemGroup>
 
+  <Import Project="..\WebView2.DOM.Sample.Shared\WebView2.DOM.Sample.Shared.projitems" Label="Shared" />
+
 </Project>

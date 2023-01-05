@@ -25,6 +25,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "WebView2.DOM.Sample.Shared", "WebView2.DOM.Sample.Shared\WebView2.DOM.Sample.Shared.shproj", "{52E3C6F7-6E51-4F73-8EF5-50ED3F492F8B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,5 +63,10 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1676229F-F40B-49EA-B04E-8748ABE7CAE4}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		WebView2.DOM.Sample.Shared\WebView2.DOM.Sample.Shared.projitems*{3c73d0f4-b828-443a-884f-945456cff094}*SharedItemsImports = 5
+		WebView2.DOM.Sample.Shared\WebView2.DOM.Sample.Shared.projitems*{52e3c6f7-6e51-4f73-8ef5-50ed3f492f8b}*SharedItemsImports = 13
+		WebView2.DOM.Sample.Shared\WebView2.DOM.Sample.Shared.projitems*{9985fbda-b9c2-467d-9cb5-4d96d1d0ba5e}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal
