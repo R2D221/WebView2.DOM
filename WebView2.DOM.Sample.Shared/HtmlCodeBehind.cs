@@ -8,7 +8,6 @@ using Duration = NodaTime.Duration;
 
 namespace WebView2.DOM.Sample.Shared
 {
-
 	internal class HtmlCodeBehind
 	{
 		private static Dispatcher dispatcher = Dispatcher.CurrentDispatcher;
