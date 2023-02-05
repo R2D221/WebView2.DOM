@@ -7,7 +7,7 @@
     <UseWindowsForms>True</UseWindowsForms>
     <Nullable>enable</Nullable>
     <WarningsAsErrors>NU1605;nullable</WarningsAsErrors>
-    <Version>0.6.2</Version>
+    <Version>0.7.0</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/R2D221/WebView2.DOM</PackageProjectUrl>
     <Description>C# DOM bindings to be used with WebView2</Description>
