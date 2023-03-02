@@ -112,7 +112,7 @@ namespace WebView2.DOM
 			var tcs = new TaskCompletionSource();
 
 			browsingContext.browsingSyncContext.Post(
-				state: Pool.Box((action, browsingContext.Window, tcs)),
+				state: Pool.Box((action, browsingContext.Window, tcs)).Obj,
 				d: static obj =>
 				{
 					var (action, window, tcs) = Pool.UnboxAndReturn<(Action<Window>, Window, TaskCompletionSource)>(obj);
@@ -146,7 +146,7 @@ namespace WebView2.DOM
 			var tcs = new TaskCompletionSource<T>();
 
 			browsingContext.browsingSyncContext.Post(
-				state: Pool.Box((function, browsingContext.Window, tcs)),
+				state: Pool.Box((function, browsingContext.Window, tcs)).Obj,
 				d: static obj =>
 				{
 					var (function, window, tcs) = Pool.UnboxAndReturn<(Func<Window, T>, Window, TaskCompletionSource<T>)>(obj);
@@ -180,7 +180,7 @@ namespace WebView2.DOM
 			var tcs = new TaskCompletionSource();
 
 			browsingContext.browsingSyncContext.Post(
-				state: Pool.Box((asyncAction, browsingContext.Window, tcs)),
+				state: Pool.Box((asyncAction, browsingContext.Window, tcs)).Obj,
 				d: static async obj =>
 				{
 					var (asyncAction, window, tcs) = Pool.UnboxAndReturn<(Func<Window, Task>, Window, TaskCompletionSource)>(obj);
@@ -214,7 +214,7 @@ namespace WebView2.DOM
 			var tcs = new TaskCompletionSource<T>();
 
 			browsingContext.browsingSyncContext.Post(
-				state: Pool.Box((asyncFunction, browsingContext.Window, tcs)),
+				state: Pool.Box((asyncFunction, browsingContext.Window, tcs)).Obj,
 				d: static async obj =>
 				{
 					var (asyncFunction, window, tcs) = Pool.UnboxAndReturn<(Func<Window, Task<T>>, Window, TaskCompletionSource<T>)>(obj);

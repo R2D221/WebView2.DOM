@@ -17,9 +17,9 @@ namespace WebView2.DOM.Tests
 			await webView.InvokeInBrowserContextAsync(async window =>
 			{
 				var weakReference = getWeakReference();
-				WeakReference<Document> getWeakReference()
+				WeakReference<BarProp> getWeakReference()
 				{
-					return new WeakReference<Document>(window.document);
+					return new WeakReference<BarProp>(window.menubar);
 				}
 
 				GC.Collect(0, GCCollectionMode.Forced);
@@ -29,11 +29,8 @@ namespace WebView2.DOM.Tests
 
 				Assert.AreEqual(false, weakReference.TryGetTarget(out _));
 
-				var document = window.document;
-				Assert.IsInstanceOfType(document, typeof(HTMLDocument));
-
-				var body = document.body;
-				Assert.IsInstanceOfType(body, typeof(HTMLBodyElement));
+				var menubar = window.menubar;
+				Assert.IsInstanceOfType(menubar, typeof(BarProp));
 			});
 		}
 

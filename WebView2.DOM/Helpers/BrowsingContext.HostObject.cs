@@ -44,7 +44,7 @@ namespace WebView2.DOM
 				_ = Flow.JavaScriptStart;
 
 				RunBothLoops(
-					state: Pool.Box((eventTargetJson, @event, argsJson)),
+					state: Pool.Box((eventTargetJson, @event, argsJson)).Obj,
 					d: static obj =>
 					{
 						var (eventTargetJson, @event, argsJson) = Pool.UnboxAndReturn<(string, string, string)>(obj);
@@ -63,7 +63,7 @@ namespace WebView2.DOM
 				_ = Flow.JavaScriptStart;
 
 				RunBothLoops(
-					state: Pool.Box((callbackId, parametersJson)),
+					state: Pool.Box((callbackId, parametersJson)).Obj,
 					d: static obj =>
 					{
 						var (callbackId, parametersJson) = Pool.UnboxAndReturn<(string, string)>(obj);
@@ -80,7 +80,7 @@ namespace WebView2.DOM
 					using var executionContext = browsingContext.StartNewExecutionContext();
 
 					browsingContext.browsingSyncContext.PostInternal(
-						state: Pool.Box((executionContext, d, state)),
+						state: Pool.Box((executionContext, d, state)).Obj,
 						d: static param =>
 						{
 							var (executionContext, d, state) = Pool.UnboxAndReturn<(JsExecutionContext, SendOrPostCallback, object?)>(param);

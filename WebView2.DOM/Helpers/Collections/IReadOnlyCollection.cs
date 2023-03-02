@@ -32,7 +32,7 @@ using System.Collections.Generic;
 
 namespace WebView2.DOM
 {
-	public partial class CSSTransformValue : IReadOnlyCollection<CSSTransformValue>, ICollection
+	public partial class CSSTransformValue : IReadOnlyCollection<CSSTransformComponent>, ICollection
 	{
 		bool ICollection.IsSynchronized => false;
 		object ICollection.SyncRoot => null!;

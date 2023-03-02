@@ -8,9 +8,7 @@ namespace WebView2.DOM
 
 	public class DOMPointReadOnly : JsObject, IDOMPointInit
 	{
-		private static readonly AsyncLocal<JsObject?> _static = new();
-		private static JsObject @static => _static.Value ??=
-			window.Instance.Get<JsObject>(nameof(DOMPointReadOnly));
+		private static JsObject Static => window.Instance.GetCached<JsObject>(nameof(DOMPointReadOnly));
 
 		protected internal DOMPointReadOnly() { }
 
@@ -27,10 +25,10 @@ namespace WebView2.DOM
 		}
 
 		public static DOMPointReadOnly fromPoint(DOMPointInit other) =>
-			@static.Method<DOMPointReadOnly>().Invoke(other);
+			Static.Method<DOMPointReadOnly>().Invoke(other);
 
 		public static DOMPointReadOnly fromPoint(DOMPointReadOnly other) =>
-			@static.Method<DOMPointReadOnly>().Invoke(other);
+			Static.Method<DOMPointReadOnly>().Invoke(other);
 
 		public double x => Get<double>();
 		public double y => Get<double>();

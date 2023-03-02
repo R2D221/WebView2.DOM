@@ -8,9 +8,7 @@ namespace WebView2.DOM
 
 	public class DOMRectReadOnly : JsObject
 	{
-		private static readonly AsyncLocal<JsObject?> _static = new();
-		private static JsObject @static => _static.Value ??=
-			window.Instance.Get<JsObject>(nameof(DOMRectReadOnly));
+		private static JsObject Static => window.Instance.GetCached<JsObject>(nameof(DOMRectReadOnly));
 
 		protected internal DOMRectReadOnly() { }
 
@@ -27,10 +25,10 @@ namespace WebView2.DOM
 		}
 
 		public static DOMRectReadOnly fromRect(DOMRectInit other) =>
-			@static.Method<DOMRectReadOnly>().Invoke(other);
+			Static.Method<DOMRectReadOnly>().Invoke(other);
 
 		public static DOMRectReadOnly fromRect(DOMRectReadOnly other) =>
-			@static.Method<DOMRectReadOnly>().Invoke(other);
+			Static.Method<DOMRectReadOnly>().Invoke(other);
 
 		public double x => Get<double>();
 		public double y => Get<double>();

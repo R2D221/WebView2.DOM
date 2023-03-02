@@ -9,9 +9,7 @@ namespace WebView2.DOM
 
 	public class DOMMatrixReadOnly : JsObject
 	{
-		private static readonly AsyncLocal<JsObject?> _static = new();
-		private static JsObject @static => _static.Value ??=
-			window.Instance.Get<JsObject>(nameof(DOMMatrixReadOnly));
+		private static JsObject Static => window.Instance.GetCached<JsObject>(nameof(DOMMatrixReadOnly));
 
 		public DOMMatrixReadOnly() =>
 			Construct();
@@ -23,16 +21,16 @@ namespace WebView2.DOM
 			Construct(init);
 
 		public static DOMMatrixReadOnly fromMatrix(DOMMatrixInit other) =>
-			@static.Method<DOMMatrixReadOnly>().Invoke(other);
+			Static.Method<DOMMatrixReadOnly>().Invoke(other);
 
 		public static DOMMatrixReadOnly fromMatrix(DOMMatrixReadOnly other) =>
-			@static.Method<DOMMatrixReadOnly>().Invoke(other);
+			Static.Method<DOMMatrixReadOnly>().Invoke(other);
 
 		public static DOMMatrixReadOnly fromFloat32Array(Float32Array array32) =>
-			@static.Method<DOMMatrixReadOnly>().Invoke(array32);
+			Static.Method<DOMMatrixReadOnly>().Invoke(array32);
 
 		public static DOMMatrixReadOnly fromFloat64Array(Float64Array array64) =>
-			@static.Method<DOMMatrixReadOnly>().Invoke(array64);
+			Static.Method<DOMMatrixReadOnly>().Invoke(array64);
 
 		// These attributes are simple aliases for certain elements of the 4x4 matrix
 		public double a => Get<double>();

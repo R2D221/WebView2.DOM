@@ -13,7 +13,7 @@ namespace WebView2.DOM
 		protected internal CSSMathMax() { }
 
 		public CSSMathMax(params CSSNumericValue[] values) =>
-			Construct(args: values.ToArray<object?>());
+			Construct(args: values);
 
 		public IReadOnlyList<CSSNumericValue> values => Get<ImmutableArray<CSSNumericValue>>();
 	}

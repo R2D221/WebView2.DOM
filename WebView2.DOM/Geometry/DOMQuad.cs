@@ -8,9 +8,7 @@ namespace WebView2.DOM
 
 	public class DOMQuad : JsObject
 	{
-		private static readonly AsyncLocal<JsObject?> _static = new();
-		private static JsObject @static => _static.Value ??=
-			window.Instance.Get<JsObject>(nameof(DOMQuad));
+		private static JsObject Static => window.Instance.GetCached<JsObject>(nameof(DOMQuad));
 
 		protected internal DOMQuad() { }
 
@@ -21,16 +19,16 @@ namespace WebView2.DOM
 			Construct(p1, p2, p3, p4);
 
 		public static DOMQuad fromRect(DOMRectInit other) =>
-			@static.Method<DOMQuad>().Invoke(other);
+			Static.Method<DOMQuad>().Invoke(other);
 
 		public static DOMQuad fromRect(DOMRectReadOnly other) =>
-			@static.Method<DOMQuad>().Invoke(other);
+			Static.Method<DOMQuad>().Invoke(other);
 
 		public static DOMQuad fromQuad(DOMQuadInit other) =>
-			@static.Method<DOMQuad>().Invoke(other);
+			Static.Method<DOMQuad>().Invoke(other);
 
 		public static DOMQuad fromQuad(DOMQuad other) =>
-			@static.Method<DOMQuad>().Invoke(other);
+			Static.Method<DOMQuad>().Invoke(other);
 
 		public DOMPoint p1 => GetCached<DOMPoint>();
 		public DOMPoint p2 => GetCached<DOMPoint>();

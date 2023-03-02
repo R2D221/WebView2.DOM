@@ -250,7 +250,7 @@ namespace WebView2.DOM
 
 							if (obj instanceof HTMLInputElement)
 							{{
-								return {{ referenceId: WebView2DOM.GetId(obj), referenceType: obj.constructor.name + '+' + obj.type.replace('-', '_') }};
+								return {{ referenceId: WebView2DOM.GetId(obj), referenceType: obj.constructor.name + ' ' + obj.type.replace('-', '_') }};
 							}}
 							else
 							{{

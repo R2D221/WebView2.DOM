@@ -11,10 +11,8 @@ namespace WebView2.DOM
 
 	public class CSSNumericValue : CSSStyleValue, IEquatable<CSSNumericValue>
 	{
+		private static JsObject Static => window.Instance.GetCached<JsObject>(nameof(CSSNumericValue));
 		protected internal CSSNumericValue() { }
-
-		private static readonly AsyncLocal<Function?> _static = new();
-		private static Function @static => _static.Value ??= window.Instance.Get<Function>(nameof(CSSNumericValue));
 
 		public static implicit operator CSSNumericValue(double value) => CSS.number(value);
 
@@ -114,9 +112,10 @@ namespace WebView2.DOM
 		#endregion
 
 		public CSSUnitValue to(string unit) => Method<CSSUnitValue>().Invoke(unit);
-		public CSSMathSum toSum(params string[] units) => Method<CSSMathSum>().Invoke(args: units.ToArray<object?>());
+		public CSSMathSum toSum(params string[] units) => Method<CSSMathSum>().Invoke(args: units);
 		public CSSNumericType type() => Method<CSSNumericType>().Invoke();
 
-		public static CSSNumericValue parse(string cssText) => @static.Method<CSSNumericValue>().Invoke(cssText);
+		public static CSSNumericValue parse(string cssText) =>
+			Static.Method<CSSNumericValue>().Invoke(cssText);
 	}
 }

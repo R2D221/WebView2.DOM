@@ -32,7 +32,7 @@ namespace WebView2.DOM
 			.GetTypes()
 			.Where(x => x.IsClass && typeof(JsObject).IsAssignableFrom(x))
 			.ToDictionary(
-				type => type.FullName!.Substring(type.Namespace!.Length + 1) switch
+				type => type.FullName!.Substring(type.Namespace!.Length + 1).Replace("+", " ") switch
 				{
 					"JsObject" => "Object",
 					var x => x,
@@ -62,7 +62,11 @@ namespace WebView2.DOM
 
 			if (!weakRef.TryGetTarget(out var target))
 			{
-				var realType = types[typeName];
+				if (!types.TryGetValue(typeName, out var realType))
+				{
+					throw new Exception($"Type {typeName} could not be mapped.");
+				}
+
 				var requestedType = typeof(TJsObject);
 
 				Type type;

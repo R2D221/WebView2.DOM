@@ -39,9 +39,13 @@ namespace WebView2.DOM
 		public void set(string name, Blob value, string filename) =>
 			Method().Invoke(name, value, filename);
 
-		public IEnumerator<KeyValuePair<string, OneOf<File, string>>> GetEnumerator() =>
-			SymbolMethod<Iterator<KeyValuePair<string, OneOf<File, string>>>>("iterator").Invoke();
+		public Iterator GetEnumerator() =>
+			SymbolMethod<Iterator>("iterator").Invoke();
+
+		IEnumerator<KeyValuePair<string, OneOf<File, string>>> IEnumerable<KeyValuePair<string, OneOf<File, string>>>.GetEnumerator() => GetEnumerator();
 
 		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+		public class Iterator : Iterator<KeyValuePair<string, OneOf<File, string>>> { }
 	}
 }

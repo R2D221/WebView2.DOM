@@ -1,5 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -7,13 +6,19 @@ namespace WebView2.DOM
 {
 	public abstract class Iterator : JsObject { }
 
-	public sealed class Iterator<T> : Iterator, IEnumerator<T>
+	public class Iterator<T> : Iterator, IEnumerator<T>
 	{
-		private Iterator() { }
+		private protected Iterator() { }
 
-		private T current = default!;
+		private IteratorItem<T>? current;
 
-		public T Current => current!;
+		public T Current =>
+			current switch
+			{
+				{ done: false } x => x.value,
+				{ done: true } => throw new InvalidOperationException(),
+				null => throw new InvalidOperationException(),
+			};
 
 		object? IEnumerator.Current => Current;
 
@@ -21,18 +26,17 @@ namespace WebView2.DOM
 
 		public bool MoveNext()
 		{
-			var result = Method<IteratorItem<T>>("next").Invoke();
-			current = result.value;
-			return !result.done;
+			var current = Method<IteratorItem<T>>("next").Invoke();
+			this.current = current;
+			return !current.done;
 		}
 
 		public void Reset() => throw new NotSupportedException();
 	}
 
-	//[InitRequired]
-	internal sealed record IteratorItem<T>
+	internal struct IteratorItem<T>
 	{
-		public T value { get; init; } = default!;
-		public bool done { get; init; }
+		public required T value { get; init; }
+		public required bool done { get; init; }
 	}
 }

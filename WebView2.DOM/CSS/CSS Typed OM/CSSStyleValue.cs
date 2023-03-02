@@ -9,15 +9,14 @@ namespace WebView2.DOM
 
 	public class CSSStyleValue : JsObject
 	{
-		protected internal CSSStyleValue() { }
+		private static JsObject Static => window.Instance.GetCached<JsObject>(nameof(CSSStyleValue));
 
-		private static readonly AsyncLocal<Function?> _static = new();
-		private static Function @static => _static.Value ??= window.Instance.Get<Function>(nameof(CSSStyleValue));
+		protected internal CSSStyleValue() { }
 
 		public override string ToString() => Method<string>("toString").Invoke();
 		public static CSSStyleValue parse(string property, string cssText) =>
-			@static.Method<CSSStyleValue>().Invoke(property, cssText);
+			Static.Method<CSSStyleValue>().Invoke(property, cssText);
 		public static IReadOnlyList<CSSStyleValue> parseAll(string property, string cssText) =>
-			@static.Method<ImmutableArray<CSSStyleValue>>().Invoke(property, cssText);
+			Static.Method<ImmutableArray<CSSStyleValue>>().Invoke(property, cssText);
 	}
 }

@@ -11,9 +11,9 @@ namespace WebView2.DOM
 		public Element? lastElementChild => Get<Element?>();
 
 		public void append(params OneOf<Node, string>[] nodes) =>
-			Method().Invoke(args: nodes.Select(x => x.Value).ToArray<object?>());
+			Method().Invoke(args: nodes.Select(x => x.Value).ToArray());
 		public void prepend(params OneOf<Node, string>[] nodes) =>
-			Method().Invoke(args: nodes.Select(x => x.Value).ToArray<object?>());
+			Method().Invoke(args: nodes.Select(x => x.Value).ToArray());
 		public Element? querySelector(string selectors) => Method<Element?>().Invoke(selectors);
 		public NodeList<Element> querySelectorAll(string selectors) => Method<NodeList<Element>>().Invoke(selectors);
 	}

@@ -116,7 +116,7 @@ namespace WebView2.DOM
 
 			public void Construct(JsObject obj, string typeName, object?[] args)
 			{
-				var request = new Request.Constructor(null!, typeName, args);
+				using var request = BrowsingContext.Request.Constructor.FromPool(typeName, args);
 				var response = Request(request);
 
 				response.Switch
@@ -129,7 +129,7 @@ namespace WebView2.DOM
 
 			public T Get<T>(JsObject obj, string property)
 			{
-				var request = new Request.Get(obj, property);
+				using var request = BrowsingContext.Request.Get.FromPool(obj, property);
 				var response = Request(request);
 
 				return response.Match
@@ -142,7 +142,7 @@ namespace WebView2.DOM
 
 			public T Get<T>(JsObject obj, uint index)
 			{
-				var request = new Request.GetUintIndex(obj, index);
+				using var request = BrowsingContext.Request.GetUintIndex.FromPool(obj, index);
 				var response = Request(request);
 
 				return response.Match
@@ -155,7 +155,7 @@ namespace WebView2.DOM
 
 			public T Get<T>(JsObject obj, int index)
 			{
-				var request = new Request.GetIntIndex(obj, index);
+				using var request = BrowsingContext.Request.GetIntIndex.FromPool(obj, index);
 				var response = Request(request);
 
 				return response.Match
@@ -168,7 +168,7 @@ namespace WebView2.DOM
 
 			public void Set<T>(JsObject obj, string property, T value)
 			{
-				var request = new Request.Set<T>(obj, property, value);
+				using var request = BrowsingContext.Request.Set<T>.FromPool(obj, property, value);
 				var response = Request(request);
 
 				response.Switch
@@ -181,7 +181,7 @@ namespace WebView2.DOM
 
 			public void Set<T>(JsObject obj, uint index, T value)
 			{
-				var request = new Request.SetUintIndex<T>(obj, index, value);
+				using var request = BrowsingContext.Request.SetUintIndex<T>.FromPool(obj, index, value);
 				var response = Request(request);
 
 				response.Switch
@@ -194,7 +194,7 @@ namespace WebView2.DOM
 
 			public void Set<T>(JsObject obj, int index, T value)
 			{
-				var request = new Request.SetIntIndex<T>(obj, index, value);
+				using var request = BrowsingContext.Request.SetIntIndex<T>.FromPool(obj, index, value);
 				var response = Request(request);
 
 				response.Switch
@@ -207,7 +207,7 @@ namespace WebView2.DOM
 
 			public void Delete(JsObject obj, string property)
 			{
-				var request = new Request.Delete(obj, property);
+				using var request = BrowsingContext.Request.Delete.FromPool(obj, property);
 				var response = Request(request);
 
 				response.Switch
@@ -220,7 +220,7 @@ namespace WebView2.DOM
 
 			public void Delete(JsObject obj, uint index)
 			{
-				var request = new Request.DeleteUintIndex(obj, index);
+				using var request = BrowsingContext.Request.DeleteUintIndex.FromPool(obj, index);
 				var response = Request(request);
 
 				response.Switch
@@ -233,7 +233,7 @@ namespace WebView2.DOM
 
 			public void Delete(JsObject obj, int index)
 			{
-				var request = new Request.DeleteIntIndex(obj, index);
+				using var request = BrowsingContext.Request.DeleteIntIndex.FromPool(obj, index);
 				var response = Request(request);
 
 				response.Switch
@@ -246,7 +246,7 @@ namespace WebView2.DOM
 
 			public void InvokeVoid(JsObject obj, string method, object?[] args)
 			{
-				var request = new Request.Invoke(obj, method, args);
+				using var request = BrowsingContext.Request.Invoke.FromPool(obj, method, args);
 				var response = Request(request);
 
 				response.Switch
@@ -259,7 +259,7 @@ namespace WebView2.DOM
 
 			public T Invoke<T>(JsObject obj, string method, object?[] args)
 			{
-				var request = new Request.Invoke(obj, method, args);
+				using var request = BrowsingContext.Request.Invoke.FromPool(obj, method, args);
 				var response = Request(request);
 
 				return response.Match
@@ -272,7 +272,7 @@ namespace WebView2.DOM
 
 			public T SymbolInvoke<T>(JsObject obj, string method, object?[] args)
 			{
-				var request = new Request.SymbolInvoke(obj, method, args);
+				using var request = BrowsingContext.Request.SymbolInvoke.FromPool(obj, method, args);
 				var response = Request(request);
 
 				return response.Match
@@ -290,7 +290,7 @@ namespace WebView2.DOM
 
 				if (shouldAttach)
 				{
-					var request = new Request.AddEvent(obj, @event);
+					using var request = BrowsingContext.Request.AddEvent.FromPool(obj, @event);
 					var response = Request(request);
 
 					response.Switch
@@ -309,7 +309,7 @@ namespace WebView2.DOM
 
 				if (shouldDetach)
 				{
-					var request = new Request.RemoveEvent(obj, @event);
+					using var request = BrowsingContext.Request.RemoveEvent.FromPool(obj, @event);
 					var response = Request(request);
 
 					response.Switch

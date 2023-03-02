@@ -16,7 +16,7 @@ namespace WebView2.DOM
 	// as a request.
 
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
-	public partial class CSSTransformValue : CSSStyleValue, IReadOnlyCollection<CSSTransformValue>
+	public partial class CSSTransformValue : CSSStyleValue, IReadOnlyCollection<CSSTransformComponent>
 	{
 		protected internal CSSTransformValue() { }
 
@@ -28,7 +28,7 @@ namespace WebView2.DOM
 
 		public int Count => Get<int>("length");
 
-		public IEnumerator<CSSTransformValue> GetEnumerator() =>
-			SymbolMethod<Iterator<CSSTransformValue>>("iterator").Invoke();
+		public IEnumerator<CSSTransformComponent> GetEnumerator() =>
+			SymbolMethod<Iterator<CSSTransformComponent>>("iterator").Invoke();
 	}
 }

@@ -12,6 +12,7 @@ namespace WebView2.DOM
 
 	[DebuggerTypeProxy(typeof(JsCollectionProxy))]
 	public abstract partial class SVGList<T> : JsObject, IList<T>
+		where T : class
 	{
 		private protected SVGList() { }
 

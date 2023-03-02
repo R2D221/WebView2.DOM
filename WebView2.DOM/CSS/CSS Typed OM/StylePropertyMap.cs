@@ -1,4 +1,5 @@
 ﻿using OneOf;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
@@ -29,13 +30,20 @@ namespace WebView2.DOM
 		public bool ContainsKey(string property) =>
 			Method<bool>("has").Invoke(property);
 
-		public IEnumerator<KeyValuePair<string, IReadOnlyList<CSSStyleValue>>> GetEnumerator() =>
-			SymbolMethod<Iterator<KeyValuePair<string, IReadOnlyList<CSSStyleValue>>>>("iterator").Invoke();
-
 		public bool TryGetValue(string property, out IReadOnlyList<CSSStyleValue> value)
 		{
 			value = this[property];
 			return ContainsKey(property);
+		}
+
+		public Iterator GetEnumerator() =>
+			SymbolMethod<Iterator>("iterator").Invoke();
+
+		IEnumerator<KeyValuePair<string, IReadOnlyList<CSSStyleValue>>> IEnumerable<KeyValuePair<string, IReadOnlyList<CSSStyleValue>>>.GetEnumerator() => GetEnumerator();
+
+		public sealed class Iterator : Iterator<KeyValuePair<string, IReadOnlyList<CSSStyleValue>>>
+		{
+			private Iterator() { }
 		}
 	}
 

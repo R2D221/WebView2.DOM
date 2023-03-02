@@ -13,7 +13,7 @@ namespace WebView2.DOM
 		protected internal CSSMathProduct() { }
 
 		public CSSMathProduct(params CSSNumericValue[] values) =>
-			Construct(args: values.ToArray<object?>());
+			Construct(args: values);
 
 		public IReadOnlyList<CSSNumericValue> values => Get<ImmutableArray<CSSNumericValue>>();
 	}

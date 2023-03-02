@@ -208,7 +208,7 @@ namespace WebView2.DOM.Tests
 				Assert.IsTrue(enumerator.MoveNext());
 				Assert.IsInstanceOfType(enumerator.Current, typeof(HTMLHtmlElement));
 				Assert.IsFalse(enumerator.MoveNext());
-				Assert.IsNull(enumerator.Current);
+				_ = Assert.ThrowsException<InvalidOperationException>(() => enumerator.Current);
 			});
 		}
 
