@@ -48,12 +48,12 @@ namespace WebView2.DOM
 					if (obj is not BrowsingContext browsingContext) { throw new Exception(); }
 
 					_ = browsingContext.webView.GetCoreWebView2().ExecuteScriptAsync(
-						$@"
-						(() => {{
-							Coordinator.{nameof(BrowsingContext._HostObject.Run)}();
+						$$"""
+						(() => {
+							Coordinator.{{nameof(BrowsingContext._HostObject.Run)}}();
 							WebView2DOM.EventLoop();
-						}})()
-						");
+						})()
+						""");
 				});
 		}
 
