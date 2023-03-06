@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Numerics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -24,6 +25,7 @@ namespace WebView2.DOM.Helpers
 					//new LocalDateTimeJsonConverter(),
 					new KeyValuePairJsonConverterFactory(),
 					new OneOfJsonConverterFactory(),
+					new BigIntegerJsonConverter(),
 				},
 			};
 	}
@@ -541,5 +543,41 @@ namespace WebView2.DOM.Helpers
 
 		public override void Write(Utf8JsonWriter writer, OneOf<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> value, JsonSerializerOptions options) =>
 			JsonSerializer.Serialize(writer, value.Value, options);
+	}
+
+	internal sealed class BigIntegerJsonConverter : JsonConverter<BigInteger>
+	{
+		public override BigInteger Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			if (reader.TokenType == JsonTokenType.Null)
+			{
+				throw new NullReferenceException();
+			}
+
+			if (true
+			&& reader.TokenType == JsonTokenType.StartObject
+			&& reader.Read()
+			&& reader.TokenType == JsonTokenType.PropertyName
+			&& reader.GetString() == "bigint"
+			&& reader.Read()
+			&& reader.GetString() is string bigint
+			&& reader.Read()
+			&& reader.TokenType == JsonTokenType.EndObject
+			)
+			{
+				return BigInteger.Parse(bigint);
+			}
+			else
+			{
+				throw new InvalidOperationException();
+			}
+		}
+
+		public override void Write(Utf8JsonWriter writer, BigInteger value, JsonSerializerOptions options)
+		{
+			writer.WriteStartObject();
+			writer.WriteString("bigint", value.ToString());
+			writer.WriteEndObject();
+		}
 	}
 }

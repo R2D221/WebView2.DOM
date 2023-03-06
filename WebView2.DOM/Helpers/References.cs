@@ -1,5 +1,4 @@
-﻿using deniszykov.TypeConversion;
-using Microsoft.Web.WebView2.Core;
+﻿using Microsoft.Web.WebView2.Core;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -47,7 +46,7 @@ namespace WebView2.DOM
 		private static readonly FinalizationRegistry<JsObject, (IWebView2 webView, string referenceId)>
 			registry = new(x =>
 			{
-				x.webView.InvokeAsync(() =>
+				x.webView.BeginInvoke(() =>
 				{
 					_ =
 						x.webView.GetCoreWebView2()
@@ -251,10 +250,9 @@ namespace WebView2.DOM
 				var result = EfficientInvoker.ForDelegate(callback).Invoke(callback, args: final);
 				//var result = callback.DynamicInvoke(args: final);
 
-				if (result is not null)
-				{
-					throw new NotSupportedException("Only callbacks that don't return a value are supported for now");
-				}
+				var context = BrowsingContext.Current.RunningExecutionContext.CSharp;
+				context.Return(result);
+				_ = context.Requests.TryComplete();
 			}
 			catch (TargetInvocationException ex)
 			{

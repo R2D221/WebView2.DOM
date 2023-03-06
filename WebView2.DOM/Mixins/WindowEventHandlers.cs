@@ -11,9 +11,7 @@ namespace WebView2.DOM
 		//event OnBeforeUnloadEventHandler onbeforeunload;
 		event EventHandler<HashChangeEvent/*	*/> onhashchange/*	*/;
 		event EventHandler<Event/*	*/> onlanguagechange/*	*/;
-		[Obsolete("not tested")]
 		event EventHandler<MessageEvent/*	*/> onmessage/*	*/;
-		[Obsolete("not tested")]
 		event EventHandler<MessageEvent/*	*/> onmessageerror/*	*/;
 		event EventHandler<Event/*	*/> onoffline/*	*/;
 		event EventHandler<Event/*	*/> ononline/*	*/;

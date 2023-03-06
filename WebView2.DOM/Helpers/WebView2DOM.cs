@@ -223,7 +223,11 @@ namespace WebView2.DOM
 
 					x.pre_stringify = function (obj)
 					{{
-						if (obj instanceof Array)
+						if (typeof obj === 'bigint')
+						{{
+							return {{ bigint: obj.toString() }};
+						}}
+						else if (obj instanceof Array)
 						{{
 							return obj.map(x => WebView2DOM.pre_stringify(x));
 						}}
@@ -284,6 +288,10 @@ namespace WebView2.DOM
 						{{
 							return obj.map(x => WebView2DOM.post_parse(x));
 						}}
+						else if (obj != null && typeof obj === 'object' && typeof obj.bigint === 'string')
+						{{
+							return BigInt(obj.bigint);
+						}}
 						else if (obj != null && typeof obj === 'object' && typeof obj.referenceId === 'string')
 						{{
 							return WebView2DOM.GetObject(obj.referenceId);
@@ -309,7 +317,7 @@ namespace WebView2.DOM
 									Coordinator.{nameof(BrowsingContext._HostObject.Call)}(
 										obj.callbackId,
 										JSON.stringify(WebView2DOM.pre_stringify(parameters)));
-									WebView2DOM.EventLoop('callback');
+									return WebView2DOM.EventLoop('callback');
 								}};
 
 								idToCallback[obj.callbackId] = new WeakRef(callback);
@@ -330,16 +338,15 @@ namespace WebView2.DOM
 						}}
 					}};
 
-					let alreadyInLoop = false;
 					x.EventLoop = function (runId)
 					{{
-						if (alreadyInLoop) {{ return; }}
-						alreadyInLoop = true;
-
 						const myIterator = {{
 							[Symbol.iterator]: function() {{ Coordinator.{nameof(BrowsingContext._HostObject.iterator)}(); return this; }},
 							next: function() {{ return JSON.parse(Coordinator.{nameof(BrowsingContext._HostObject.next)}()); }}
 						}};
+
+						let hasReturnValue = false;
+						let returnValue = null;
 
 						for (const item of myIterator)
 						{{
@@ -455,6 +462,13 @@ namespace WebView2.DOM
 										Coordinator.{nameof(BrowsingContext._HostObject.ReturnVoid)}();
 									}})();
 									break;
+									case 'return':
+									(() => {{
+										hasReturnValue = true;
+										Coordinator.{nameof(BrowsingContext._HostObject.ReturnVoid)}();
+										returnValue = WebView2DOM.post_parse(current.{nameof(BrowsingContext.Request.Return.returnValue)});
+									}})();
+									break;
 									default:
 									(() => {{
 										Coordinator.{nameof(BrowsingContext._HostObject.Throw)}(
@@ -493,7 +507,10 @@ namespace WebView2.DOM
 							}}
 						}}
 
-						alreadyInLoop = false;
+						if (hasReturnValue)
+						{{
+							return returnValue;
+						}}
 					}};
 
 					Object.freeze(x);

@@ -93,16 +93,12 @@ namespace WebView2.DOM
 			=> Instance.Method().Invoke(x, y);
 		public static Window? open(string url = "", string target = "_blank", string features = "")
 			=> Instance.Method<Window?>().Invoke(url, target, features);
-		[Obsolete("not tested")]
 		public static void postMessage(object? message)
 			=> Instance.Method().Invoke(message);
-		[Obsolete("not tested")]
 		public static void postMessage(object? message, string targetOrigin)
 			=> Instance.Method().Invoke(message, targetOrigin);
-		[Obsolete("not tested")]
 		public static void postMessage(object? message, string targetOrigin, IReadOnlyList<Transferable> transfer)
 			=> Instance.Method().Invoke(message, targetOrigin, transfer);
-		[Obsolete("not tested")]
 		public static void postMessage(object? message, WindowPostMessageOptions options)
 			=> Instance.Method().Invoke(message, options);
 		public static void print()
@@ -234,9 +230,7 @@ namespace WebView2.DOM
 		public static event EventHandler<Event/*	*/> onbeforeprint/*	*/{ add => Instance.AddEvent(value); remove => Instance.RemoveEvent(value); }
 		public static event EventHandler<HashChangeEvent/*	*/> onhashchange/*	*/{ add => Instance.AddEvent(value); remove => Instance.RemoveEvent(value); }
 		public static event EventHandler<Event/*	*/> onlanguagechange/*	*/{ add => Instance.AddEvent(value); remove => Instance.RemoveEvent(value); }
-		[Obsolete("not tested")]
 		public static event EventHandler<MessageEvent/*	*/> onmessage/*	*/{ add => Instance.AddEvent(value); remove => Instance.RemoveEvent(value); }
-		[Obsolete("not tested")]
 		public static event EventHandler<MessageEvent/*	*/> onmessageerror/*	*/{ add => Instance.AddEvent(value); remove => Instance.RemoveEvent(value); }
 		public static event EventHandler<Event/*	*/> onoffline/*	*/{ add => Instance.AddEvent(value); remove => Instance.RemoveEvent(value); }
 		public static event EventHandler<Event/*	*/> ononline/*	*/{ add => Instance.AddEvent(value); remove => Instance.RemoveEvent(value); }

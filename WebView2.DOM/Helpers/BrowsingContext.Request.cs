@@ -17,7 +17,12 @@ namespace WebView2.DOM
 				private class Policy : PooledObjectPolicy<Constructor>
 				{
 					public override Constructor Create() => new() { obj = null, typeName = "", args = Array.Empty<object?>() };
-					public override bool Return(Constructor obj) => true;
+					public override bool Return(Constructor obj)
+					{
+						obj.typeName = "";
+						obj.args = Array.Empty<object?>();
+						return true;
+					}
 				}
 				private static ObjectPool<Constructor> pool = new DefaultObjectPool<Constructor>(new Policy());
 				internal static Constructor FromPool(string typeName, object?[] args)
@@ -39,7 +44,12 @@ namespace WebView2.DOM
 				private class Policy : PooledObjectPolicy<Get>
 				{
 					public override Get Create() => new() { obj = null, property = "" };
-					public override bool Return(Get obj) => true;
+					public override bool Return(Get obj)
+					{
+						obj.obj = null;
+						obj.property = "";
+						return true;
+					}
 				}
 				private static ObjectPool<Get> pool = new DefaultObjectPool<Get>(new Policy());
 				internal static Get FromPool(JsObject obj, string property)
@@ -60,7 +70,12 @@ namespace WebView2.DOM
 				private class Policy : PooledObjectPolicy<GetUintIndex>
 				{
 					public override GetUintIndex Create() => new() { obj = null, property = 0 };
-					public override bool Return(GetUintIndex obj) => true;
+					public override bool Return(GetUintIndex obj)
+					{
+						obj.obj = null;
+						obj.property = 0;
+						return true;
+					}
 				}
 				private static ObjectPool<GetUintIndex> pool = new DefaultObjectPool<GetUintIndex>(new Policy());
 				internal static GetUintIndex FromPool(JsObject obj, uint property)
@@ -81,7 +96,12 @@ namespace WebView2.DOM
 				private class Policy : PooledObjectPolicy<GetIntIndex>
 				{
 					public override GetIntIndex Create() => new() { obj = null, property = 0 };
-					public override bool Return(GetIntIndex obj) => true;
+					public override bool Return(GetIntIndex obj)
+					{
+						obj.obj = null;
+						obj.property = 0;
+						return true;
+					}
 				}
 				private static ObjectPool<GetIntIndex> pool = new DefaultObjectPool<GetIntIndex>(new Policy());
 				internal static GetIntIndex FromPool(JsObject obj, int property)
@@ -102,7 +122,13 @@ namespace WebView2.DOM
 				private class Policy : PooledObjectPolicy<Set<T>>
 				{
 					public override Set<T> Create() => new() { obj = null, property = "", value = default! };
-					public override bool Return(Set<T> obj) => true;
+					public override bool Return(Set<T> obj)
+					{
+						obj.obj = null;
+						obj.property = "";
+						obj.value = default!;
+						return true;
+					}
 				}
 				private static ObjectPool<Set<T>> pool = new DefaultObjectPool<Set<T>>(new Policy());
 				internal static Set<T> FromPool(JsObject obj, string property, T value)
@@ -125,7 +151,13 @@ namespace WebView2.DOM
 				private class Policy : PooledObjectPolicy<SetUintIndex<T>>
 				{
 					public override SetUintIndex<T> Create() => new() { obj = null, property = 0, value = default! };
-					public override bool Return(SetUintIndex<T> obj) => true;
+					public override bool Return(SetUintIndex<T> obj)
+					{
+						obj.obj = null;
+						obj.property = 0;
+						obj.value = default!;
+						return true;
+					}
 				}
 				private static ObjectPool<SetUintIndex<T>> pool = new DefaultObjectPool<SetUintIndex<T>>(new Policy());
 				internal static SetUintIndex<T> FromPool(JsObject obj, uint property, T value)
@@ -148,7 +180,13 @@ namespace WebView2.DOM
 				private class Policy : PooledObjectPolicy<SetIntIndex<T>>
 				{
 					public override SetIntIndex<T> Create() => new() { obj = null, property = 0, value = default! };
-					public override bool Return(SetIntIndex<T> obj) => true;
+					public override bool Return(SetIntIndex<T> obj)
+					{
+						obj.obj = null;
+						obj.property = 0;
+						obj.value = default!;
+						return true;
+					}
 				}
 				private static ObjectPool<SetIntIndex<T>> pool = new DefaultObjectPool<SetIntIndex<T>>(new Policy());
 				internal static SetIntIndex<T> FromPool(JsObject obj, int property, T value)
@@ -171,7 +209,12 @@ namespace WebView2.DOM
 				private class Policy : PooledObjectPolicy<Delete>
 				{
 					public override Delete Create() => new() { obj = null, property = "" };
-					public override bool Return(Delete obj) => true;
+					public override bool Return(Delete obj)
+					{
+						obj.obj = null;
+						obj.property = "";
+						return true;
+					}
 				}
 				private static ObjectPool<Delete> pool = new DefaultObjectPool<Delete>(new Policy());
 				internal static Delete FromPool(JsObject obj, string property)
@@ -192,7 +235,12 @@ namespace WebView2.DOM
 				private class Policy : PooledObjectPolicy<DeleteUintIndex>
 				{
 					public override DeleteUintIndex Create() => new() { obj = null, property = 0 };
-					public override bool Return(DeleteUintIndex obj) => true;
+					public override bool Return(DeleteUintIndex obj)
+					{
+						obj.obj = null;
+						obj.property = 0;
+						return true;
+					}
 				}
 				private static ObjectPool<DeleteUintIndex> pool = new DefaultObjectPool<DeleteUintIndex>(new Policy());
 				internal static DeleteUintIndex FromPool(JsObject obj, uint property)
@@ -213,7 +261,12 @@ namespace WebView2.DOM
 				private class Policy : PooledObjectPolicy<DeleteIntIndex>
 				{
 					public override DeleteIntIndex Create() => new() { obj = null, property = 0 };
-					public override bool Return(DeleteIntIndex obj) => true;
+					public override bool Return(DeleteIntIndex obj)
+					{
+						obj.obj = null;
+						obj.property = 0;
+						return true;
+					}
 				}
 				private static ObjectPool<DeleteIntIndex> pool = new DefaultObjectPool<DeleteIntIndex>(new Policy());
 				internal static DeleteIntIndex FromPool(JsObject obj, int property)
@@ -234,7 +287,13 @@ namespace WebView2.DOM
 				private class Policy : PooledObjectPolicy<Invoke>
 				{
 					public override Invoke Create() => new() { obj = null, method = "", args = Array.Empty<object?>() };
-					public override bool Return(Invoke obj) => true;
+					public override bool Return(Invoke obj)
+					{
+						obj.obj = null;
+						obj.method = "";
+						obj.args = Array.Empty<object?>();
+						return true;
+					}
 				}
 				private static ObjectPool<Invoke> pool = new DefaultObjectPool<Invoke>(new Policy());
 				internal static Invoke FromPool(JsObject obj, string method, object?[] args)
@@ -257,7 +316,13 @@ namespace WebView2.DOM
 				private class Policy : PooledObjectPolicy<SymbolInvoke>
 				{
 					public override SymbolInvoke Create() => new() { obj = null, method = "", args = Array.Empty<object?>() };
-					public override bool Return(SymbolInvoke obj) => true;
+					public override bool Return(SymbolInvoke obj)
+					{
+						obj.obj = null;
+						obj.method = "";
+						obj.args = Array.Empty<object?>();
+						return true;
+					}
 				}
 				private static ObjectPool<SymbolInvoke> pool = new DefaultObjectPool<SymbolInvoke>(new Policy());
 				internal static SymbolInvoke FromPool(JsObject obj, string method, object?[] args)
@@ -280,7 +345,12 @@ namespace WebView2.DOM
 				private class Policy : PooledObjectPolicy<AddEvent>
 				{
 					public override AddEvent Create() => new() { obj = null, @event = "" };
-					public override bool Return(AddEvent obj) => true;
+					public override bool Return(AddEvent obj)
+					{
+						obj.obj = null;
+						obj.@event = "";
+						return true;
+					}
 				}
 				private static ObjectPool<AddEvent> pool = new DefaultObjectPool<AddEvent>(new Policy());
 				internal static AddEvent FromPool(JsObject obj, string @event)
@@ -301,7 +371,12 @@ namespace WebView2.DOM
 				private class Policy : PooledObjectPolicy<RemoveEvent>
 				{
 					public override RemoveEvent Create() => new() { obj = null, @event = "" };
-					public override bool Return(RemoveEvent obj) => true;
+					public override bool Return(RemoveEvent obj)
+					{
+						obj.obj = null;
+						obj.@event = "";
+						return true;
+					}
 				}
 				private static ObjectPool<RemoveEvent> pool = new DefaultObjectPool<RemoveEvent>(new Policy());
 				internal static RemoveEvent FromPool(JsObject obj, string @event)
@@ -315,6 +390,30 @@ namespace WebView2.DOM
 
 				private RemoveEvent() : base("removeevent") { }
 				public required string @event { get; set; }
+			}
+
+			public sealed class Return : Request, IDisposable
+			{
+				private class Policy : PooledObjectPolicy<Return>
+				{
+					public override Return Create() => new() { obj = null, returnValue = null };
+					public override bool Return(Return obj)
+					{
+						obj.returnValue = null;
+						return true;
+					}
+				}
+				private static ObjectPool<Return> pool = new DefaultObjectPool<Return>(new Policy());
+				internal static Return FromPool(object? returnValue)
+				{
+					var request = pool.Get();
+					request.returnValue = returnValue;
+					return request;
+				}
+				public void Dispose() => pool.Return(this);
+
+				private Return() : base("return") { }
+				public required object? returnValue { get; set; }
 			}
 
 		}

@@ -4,7 +4,6 @@ using System.Collections.Immutable;
 
 namespace WebView2.DOM
 {
-	[Obsolete("not tested")]
 	public sealed class MessageEvent : Event
 	{
 		private MessageEvent() { }

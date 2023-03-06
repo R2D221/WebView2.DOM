@@ -4,7 +4,6 @@ namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/frame/user_activation.idl
 
-	[Obsolete("not tested")]
 	public sealed class UserActivation : JsObject
 	{
 		private UserActivation() { }

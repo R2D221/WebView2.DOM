@@ -38,7 +38,6 @@ namespace WebView2.DOM
 		public bool? _includeUserActivation { get; init; }
 	}
 
-	[Obsolete("not tested")]
 	public sealed partial class MessagePort : EventTarget
 	{
 		private MessagePort() { }

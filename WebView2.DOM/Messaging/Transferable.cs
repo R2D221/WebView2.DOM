@@ -4,8 +4,6 @@
 
 	public interface Transferable { }
 
-	public partial class ArrayBuffer : Transferable { }
-
 	public partial class MessagePort : Transferable { }
 
 	public partial class ImageBitmap : Transferable { }

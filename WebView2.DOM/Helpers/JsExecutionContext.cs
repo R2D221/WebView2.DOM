@@ -1,6 +1,8 @@
 ﻿using OneOf;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Channels;
@@ -15,12 +17,12 @@ namespace WebView2.DOM
 	{
 		private static Channel<T> CreateChannel<T>() => Channel.CreateBounded<T>(options: new(capacity: 1) { SingleReader = true, SingleWriter = true, AllowSynchronousContinuations = true });
 
-		private BrowsingContext browsingContext;
-		private readonly DispatcherFrame? dispatcherFrame;
+		private readonly BrowsingContext browsingContext;
+		private readonly TaskCompletionSource<DispatcherFrame> dispatcherFrameTcs = new();
 		private readonly TaskCompletionSource tcs = new();
 		private readonly CancellationTokenSource cts = new();
-		private Channel<Request> requests = CreateChannel<Request>();
-		private Channel<OneOf<string, Exception, @null>> responses = CreateChannel<OneOf<string, Exception, @null>>();
+		private readonly Channel<Request> requests = CreateChannel<Request>();
+		private readonly Channel<OneOf<string, Exception, @null>> responses = CreateChannel<OneOf<string, Exception, @null>>();
 
 		internal CSharpSide CSharp { get; }
 		internal JavaScriptSide JavaScript { get; }
@@ -29,12 +31,6 @@ namespace WebView2.DOM
 		{
 			this.browsingContext = browsingContext;
 
-			dispatcherFrame =
-				/*browsingContext.uiSyncContext is DispatcherSynchronizationContext
-				? new DispatcherFrame()
-				: */null
-				;
-
 			CSharp = new(this);
 			JavaScript = new(this);
 		}
@@ -42,8 +38,6 @@ namespace WebView2.DOM
 		public void Dispose()
 		{
 			cts.Cancel();
-			if (dispatcherFrame is not null) { dispatcherFrame.Continue = true; }
-
 			CSharp.Dispose();
 			JavaScript.Dispose();
 
@@ -54,9 +48,7 @@ namespace WebView2.DOM
 
 		internal sealed class CSharpSide : IDisposable
 		{
-			private readonly Lazy<object?> disposeLazy;
 			private readonly JsExecutionContext jsExecutionContext;
-			private DispatcherFrame? dispatcherFrame => jsExecutionContext.dispatcherFrame;
 			private CancellationToken cancellationToken => jsExecutionContext.cts.Token;
 			internal TaskCompletionSource taskCompletionSource => jsExecutionContext.tcs;
 
@@ -69,14 +61,18 @@ namespace WebView2.DOM
 			public CSharpSide(JsExecutionContext jsExecutionContext)
 			{
 				this.jsExecutionContext = jsExecutionContext;
-				disposeLazy = new(() => { DisposeInner(); return null; });
 			}
 
-			private void SetDispatcherFrameContinueFalse()
+			private void DispatcherPushFrame()
 			{
-				//if (dispatcherFrame is null) { return; }
+				if (jsExecutionContext.dispatcherFrameTcs.Task.IsCompleted == false)
+				{
+					jsExecutionContext.dispatcherFrameTcs.SetResult(new DispatcherFrame());
+				}
 
-				//dispatcherFrame.Continue = false;
+				var dispatcherFrame = jsExecutionContext.dispatcherFrameTcs.Task.GetAwaiter().GetResult();
+				Dispatcher.PushFrame(dispatcherFrame);
+				dispatcherFrame.Continue = true;
 			}
 
 			private OneOf<string, Exception, @null> Request(Request request)
@@ -92,8 +88,7 @@ namespace WebView2.DOM
 					throw new OperationCanceledException();
 				}
 
-				SetDispatcherFrameContinueFalse();
-
+				DispatcherPushFrame();
 				var @continue = Responses.WaitToReadAsync(cancellationToken).AsTask().GetAwaiter().GetResult();
 
 				if (@continue)
@@ -321,20 +316,29 @@ namespace WebView2.DOM
 				}
 			}
 
-			public void DisposeInner()
+			public void Return(object? returnValue)
 			{
-				_ = Requests.TryComplete();
-				SetDispatcherFrameContinueFalse();
+				using var request = BrowsingContext.Request.Return.FromPool(returnValue);
+				var response = Request(request);
+
+				response.Switch
+					(
+					(string json) => throw new Exception(),
+					(Exception ex) => throw ex,
+					_ => { }
+					);
 			}
 
-			public void Dispose() => _ = disposeLazy.Value;
+			public void Dispose()
+			{
+				_ = taskCompletionSource.TrySetResult();
+				_ = Requests.TryComplete();
+			}
 		}
 
 		internal sealed class JavaScriptSide : IDisposable
 		{
-			private readonly Lazy<object?> disposeLazy;
 			private readonly JsExecutionContext jsExecutionContext;
-			private DispatcherFrame? dispatcherFrame => jsExecutionContext.dispatcherFrame;
 			internal CancellationToken cancellationToken => jsExecutionContext.cts.Token;
 
 			public ChannelReader<Request> Requests =>
@@ -346,26 +350,20 @@ namespace WebView2.DOM
 			public JavaScriptSide(JsExecutionContext jsExecutionContext)
 			{
 				this.jsExecutionContext = jsExecutionContext;
-				disposeLazy = new(() => { DisposeInner(); return null; });
 			}
 
 			internal void WriteResponse(OneOf<string, Exception, @null> value)
 			{
 				var success = Responses.TryWrite(value);
+				SetDispatcherFrameContinueFalse();
 
-				if (success == false)
-				{
-					Debugger.Break();
-					throw new Exception();
-				}
+				Debug.Assert(success);
 			}
 
-			internal void DispatcherPushFrame()
+			public void SetDispatcherFrameContinueFalse()
 			{
-				//if (dispatcherFrame is null) { return; }
-
-				//Dispatcher.PushFrame(dispatcherFrame);
-				//dispatcherFrame.Continue = true;
+				var dispatcherFrame = jsExecutionContext.dispatcherFrameTcs.Task.GetAwaiter().GetResult();
+				dispatcherFrame.Continue = false;
 			}
 
 			internal void DoEvents()
@@ -375,12 +373,10 @@ namespace WebView2.DOM
 				System.Windows.Forms.Application.DoEvents();
 			}
 
-			public void DisposeInner()
+			public void Dispose()
 			{
 				_ = Responses.TryComplete();
 			}
-
-			public void Dispose() => _ = disposeLazy.Value;
 		}
 	}
 }

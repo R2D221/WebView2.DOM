@@ -34,7 +34,7 @@ namespace WebView2.DOM.Tests
 
 					location.href = new Uri("http://example.com");
 
-					_ = Assert.ThrowsException<OperationCanceledException>(() =>
+					_ = Assert.That.ThrowsExceptionOrDerived<OperationCanceledException>(() =>
 					{
 						while (true)
 						{

@@ -105,13 +105,8 @@ namespace WebView2.DOM.Tests
 		public async Task ExceptionFromCallbackIsHandledByTheDispatcher()
 		{
 			await wpfSyncContext;
-			await webView.InvokeInBrowserContextAsync(window =>
-			{
-				_ = window.setTimeout(() => throw new MyException(), Duration.Zero);
-			});
 
 			var tcs = new TaskCompletionSource();
-
 			application.DispatcherUnhandledException += x;
 			void x(object s, DispatcherUnhandledExceptionEventArgs e)
 			{
@@ -120,10 +115,18 @@ namespace WebView2.DOM.Tests
 				tcs.SetException(e.Exception);
 			}
 
-			_ = await Assert.ThrowsExceptionAsync<MyException>(async () =>
+			await webView.InvokeInBrowserContextAsync(window =>
+			{
+				_ = window.setTimeout(() => throw new MyException(), Duration.Zero);
+			});
+
+			var outerException = await Assert.ThrowsExceptionAsync<Exception>(async () =>
 			{
 				await tcs.Task;
 			});
+
+			var innerException = outerException.InnerException;
+			Assert.IsInstanceOfType(innerException, typeof(MyException));
 		}
 
 		[TestMethod]

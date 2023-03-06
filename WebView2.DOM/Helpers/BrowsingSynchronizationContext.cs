@@ -2,15 +2,13 @@
 using System.Collections.Concurrent;
 using System.Runtime.ExceptionServices;
 using System.Threading;
+using System.Windows.Threading;
 
 namespace WebView2.DOM
 {
 	internal sealed class BrowsingSynchronizationContext : SynchronizationContext, IDisposable
 	{
 		private readonly Thread thread;
-
-		private readonly BlockingCollection<(SendOrPostCallback, object?)>
-			actions = new();
 
 		internal BrowsingContext BrowsingContext { get; private set; }
 
@@ -19,6 +17,7 @@ namespace WebView2.DOM
 			this.BrowsingContext = browsingContext;
 
 			this.thread = new Thread(loop) { Name = "WebView2.DOM", IsBackground = true };
+			this.thread.SetApartmentState(ApartmentState.STA);
 			this.thread.Start();
 		}
 
@@ -26,24 +25,14 @@ namespace WebView2.DOM
 		{
 			SetSynchronizationContext(this);
 
-			foreach (var item in actions.GetConsumingEnumerable())
+			Dispatcher.CurrentDispatcher.UnhandledException += (s, e) =>
 			{
-				try
-				{
-					var (action, state) = item;
+				e.Handled = true;
+				var ex = e.Exception;
+				BrowsingContext.webView.BeginInvoke(() => throw new Exception(message: "Unhandled exception in browsing context.", innerException: ex));
+			};
 
-					action(state);
-				}
-				catch (Exception ex)
-				{
-					BrowsingContext.uiSyncContext.Post(ex =>
-					{
-						ExceptionDispatchInfo
-							.Capture((Exception)ex!)
-							.Throw();
-					}, ex);
-				}
-			}
+			Dispatcher.Run();
 		}
 
 		public override void Post(SendOrPostCallback d, object? state)
@@ -70,12 +59,24 @@ namespace WebView2.DOM
 
 		internal void PostInternal(SendOrPostCallback d, object? state)
 		{
-			actions.Add((d, state));
+			_ = Dispatcher.FromThread(thread).BeginInvoke(() =>
+			{
+				var x = SynchronizationContext.Current;
+				SetSynchronizationContext(this);
+				try
+				{
+					d(state);
+				}
+				finally
+				{
+					SetSynchronizationContext(x);
+				}
+			});
 		}
 
 		public void Dispose()
 		{
-			actions.CompleteAdding();
+			Dispatcher.FromThread(thread).InvokeShutdown();
 		}
 	}
 }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Channels;
@@ -46,10 +48,12 @@ namespace WebView2.DOM
 		internal readonly Channel<(SendOrPostCallback d, object? state)> callbacksChannel =
 			Channel.CreateUnbounded<(SendOrPostCallback d, object? state)>(options: new() { SingleReader = true, AllowSynchronousContinuations = true });
 
+		private readonly Stack<JsExecutionContext> executionContexts = new();
+
 		internal ulong NavigationId { get; }
 		internal Window Window { get; } = new Window();
 		internal _HostObject HostObject { get; }
-		internal JsExecutionContext? RunningExecutionContext { get; private set; }
+		internal JsExecutionContext RunningExecutionContext => executionContexts.Peek();
 
 		internal BrowsingContext(IWebView2 coreWebView, ulong navigationId)
 		{
@@ -66,21 +70,24 @@ namespace WebView2.DOM
 
 		internal JsExecutionContext StartNewExecutionContext()
 		{
-			if (RunningExecutionContext is not null) { throw new InvalidOperationException(); }
-
-			return RunningExecutionContext = new JsExecutionContext(this);
+			var executionContext = new JsExecutionContext(this);
+			executionContexts.Push(executionContext);
+			return executionContext;
 		}
 
 		internal void EndExecutionContext(JsExecutionContext executionContext)
 		{
-			if (executionContext != RunningExecutionContext) { throw new InvalidOperationException(); }
-
-			RunningExecutionContext = null;
+			var pop = executionContexts.Pop();
+			Debug.Assert(pop == executionContext);
 		}
 
 		public void Dispose()
 		{
-			RunningExecutionContext?.Dispose();
+			while (executionContexts.TryPeek(out var executionContext))
+			{
+				executionContext.Dispose();
+			}
+
 			browsingSyncContext.Dispose();
 		}
 	}

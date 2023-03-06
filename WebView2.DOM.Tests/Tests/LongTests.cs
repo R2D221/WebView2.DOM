@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using static WebView2.DOM.HTMLElementTag;
 using static WebView2.DOM.Tests.Global;
 
-namespace WebView2.DOM.Tests
+namespace WebView2.DOM.AdditionalTests
 {
 	[TestClass]
 	public class LongTests

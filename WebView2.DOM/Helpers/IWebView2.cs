@@ -33,7 +33,7 @@ namespace WebView2.DOM
 			}
 		}
 
-		public static void InvokeAsync(this IWebView2 webView2, Action action)
+		public static void BeginInvoke(this IWebView2 webView2, Action action)
 		{
 			switch (webView2)
 			{
@@ -44,7 +44,7 @@ namespace WebView2.DOM
 			}
 			case Microsoft.Web.WebView2.Wpf.WebView2 wpfWebView:
 			{
-				_ = wpfWebView.Dispatcher.InvokeAsync(action);
+				_ = wpfWebView.Dispatcher.BeginInvoke(action);
 				break;
 			}
 			default: throw new InvalidOperationException("webView was of unexpected type");

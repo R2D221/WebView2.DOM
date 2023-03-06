@@ -11,9 +11,7 @@ namespace WebView2.DOM
 		private protected JsObject() { }
 
 		private protected static JsExecutionContext.CSharpSide executionContext =>
-			BrowsingContext.Current.RunningExecutionContext?.CSharp
-			??
-			throw new InvalidOperationException();
+			BrowsingContext.Current.RunningExecutionContext.CSharp;
 
 		internal void Construct()
 		{

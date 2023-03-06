@@ -1,21 +1,32 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace WebView2.DOM.Tests
+public static class AssertExtensions
 {
-	public static class AssertExtensions
+	public static void IsInstanceOfType<T>(this Assert that, object? value, out T result)
+		where T : notnull
 	{
-#pragma warning disable RCS1175, IDE0060 // Quitar el parámetro no utilizado
-		public static void IsInstanceOfType<T>(this Assert that, object? value, out T result)
-			where T : notnull
+		_ = that;
+		Assert.IsInstanceOfType(value, typeof(T));
+		result = (T)value!;
+	}
+
+	public static T ThrowsExceptionOrDerived<T>(this Assert that, Action action)
+		where T : Exception
+	{
+		_ = that;
+		try
 		{
-			Assert.IsInstanceOfType(value, typeof(T));
-			result = (T)value!;
+			action();
 		}
-#pragma warning restore IDE0060, RCS1175 // Quitar el parámetro no utilizado
+		catch (T ex)
+		{
+			return ex;
+		}
+		//didn't catch
+		{
+			_ = Assert.ThrowsException<T>(() => { });
+			throw new Exception();
+		}
 	}
 }

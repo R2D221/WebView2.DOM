@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace WebView2.DOM.Tests
+namespace WebView2.DOM.AdditionalTests
 {
 	[TestClass]
 	public class FailingTests
@@ -16,13 +16,6 @@ namespace WebView2.DOM.Tests
 		public void FontFaceSet()
 		{
 			var set = new FontFaceSet();
-		}
-
-		[TestMethod]
-		public void TypedArrays()
-		{
-			var a1 = new Float32Array();
-			var a2 = new Float64Array();
 		}
 	}
 }

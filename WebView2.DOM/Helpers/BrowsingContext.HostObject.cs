@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.Json;
 using System.Threading;
+using System.Threading.Tasks;
 using WebView2.DOM.Helpers;
 
 namespace WebView2.DOM
@@ -23,11 +24,10 @@ namespace WebView2.DOM
 				return References2.GetId(browsingContext.Window);
 			}
 
-			private IEnumerator<Request>? enumerator;
+			private Stack<IEnumerator<Request>> enumerators = new();
 
 			private JsExecutionContext.JavaScriptSide executionContext =>
-				browsingContext.RunningExecutionContext?.JavaScript
-				?? throw new InvalidOperationException();
+				browsingContext.RunningExecutionContext.JavaScript;
 
 			public void Run()
 			{
@@ -74,7 +74,7 @@ namespace WebView2.DOM
 
 			private void RunBothLoops(SendOrPostCallback d, object? state)
 			{
-				enumerator = MyInnerEnumerator();
+				enumerators.Push(MyInnerEnumerator());
 				IEnumerator<Request> MyInnerEnumerator()
 				{
 					using var executionContext = browsingContext.StartNewExecutionContext();
@@ -87,43 +87,10 @@ namespace WebView2.DOM
 
 							using var __ = executionContext.CSharp;
 
-							try
-							{
-								d(state);
-							}
-							finally
-							{
-								executionContext.CSharp.taskCompletionSource.SetResult();
-							}
+							d(state);
 						});
 
 					using var javaScript = executionContext.JavaScript;
-
-					//while (javaScript.Requests.Completion.IsCompleted == false)
-					//{
-					//	javaScript.DispatcherPushFrame();
-
-					//	javaScript.cancellationToken.ThrowIfCancellationRequested();
-
-					//	while (true)
-					//	{
-					//		if (javaScript.Requests.TryRead(out var request))
-					//		{
-					//			yield return request;
-					//			break;
-					//		}
-					//		else if (javaScript.Requests.Completion.IsCompleted)
-					//		{
-					//			break;
-					//		}
-					//		else
-					//		{
-					//			javaScript.DoEvents();
-					//		}
-
-					//		javaScript.cancellationToken.ThrowIfCancellationRequested();
-					//	}
-					//}
 
 					while (javaScript.Requests.WaitToReadAsync(javaScript.cancellationToken).AsTask().GetAwaiter().GetResult())
 					{
@@ -139,7 +106,7 @@ namespace WebView2.DOM
 						}
 					}
 
-					enumerator = null;
+					_ = enumerators.Pop();
 					yield break;
 				}
 			}
@@ -154,7 +121,7 @@ namespace WebView2.DOM
 
 			public string next()
 			{
-				var enumerator = this.enumerator ?? throw new Exception();
+				var enumerator = enumerators.Peek();
 
 				var response = new next_response();
 

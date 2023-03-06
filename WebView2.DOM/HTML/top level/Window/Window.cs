@@ -91,16 +91,12 @@ namespace WebView2.DOM
 		public void print()
 			=> Method().Invoke();
 
-		[Obsolete("not tested")]
 		public void postMessage(object? message)
 			=> Method().Invoke(message);
-		[Obsolete("not tested")]
 		public void postMessage(object? message, string targetOrigin)
 			=> Method().Invoke(message, targetOrigin);
-		[Obsolete("not tested")]
 		public void postMessage(object? message, string targetOrigin, IReadOnlyList<Transferable> transfer)
 			=> Method().Invoke(message, targetOrigin, transfer);
-		[Obsolete("not tested")]
 		public void postMessage(object? message, WindowPostMessageOptions options)
 			=> Method().Invoke(message, options);
 
