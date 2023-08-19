@@ -8,7 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TestXaml.Library\TestXaml.Library.csproj" />
     <ProjectReference Include="..\WebView2.DOM\WebView2.DOM.csproj" />
   </ItemGroup>
 

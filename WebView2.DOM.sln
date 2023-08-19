@@ -16,14 +16,20 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "repo", "repo", "{0110E9B9-0
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestXaml.Library", "TestXaml.Library\TestXaml.Library.csproj", "{122B5A98-D56A-432D-B747-C17B511B4685}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5AE95A3F-2B9C-4F7D-AD4F-7FA0B5041DBE}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "WebView2.DOM.Sample.Shared", "WebView2.DOM.Sample.Shared\WebView2.DOM.Sample.Shared.shproj", "{52E3C6F7-6E51-4F73-8EF5-50ED3F492F8B}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "WebIdlParser", "WebIdlParser\WebIdlParser.shproj", "{C468C7F2-B12B-48E9-B72C-CC8D13E6FE4E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebIdlParser.Test", "WebIdlParser.Test\WebIdlParser.Test.csproj", "{A464E506-3E90-4A74-8EC5-B850D846AD06}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebIdlSourceGenerator", "WebIdlSourceGenerator\WebIdlSourceGenerator.csproj", "{8562C3AA-A22B-4165-AFF4-D100011F4DA0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebIdelParser.Test2", "WebIdelParser.Test2\WebIdelParser.Test2.csproj", "{5CC8B390-B06E-4E77-B599-E96EE1D99F13}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,10 +53,18 @@ Global
 		{3C73D0F4-B828-443A-884F-945456CFF094}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C73D0F4-B828-443A-884F-945456CFF094}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C73D0F4-B828-443A-884F-945456CFF094}.Release|Any CPU.Build.0 = Release|Any CPU
-		{122B5A98-D56A-432D-B747-C17B511B4685}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{122B5A98-D56A-432D-B747-C17B511B4685}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{122B5A98-D56A-432D-B747-C17B511B4685}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{122B5A98-D56A-432D-B747-C17B511B4685}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A464E506-3E90-4A74-8EC5-B850D846AD06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A464E506-3E90-4A74-8EC5-B850D846AD06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A464E506-3E90-4A74-8EC5-B850D846AD06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A464E506-3E90-4A74-8EC5-B850D846AD06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8562C3AA-A22B-4165-AFF4-D100011F4DA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8562C3AA-A22B-4165-AFF4-D100011F4DA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8562C3AA-A22B-4165-AFF4-D100011F4DA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8562C3AA-A22B-4165-AFF4-D100011F4DA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CC8B390-B06E-4E77-B599-E96EE1D99F13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CC8B390-B06E-4E77-B599-E96EE1D99F13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CC8B390-B06E-4E77-B599-E96EE1D99F13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CC8B390-B06E-4E77-B599-E96EE1D99F13}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -61,6 +75,10 @@ Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		WebView2.DOM.Sample.Shared\WebView2.DOM.Sample.Shared.projitems*{3c73d0f4-b828-443a-884f-945456cff094}*SharedItemsImports = 5
 		WebView2.DOM.Sample.Shared\WebView2.DOM.Sample.Shared.projitems*{52e3c6f7-6e51-4f73-8ef5-50ed3f492f8b}*SharedItemsImports = 13
+		WebIdlParser\WebIdlParser.projitems*{5cc8b390-b06e-4e77-b599-e96ee1d99f13}*SharedItemsImports = 5
+		WebIdlParser\WebIdlParser.projitems*{8562c3aa-a22b-4165-aff4-d100011f4da0}*SharedItemsImports = 5
 		WebView2.DOM.Sample.Shared\WebView2.DOM.Sample.Shared.projitems*{9985fbda-b9c2-467d-9cb5-4d96d1d0ba5e}*SharedItemsImports = 5
+		WebIdlParser\WebIdlParser.projitems*{a464e506-3e90-4a74-8ec5-b850d846ad06}*SharedItemsImports = 5
+		WebIdlParser\WebIdlParser.projitems*{c468c7f2-b12b-48e9-b72c-cc8d13e6fe4e}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal
