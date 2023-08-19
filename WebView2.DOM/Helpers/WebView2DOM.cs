@@ -116,15 +116,6 @@ namespace WebView2.DOM
 
 						const newId = Guid.NewGuid();
 
-						//if (obj instanceof HTMLInputElement)
-						//{
-						//	Coordinator.nameof(Coordinator.References_AddHTMLInputElement)(newId, obj.type);
-						//}
-						//else
-						//{
-						//	Coordinator.nameof(BrowsingContext.JS_AddReference)(newId, obj.constructor.name);
-						//}
-
 						objToId.set(obj, newId);
 						idToObj[newId] = new WeakRef(obj);
 						registry.register(obj, newId, obj);
@@ -224,24 +215,26 @@ namespace WebView2.DOM
 
 					x.pre_stringify = function (obj)
 					{
+						const objWindow = obj.constructor.constructor('return window')();
+
 						if (typeof obj === 'bigint')
 						{
 							return { bigint: obj.toString() };
 						}
-						else if (obj instanceof Array)
+						else if (obj instanceof objWindow.Array)
 						{
 							return obj.map(x => WebView2DOM.pre_stringify(x));
 						}
 						else if (false
-							|| obj instanceof DOMStringList
-							|| obj instanceof DOMRectList
-							|| obj instanceof TouchList
-							|| obj instanceof CSSNumericArray
+							|| obj instanceof objWindow.DOMStringList
+							|| obj instanceof objWindow.DOMRectList
+							|| obj instanceof objWindow.TouchList
+							|| obj instanceof objWindow.CSSNumericArray
 							)
 						{
 							return Array.from(obj, x => WebView2DOM.pre_stringify(x));
 						}
-						else if (obj instanceof Promise)
+						else if (obj instanceof objWindow.Promise)
 						{
 							obj = WebView2DOM.ExtendPromise(obj);
 
@@ -249,11 +242,11 @@ namespace WebView2.DOM
 
 							return { referenceId: WebView2DOM.GetId(obj), referenceType: obj.constructor.name };
 						}
-						else if (obj != null && typeof obj === 'object' && Object.getPrototypeOf(obj) !== Object.prototype)
+						else if (obj != null && typeof obj === 'object' && Object.getPrototypeOf(obj) !== objWindow.Object.prototype)
 						{
 							refsHeldInCSharp.add(obj);
 
-							if (obj instanceof HTMLInputElement)
+							if (obj instanceof objWindow.HTMLInputElement)
 							{
 								return { referenceId: WebView2DOM.GetId(obj), referenceType: obj.constructor.name + ' ' + obj.type.replace('-', '_') };
 							}
@@ -262,13 +255,13 @@ namespace WebView2.DOM
 								return { referenceId: WebView2DOM.GetId(obj), referenceType: obj.constructor.name };
 							}
 						}
-						else if (obj != null && typeof obj === 'object' && obj[Symbol.toStringTag] != null)
+						else if (obj != null && typeof obj === 'object' && obj[objWindow.Symbol.toStringTag] != null)
 						{
 							refsHeldInCSharp.add(obj);
 
-							return { referenceId: WebView2DOM.GetId(obj), referenceType: obj[Symbol.toStringTag] };
+							return { referenceId: WebView2DOM.GetId(obj), referenceType: obj[objWindow.Symbol.toStringTag] };
 						}
-						else if (obj != null && typeof obj === 'object' && Object.getPrototypeOf(obj) === Object.prototype)
+						else if (obj != null && typeof obj === 'object' && Object.getPrototypeOf(obj) === objWindow.Object.prototype)
 						{
 							const newObj = {};
 							for (const key in obj)

@@ -54,9 +54,16 @@ namespace WebView2.DOM
 				});
 			});
 
+		//private static HashSet<string> seen = new();
+
 		public static TJsObject Load<TJsObject>(string referenceId, string typeName)
 			where TJsObject : JsObject
 		{
+			//if (seen.Add(typeName))
+			//{
+			//	//Debugger.Break();
+			//}
+
 			var weakRef = idToObj.GetOrAdd(referenceId, _ => new(null!));
 
 			if (!weakRef.TryGetTarget(out var target))
