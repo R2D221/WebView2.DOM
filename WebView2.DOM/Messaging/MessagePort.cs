@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -9,33 +10,22 @@ namespace WebView2.DOM
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/messaging/message_port.idl
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/messaging/post_message_options.idl
 
-	public record PostMessageOptions
+	[JsonConverter(typeof(Converter))]
+	public record PostMessageOptions : JsDictionary
 	{
-		[JsonIgnore]
+		private class Converter : Converter<PostMessageOptions> { }
+
 		public IReadOnlyList<Transferable> transfer
 		{
-			get => _transfer ?? Array.Empty<Transferable>();
-			init => _transfer = value;
+			get => Get<IReadOnlyList<Transferable>>(defaultValue: Array.Empty<Transferable>());
+			init => Set(value);
 		}
 
-		[JsonIgnore]
 		public bool includeUserActivation
 		{
-			get => _includeUserActivation ?? false;
-			init => _includeUserActivation = value;
+			get => Get<bool>(defaultValue: false);
+			init => Set(value);
 		}
-
-		[JsonPropertyName(nameof(transfer))]
-		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-		[EditorBrowsable(EditorBrowsableState.Never)]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		public IReadOnlyList<Transferable>? _transfer { get; init; }
-
-		[JsonPropertyName(nameof(includeUserActivation))]
-		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-		[EditorBrowsable(EditorBrowsableState.Never)]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		public bool? _includeUserActivation { get; init; }
 	}
 
 	public sealed partial class MessagePort : EventTarget

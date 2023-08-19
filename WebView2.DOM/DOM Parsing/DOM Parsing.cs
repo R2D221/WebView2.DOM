@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace WebView2.DOM
 {
@@ -15,9 +16,16 @@ namespace WebView2.DOM
 
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/xml/parse_from_string_options.idl
 
-	public record ParseFromStringOptions
+	[JsonConverter(typeof(Converter))]
+	public record ParseFromStringOptions : JsDictionary
 	{
-		public required bool includeShadowRoots { get; init; }
+		private class Converter : Converter<ParseFromStringOptions> { }
+
+		public required bool includeShadowRoots
+		{
+			get => GetRequired<bool>();
+			init => Set(value);
+		}
 	}
 
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/xml/dom_parser.idl

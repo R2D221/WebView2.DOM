@@ -12,20 +12,16 @@ namespace WebView2.DOM
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/frame/window_post_message_options.idl
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/modules/storage/window_storage.idl
 
+	[JsonConverter(typeof(Converter))]
 	public record WindowPostMessageOptions : PostMessageOptions
 	{
-		[JsonIgnore]
+		private class Converter : Converter<WindowPostMessageOptions> { }
+
 		public string targetOrigin
 		{
-			get => _targetOrigin ?? "/";
-			init => _targetOrigin = value;
+			get => Get<string>(defaultValue: "/");
+			init => Set(value);
 		}
-
-		[JsonPropertyName(nameof(targetOrigin))]
-		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-		[EditorBrowsable(EditorBrowsableState.Never)]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		public string? _targetOrigin { get; init; }
 	}
 
 	public partial class Window : EventTarget

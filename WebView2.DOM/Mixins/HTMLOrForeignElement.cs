@@ -1,10 +1,19 @@
-﻿namespace WebView2.DOM
+﻿using System.Text.Json.Serialization;
+
+namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/html/html_or_foreign_element.idl
 
-	public record FocusOptions
+	[JsonConverter(typeof(Converter))]
+	public record FocusOptions : JsDictionary
 	{
-		public required bool preventScroll { get; init; }
+		private class Converter : Converter<FocusOptions> { }
+
+		public required bool preventScroll
+		{
+			get => GetRequired<bool>();
+			init => Set(value);
+		}
 	}
 
 	public interface HTMLOrForeignElement

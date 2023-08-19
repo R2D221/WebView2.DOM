@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Text.Json.Serialization;
 
 namespace WebView2.DOM
 {
@@ -80,25 +81,59 @@ namespace WebView2.DOM
 
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/frame/navigator_ua_brand_version.idl
 
-	public record NavigatorUABrandVersion
+	[JsonConverter(typeof(Converter))]
+	public record NavigatorUABrandVersion : JsDictionary
 	{
-		public required string brand { get; init; }
+		private class Converter : Converter<NavigatorUABrandVersion> { }
 
-		public required string version { get; init; }
+		public required string brand
+		{
+			get => GetRequired<string>();
+			init => Set(value);
+		}
+
+		public required string version
+		{
+			get => GetRequired<string>();
+			init => Set(value);
+		}
 	}
 
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/frame/ua_data_values.idl
 
-	public record UADataValues
+	[JsonConverter(typeof(Converter))]
+	public record UADataValues : JsDictionary
 	{
-		public required string platform { get; init; }
+		private class Converter : Converter<UADataValues> { }
 
-		public required string platformVersion { get; init; }
+		public required string platform
+		{
+			get => GetRequired<string>();
+			init => Set(value);
+		}
 
-		public required string architecture { get; init; }
+		public required string platformVersion
+		{
+			get => GetRequired<string>();
+			init => Set(value);
+		}
 
-		public required string model { get; init; }
+		public required string architecture
+		{
+			get => GetRequired<string>();
+			init => Set(value);
+		}
 
-		public required string uaFullVersion { get; init; }
+		public required string model
+		{
+			get => GetRequired<string>();
+			init => Set(value);
+		}
+
+		public required string uaFullVersion
+		{
+			get => GetRequired<string>();
+			init => Set(value);
+		}
 	}
 }

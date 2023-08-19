@@ -17,7 +17,7 @@ namespace WebView2.DOM
 
 	public enum CanPlayTypeResult { _, maybe, probably }
 
-	public enum Preload { _, none, metadata, auto }
+	public enum Preload { none, metadata, auto }
 
 	public enum MediaReadyState : ushort
 	{

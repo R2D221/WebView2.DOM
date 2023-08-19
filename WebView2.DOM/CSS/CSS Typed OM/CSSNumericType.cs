@@ -1,4 +1,6 @@
-﻿namespace WebView2.DOM
+﻿using System.Text.Json.Serialization;
+
+namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/css/cssom/css_numeric_type.idl
 
@@ -13,22 +15,57 @@
 		percent,
 	};
 
-	public record CSSNumericType
+	[JsonConverter(typeof(Converter))]
+	public record CSSNumericType : JsDictionary
 	{
-		public required int length { get; init; }
+		private class Converter : Converter<CSSNumericType> { }
 
-		public required int angle { get; init; }
+		public required int length
+		{
+			get => GetRequired<int>();
+			init => Set(value);
+		}
 
-		public required int time { get; init; }
+		public required int angle
+		{
+			get => GetRequired<int>();
+			init => Set(value);
+		}
 
-		public required int frequency { get; init; }
+		public required int time
+		{
+			get => GetRequired<int>();
+			init => Set(value);
+		}
 
-		public required int resolution { get; init; }
+		public required int frequency
+		{
+			get => GetRequired<int>();
+			init => Set(value);
+		}
 
-		public required int flex { get; init; }
+		public required int resolution
+		{
+			get => GetRequired<int>();
+			init => Set(value);
+		}
 
-		public required int percent { get; init; }
+		public required int flex
+		{
+			get => GetRequired<int>();
+			init => Set(value);
+		}
 
-		public required CSSNumericBaseType percentHint { get; init; }
+		public required int percent
+		{
+			get => GetRequired<int>();
+			init => Set(value);
+		}
+
+		public required CSSNumericBaseType percentHint
+		{
+			get => GetRequired<CSSNumericBaseType>();
+			init => Set(value);
+		}
 	}
 }

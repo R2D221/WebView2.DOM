@@ -1,11 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Text.Json.Serialization;
 
 namespace WebView2.DOM
 {
-	public record AssignedNodesOptions
+	[JsonConverter(typeof(Converter))]
+	public record AssignedNodesOptions : JsDictionary
 	{
-		public required bool flatten { get; init; }
+		private class Converter : Converter<AssignedNodesOptions> { }
+
+		public required bool flatten
+		{
+			get => GetRequired<bool>();
+			init => Set(value);
+		}
 	}
 
 	public sealed class HTMLSlotElement : HTMLElement
