@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <WarningsAsErrors>NX0001,NX0002</WarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DelegateBindings" Version="1.0.0" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1722.45" />
+    <PackageReference Include="Nito.Mvvm.CalculatedProperties" Version="1.3.1" />
+    <PackageReference Include="Nullable.Extended.Analyzer" Version="1.10.4539">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <!--<PackageReference Include="WebView2.DOM" Version="0.7.0" />-->
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WebView2.DOM\WebView2.DOM.csproj" />
+  </ItemGroup>
+
+</Project>

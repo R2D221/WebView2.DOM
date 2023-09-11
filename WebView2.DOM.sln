@@ -31,6 +31,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebIdlSourceGenerator", "We
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebIdelParser.Test2", "WebIdelParser.Test2\WebIdelParser.Test2.csproj", "{5CC8B390-B06E-4E77-B599-E96EE1D99F13}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Components", "Components", "{B7C0515C-2A9D-42A7-A4D7-954D0BC0852C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebView2.DOM.Components", "WebView2.DOM.Components\WebView2.DOM.Components.csproj", "{BF12693D-B0FB-4FBA-93DB-D3C890547E60}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebView2.DOM.Components.Test", "WebView2.DOM.Components.Test\WebView2.DOM.Components.Test.csproj", "{009E7DE5-696F-4236-B548-5C1C6264607B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,9 +71,21 @@ Global
 		{5CC8B390-B06E-4E77-B599-E96EE1D99F13}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5CC8B390-B06E-4E77-B599-E96EE1D99F13}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5CC8B390-B06E-4E77-B599-E96EE1D99F13}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF12693D-B0FB-4FBA-93DB-D3C890547E60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF12693D-B0FB-4FBA-93DB-D3C890547E60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF12693D-B0FB-4FBA-93DB-D3C890547E60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF12693D-B0FB-4FBA-93DB-D3C890547E60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{009E7DE5-696F-4236-B548-5C1C6264607B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{009E7DE5-696F-4236-B548-5C1C6264607B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{009E7DE5-696F-4236-B548-5C1C6264607B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{009E7DE5-696F-4236-B548-5C1C6264607B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BF12693D-B0FB-4FBA-93DB-D3C890547E60} = {B7C0515C-2A9D-42A7-A4D7-954D0BC0852C}
+		{009E7DE5-696F-4236-B548-5C1C6264607B} = {B7C0515C-2A9D-42A7-A4D7-954D0BC0852C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1676229F-F40B-49EA-B04E-8748ABE7CAE4}
