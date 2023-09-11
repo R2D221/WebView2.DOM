@@ -17,5 +17,7 @@ namespace WebView2.DOM
 		}
 		public string sizes { get => Get<string>(); set => Set(value); }
 		public string media { get => Get<string>(); set => Set(value); }
+		public uint width { get => Get<uint>(); set => Set(value); }
+		public uint height { get => Get<uint>(); set => Set(value); }
 	}
 }

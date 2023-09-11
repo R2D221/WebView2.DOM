@@ -58,6 +58,7 @@ namespace WebView2.DOM
 			private @hidden() { }
 
 			public string autocomplete { get => Get<string>(); set => Set(value); }
+			public string dirName { get => Get<string>(); set => Set(value); }
 		}
 
 		#endregion
@@ -117,6 +118,7 @@ namespace WebView2.DOM
 		{
 			private @tel() { }
 
+			public string dirName { get => Get<string>(); set => Set(value); }
 			public HTMLDataListElement? list => Get<HTMLDataListElement?>();
 		}
 
@@ -124,6 +126,7 @@ namespace WebView2.DOM
 		{
 			private @url() { }
 
+			public string dirName { get => Get<string>(); set => Set(value); }
 			public HTMLDataListElement? list => Get<HTMLDataListElement?>();
 		}
 
@@ -131,6 +134,7 @@ namespace WebView2.DOM
 		{
 			private @email() { }
 
+			public string dirName { get => Get<string>(); set => Set(value); }
 			public HTMLDataListElement? list => Get<HTMLDataListElement?>();
 		}
 

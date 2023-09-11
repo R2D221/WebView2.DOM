@@ -103,7 +103,7 @@ namespace WebView2.DOM
 		public static readonly HTMLElementTag<HTMLElement/*	*/> main/*	*/= new HTMLElementTag();
 		public static readonly HTMLElementTag<HTMLMapElement/*	*/> map/*	*/= new HTMLElementTag();
 		public static readonly HTMLElementTag<HTMLElement/*	*/> mark/*	*/= new HTMLElementTag();
-		//public static readonly HTMLElementTag<HTMLMenuElement/*	*/> menu/*	*/= new HTMLElementTag();
+		public static readonly HTMLElementTag<HTMLMenuElement/*	*/> menu/*	*/= new HTMLElementTag();
 		public static readonly HTMLElementTag<HTMLMetaElement/*	*/> meta/*	*/= new HTMLElementTag();
 		public static readonly HTMLElementTag<HTMLMeterElement/*	*/> meter/*	*/= new HTMLElementTag();
 		public static readonly HTMLElementTag<HTMLElement/*	*/> nav/*	*/= new HTMLElementTag();

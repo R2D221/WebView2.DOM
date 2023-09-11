@@ -4,6 +4,21 @@ namespace WebView2.DOM
 {
 	// https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/core/html/html_element.idl
 
+	public enum Autocapitalize
+	{
+		_, off, none, on, sentences, words, characters
+	}
+
+	public enum ContentEditable
+	{
+		inherit, @true, plaintext_only, @false
+	}
+
+	public enum Dir
+	{
+		_, ltr, rtl, auto
+	}
+
 	public enum EnterKeyHint
 	{
 		_, enter, done, go, next, previous, search, send
@@ -22,7 +37,7 @@ namespace WebView2.DOM
 		public string title { get => Get<string>(); set => Set(value); }
 		public string lang { get => Get<string>(); set => Set(value); }
 		public bool translate { get => Get<bool>(); set => Set(value); }
-		public string dir { get => Get<string>(); set => Set(value); }
+		public Dir dir { get => Get<Dir>(); set => Set(value); }
 
 		// user interaction
 		public bool hidden { get => Get<bool>(); set => Set(value); }
@@ -31,12 +46,12 @@ namespace WebView2.DOM
 		public string accessKey { get => Get<string>(); set => Set(value); }
 		public bool draggable { get => Get<bool>(); set => Set(value); }
 		public bool spellcheck { get => Get<bool>(); set => Set(value); }
-		public string autocapitalize { get => Get<string>(); set => Set(value); }
+		public Autocapitalize autocapitalize { get => Get<Autocapitalize>(); set => Set(value); }
 
 		//public ElementInternals attachInternals() => Method<ElementInternals>().Invoke();
 
 		// HTMLElement includes ElementContentEditable
-		public string contentEditable { get => Get<string>(); set => Set(value); }
+		public ContentEditable contentEditable { get => Get<ContentEditable>(); set => Set(value); }
 		public EnterKeyHint enterKeyHint { get => Get<EnterKeyHint>(); set => Set(value); }
 		public bool isContentEditable => Get<bool>();
 		public InputMode inputMode { get => Get<InputMode>(); set => Set(value); }

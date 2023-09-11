@@ -1,4 +1,4 @@
 ﻿namespace WebView2.DOM
 {
-	public enum ImageDecodingHint { _, async, sync, auto }
+	public enum ImageDecodingHint { async, sync, auto }
 }

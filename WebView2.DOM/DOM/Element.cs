@@ -10,10 +10,10 @@ namespace WebView2.DOM
 	{
 		private protected Element() { }
 
-		public string? namespaceURI => Get<string?>();
-		public string? prefix => Get<string?>();
-		public string localName => Get<string>();
-		public string tagName => Get<string>();
+		public string? namespaceURI => GetCached<string?>();
+		public string? prefix => GetCached<string?>();
+		public string localName => GetCached<string>();
+		public string tagName => GetCached<string>();
 
 		public string id { get => Get<string>(); set => Set(value); }
 		public string className { get => Get<string>(); set => Set(value); }

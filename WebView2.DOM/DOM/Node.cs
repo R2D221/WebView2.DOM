@@ -35,8 +35,8 @@ namespace WebView2.DOM
 	{
 		private protected Node() { }
 
-		public NodeType nodeType => Get<NodeType>();
-		public string nodeName => Get<string>();
+		public NodeType nodeType => GetCached<NodeType>();
+		public string nodeName => GetCached<string>();
 
 		public string? baseURI => Get<string?>();
 

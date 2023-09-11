@@ -18,7 +18,7 @@
 
 		public HTMLOptionsCollection options => Get<HTMLOptionsCollection>();
 
-		public HTMLCollection<HTMLOptionElement> selectedOptions => Get<HTMLCollection<HTMLOptionElement>>();
+		public HTMLCollection<HTMLOptionElement> selectedOptions => GetCached<HTMLCollection<HTMLOptionElement>>();
 		public int selectedIndex { get => Get<int>(); set => Set(value); }
 		public string value { get => Get<string>(); set => Set(value); }
 
