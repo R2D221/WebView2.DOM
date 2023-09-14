@@ -63,7 +63,10 @@ public sealed class CalculatedCollection<TSource, TResult> : INotifyCollectionCh
 			var oldItemsCount = e_OldItems.Count;
 
 			var oldItems =
-				result[e.OldStartingIndex..(e.OldStartingIndex + oldItemsCount)];
+				result.AsSpan()
+				[e.OldStartingIndex..(e.OldStartingIndex + oldItemsCount)]
+				.ToArray()
+				.ToImmutableArray();
 
 			result = result.RemoveRange(e.OldStartingIndex, oldItemsCount);
 
@@ -81,7 +84,10 @@ public sealed class CalculatedCollection<TSource, TResult> : INotifyCollectionCh
 			var oldItemsCount = e_OldItems.Count;
 
 			var oldItems =
-				result[e.OldStartingIndex..(e.OldStartingIndex + oldItemsCount)];
+				result.AsSpan()
+				[e.OldStartingIndex..(e.OldStartingIndex + oldItemsCount)]
+				.ToArray()
+				.ToImmutableArray();
 
 			result = result.RemoveRange(e.OldStartingIndex, oldItemsCount);
 
@@ -108,7 +114,10 @@ public sealed class CalculatedCollection<TSource, TResult> : INotifyCollectionCh
 			var movedItemsCount = e_OldItems.Count;
 
 			var movedItems =
-				result[e.OldStartingIndex..(e.OldStartingIndex + movedItemsCount)];
+				result.AsSpan()
+				[e.OldStartingIndex..(e.OldStartingIndex + movedItemsCount)]
+				.ToArray()
+				.ToImmutableArray();
 
 			result = result.RemoveRange(e.OldStartingIndex, movedItemsCount);
 			result = result.InsertRange(e.NewStartingIndex, movedItems);
