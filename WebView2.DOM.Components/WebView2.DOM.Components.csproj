@@ -7,6 +7,9 @@
     <UseWPF>true</UseWPF>
     <WarningsAsErrors>nullable,IDE0058,IDE0059,NX0001,NX0002</WarningsAsErrors>
     <Version>0.0.1</Version>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/R2D221/WebView2.DOM</PackageProjectUrl>
+    <Description>Define components for WebView2.DOM in a simple way</Description>
   </PropertyGroup>
 
   <ItemGroup>
