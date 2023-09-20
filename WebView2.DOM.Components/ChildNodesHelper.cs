@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using static DelegateBindings.DelegateBinder;
 
 namespace WebView2.DOM.Components;
@@ -52,30 +53,32 @@ public static class ChildNodesHelper
 		NodeExtraInfo.AppendChild(parent, child);
 	}
 
-	public static void Add(NodeBuilder builder, IReadOnlyList<NodeBuilder> list)
+	public static void Add(NodeBuilder builder, IEnumerable<NodeBuilder> children)
 	{
 		var parent = (Node)builder;
 
-		if (list.Any(child => builder.CanAddChild(child) == false))
+		if (children.Any(child => builder.CanAddChild(child) == false))
 		{
 			throw new NotSupportedException($"Couldn't append child to node {parent.nodeName}");
 		}
 
-		if (list is INotifyCollectionChanged incc)
+		if (children is INotifyCollectionChanged and IReadOnlyCollection<NodeBuilder>)
 		{
+			var notifyingChildren = Unsafe.As<INotifyingCollection<NodeBuilder>>(children);
+
 			var startMarker = parent.appendChild(document.createComment(""));
 
-			foreach (var child in list)
+			foreach (var child in notifyingChildren)
 			{
 				_ = parent.appendChild(child);
 				NodeExtraInfo.AppendChild(parent, child);
 			}
 
-			var childNodes = list.Select(x => (Node)x).ToList();
+			var childNodes = notifyingChildren.Select(x => (Node)x).ToList();
 
 			var endMarker = parent.appendChild(document.createComment(""));
 
-			incc.CollectionChanged += (_, e) =>
+			notifyingChildren.CollectionChanged += (_, e) =>
 			{
 				void AddInternal()
 				{
@@ -88,13 +91,23 @@ public static class ChildNodesHelper
 						? childNodes[e.NewStartingIndex] :
 						e.NewStartingIndex == childNodes.Count
 						? endMarker :
+						e.NewStartingIndex == -1
+						? endMarker :
 						throw new IndexOutOfRangeException();
 
 					if (newItems.Length == 1)
 					{
 						_ = parent.insertBefore(newItems[0], sibling);
 						NodeExtraInfo.AppendChild(parent, newItems[0]);
-						childNodes.Insert(e.NewStartingIndex, newItems[0]);
+
+						if (e.NewStartingIndex == -1)
+						{
+							childNodes.Add(newItems[0]);
+						}
+						else
+						{
+							childNodes.Insert(e.NewStartingIndex, newItems[0]);
+						}
 					}
 					else
 					{
@@ -107,7 +120,15 @@ public static class ChildNodesHelper
 						}
 
 						_ = parent.insertBefore(fragment, sibling);
-						childNodes.InsertRange(e.NewStartingIndex, newItems.Select(x => (Node)x));
+
+						if (e.NewStartingIndex == -1)
+						{
+							childNodes.AddRange(newItems.Select(x => (Node)x));
+						}
+						else
+						{
+							childNodes.InsertRange(e.NewStartingIndex, newItems.Select(x => (Node)x));
+						}
 					}
 				}
 
@@ -159,23 +180,24 @@ public static class ChildNodesHelper
 
 					childNodes.Clear();
 
-					if (list.Count == 1)
+					if (notifyingChildren.Count == 1)
 					{
-						_ = parent.insertBefore(list[0], endMarker);
-						NodeExtraInfo.AppendChild(parent, list[0]);
+						var child = notifyingChildren.Single();
+						_ = parent.insertBefore(child, endMarker);
+						NodeExtraInfo.AppendChild(parent, child);
 					}
 					else
 					{
 						var fragment = document.createDocumentFragment();
 
-						foreach (var newItem in list)
+						foreach (var newItem in notifyingChildren)
 						{
 							_ = fragment.appendChild(newItem);
 							NodeExtraInfo.AppendChild(parent, newItem);
 						}
 
 						_ = parent.insertBefore(fragment, endMarker);
-						childNodes.AddRange(list.Select(x => (Node)x));
+						childNodes.AddRange(notifyingChildren.Select(x => (Node)x));
 					}
 
 					break;
@@ -185,7 +207,7 @@ public static class ChildNodesHelper
 		}
 		else
 		{
-			foreach (var child in list)
+			foreach (var child in children)
 			{
 				_ = parent.appendChild(child);
 				NodeExtraInfo.AppendChild(parent, child);

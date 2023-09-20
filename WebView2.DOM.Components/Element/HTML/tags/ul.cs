@@ -15,7 +15,7 @@ public sealed class @ul : HTMLUListElementBuilder, IEnumerable
 	}
 
 	public void Add(Node child) => ChildNodesHelper.Add(this, child);
-	public void Add(IReadOnlyList<NodeBuilder> list) => ChildNodesHelper.Add(this, list);
+	public void Add(IEnumerable<NodeBuilder> list) => ChildNodesHelper.Add(this, list);
 
 	public @ul this[ChildNodes childNodes]
 	{
@@ -34,7 +34,7 @@ public sealed class @ul : HTMLUListElementBuilder, IEnumerable
 		internal readonly List<Action<@ul>> actions = new();
 
 		public void Add(Node child) => actions.Add(@this => ChildNodesHelper.Add(@this, child));
-		public void Add(IReadOnlyList<NodeBuilder> list) => actions.Add(@this => ChildNodesHelper.Add(@this, list));
+		public void Add(IEnumerable<NodeBuilder> list) => actions.Add(@this => ChildNodesHelper.Add(@this, list));
 
 		IEnumerator IEnumerable.GetEnumerator() => throw new NotSupportedException();
 	}

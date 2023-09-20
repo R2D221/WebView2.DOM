@@ -17,7 +17,7 @@ public sealed class @colgroup : HTMLTableColElementBuilder, IEnumerable
 	}
 
 	public void Add(Node child) => ChildNodesHelper.Add(this, child);
-	public void Add(IReadOnlyList<NodeBuilder> list) => ChildNodesHelper.Add(this, list);
+	public void Add(IEnumerable<NodeBuilder> list) => ChildNodesHelper.Add(this, list);
 
 	public @colgroup this[ChildNodes childNodes]
 	{
@@ -36,7 +36,7 @@ public sealed class @colgroup : HTMLTableColElementBuilder, IEnumerable
 		internal readonly List<Action<@colgroup>> actions = new();
 
 		public void Add(Node child) => actions.Add(@this => ChildNodesHelper.Add(@this, child));
-		public void Add(IReadOnlyList<NodeBuilder> list) => actions.Add(@this => ChildNodesHelper.Add(@this, list));
+		public void Add(IEnumerable<NodeBuilder> list) => actions.Add(@this => ChildNodesHelper.Add(@this, list));
 
 		IEnumerator IEnumerable.GetEnumerator() => throw new NotSupportedException();
 	}
