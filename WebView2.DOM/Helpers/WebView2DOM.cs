@@ -215,6 +215,11 @@ namespace WebView2.DOM
 
 					x.pre_stringify = function (obj)
 					{
+						if (obj == null)
+						{
+							return null;
+						}
+
 						const objWindow = obj.constructor.constructor('return window')();
 
 						if (typeof obj === 'bigint')
@@ -466,7 +471,8 @@ namespace WebView2.DOM
 										JSON.stringify({
 											constructor_name: ex.constructor.name,
 											name: ex.name,
-											message: ex.message
+											message: ex.message,
+											stack: ex.stack
 										});
 								}
 								else if (typeof ex === 'string')
@@ -476,6 +482,8 @@ namespace WebView2.DOM
 											message: ex
 										});
 								}
+
+								alert(exJson);
 
 								Coordinator.{{nameof(BrowsingContext._HostObject.Throw)}}(exJson);
 							}

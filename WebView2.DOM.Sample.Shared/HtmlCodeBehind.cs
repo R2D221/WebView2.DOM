@@ -18,7 +18,8 @@ namespace WebView2.DOM.Sample.Shared
 			{
 				await webView.InvokeInBrowserContextAsync(DOMContentLoaded);
 			};
-			webView.NavigateToString(@"
+			webView.NavigateToString(
+				"""
 				<h1>Welcome to C# DOM</h1>
 				<p id='mouse-coords'>Mouse coords: (<span id='x'></span>, <span id='y'></span>)</p>
 				<p>The current time is <span id='current-time'></span></p>
@@ -28,7 +29,7 @@ namespace WebView2.DOM.Sample.Shared
 					<br />
 					<button id='csAlertButton'>(C#) MessageBox.Show</button>
 				</p>
-			");
+				""");
 		}
 
 		private static void DOMContentLoaded(WebView2.DOM.Window window)
