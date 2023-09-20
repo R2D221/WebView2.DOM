@@ -483,8 +483,6 @@ namespace WebView2.DOM
 										});
 								}
 
-								alert(exJson);
-
 								Coordinator.{{nameof(BrowsingContext._HostObject.Throw)}}(exJson);
 							}
 						}
