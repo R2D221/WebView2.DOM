@@ -25,6 +25,7 @@ public sealed class @tbody : HTMLTableSectionElementBuilder, IEnumerable
 			{
 				action(this);
 			}
+
 			return this;
 		}
 	}

@@ -6,6 +6,13 @@ namespace WebView2.DOM.Components;
 
 public sealed class @dialog : HTMLDialogElementBuilder, IEnumerable
 {
+	public dialog() { }
+
+	public dialog(out HTMLDialogElement element)
+	{
+		element = this.element;
+	}
+
 	protected override HTMLDialogElement CreateElement() =>
 		document.createHTMLElement(HTMLElementTag.dialog);
 

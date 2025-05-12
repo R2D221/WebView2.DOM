@@ -6,10 +6,8 @@ namespace WebView2.DOM.Components;
 
 public sealed class @form : HTMLFormElementBuilder, IEnumerable
 {
-	protected override HTMLFormElement CreateElement()
-	{
-		throw new NotImplementedException();
-	}
+	protected override HTMLFormElement CreateElement() =>
+		document.createHTMLElement(HTMLElementTag.form);
 
 	internal override bool CanAddChild(Node child)
 	{

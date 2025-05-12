@@ -1,4 +1,6 @@
-﻿namespace WebView2.DOM.Components;
+﻿using System;
+
+namespace WebView2.DOM.Components;
 
 public abstract class NodeBuilder
 {
@@ -7,6 +9,13 @@ public abstract class NodeBuilder
 	public sealed override string? ToString() => base.ToString();
 
 	public static Document document { get; set; } = window.document;
+
+	public static IServiceProvider Provider { get; set; } = new EmptyServiceProvider();
+
+	private sealed class EmptyServiceProvider : IServiceProvider
+	{
+		object? IServiceProvider.GetService(Type serviceType) => null;
+	}
 
 	protected abstract Node Node { get; }
 

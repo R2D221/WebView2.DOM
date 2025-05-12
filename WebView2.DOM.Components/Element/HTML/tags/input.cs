@@ -337,6 +337,12 @@ public static class @input
 	{
 		protected override HTMLInputElement.checkbox CreateElement() =>
 			document.createHTMLInputElement(InputType.checkbox);
+
+		public AttributeBuilder<bool> indeterminate
+		{
+			get => new(value => element.indeterminate = value);
+			set => element.indeterminate = value.GetConstantValue();
+		}
 	}
 	public sealed class @radio : HTMLInputElementWithCheckednessBuilder<HTMLInputElement.radio>
 	{
