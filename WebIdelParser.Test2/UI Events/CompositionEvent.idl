@@ -1,0 +1,9 @@
+﻿[Exposed=Window]
+interface CompositionEvent : UIEvent {
+  constructor(DOMString type, optional CompositionEventInit eventInitDict = {});
+  readonly attribute DOMString data;
+};
+
+dictionary CompositionEventInit : UIEventInit {
+  DOMString data = "";
+};

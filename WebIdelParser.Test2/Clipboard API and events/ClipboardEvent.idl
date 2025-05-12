@@ -1,0 +1,9 @@
+﻿dictionary ClipboardEventInit : EventInit {
+  DataTransfer? clipboardData = null;
+};
+
+[Exposed=Window]
+interface ClipboardEvent : Event {
+  constructor(DOMString type, optional ClipboardEventInit eventInitDict = {});
+  readonly attribute DataTransfer? clipboardData;
+};

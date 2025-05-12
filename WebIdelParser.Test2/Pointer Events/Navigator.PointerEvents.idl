@@ -1,0 +1,3 @@
+﻿partial interface Navigator {
+    readonly  attribute long maxTouchPoints;
+};

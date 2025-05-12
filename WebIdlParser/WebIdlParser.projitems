@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>c468c7f2-b12b-48e9-b72c-cc8d13e6fe4e</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>WebIdlParser</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Definitions\CallbackFunctionDefinition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Definitions\CallbackInterfaceDefinition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Definitions\EnumDefinition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Definitions\IncludesDefinition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Definitions\InterfaceDefinition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Members\Member.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Definitions\InterfaceMixinDefinition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Definitions\NamespaceDefinition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Definitions\Partial.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Definitions\TypedefDefinition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ExtendedAttributes\ExtendedAttributeIdent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ExtendedAttributes\ExtendedAttributeIdentList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ExtendedAttributes\ExtendedAttributeNamedArgList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ExtendedAttributes\ExtendedAttributeWildcard.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ExtendedAttributes\ExtendedAttributeNoArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Members\Argument.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Members\AsyncIterable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Members\Attribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Members\InheritAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Members\Const.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Members\Constructor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Members\Deleter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Members\Getter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Members\Iterable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Members\Maplike.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Members\Operation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Members\OptionalArgument.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Members\Setlike.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Members\Setter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Members\StaticMember.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Members\Stringifier.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Members\StringifierAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Members\VariadicArgument.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\Any.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\BufferRelatedTypes\BufferRelatedTypes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\Object.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\PrimitiveTypes\BigInt.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\PrimitiveTypes\Boolean.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\PrimitiveTypes\Byte.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Definitions\Definition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Definitions\DictionaryDefinition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Definitions\DictionaryMember.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\PrimitiveTypes\Double.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ExtendedAttributes\ExtendedAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\PrimitiveTypes\Float.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GenericType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\PrimitiveTypes\Long.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\PrimitiveTypes\LongLong.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\PrimitiveTypes\Octet.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parser.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\PrimitiveTypes\Short.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\StringTypes\ByteString.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\StringTypes\DOMString.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\StringTypes\USVString.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Type.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\Symbol.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\Undefined.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TypeWithExtendedAttributes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\PrimitiveTypes\UnrestrictedDouble.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\PrimitiveTypes\UnrestrictedFloat.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\PrimitiveTypes\UnsignedLong.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\PrimitiveTypes\UnsignedLongLong.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Types\PrimitiveTypes\UnsignedShort.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UnionType.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Types\PrimitiveTypes\" />
+  </ItemGroup>
+</Project>

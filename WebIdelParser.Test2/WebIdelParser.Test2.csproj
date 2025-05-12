@@ -1,0 +1,115 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Clipboard API and events\Clipboard.idl" />
+    <None Remove="Clipboard API and events\ClipboardEvent.idl" />
+    <None Remove="Clipboard API and events\ClipboardItem.idl" />
+    <None Remove="Clipboard API and events\Navigator.ClipboardAPI.idl" />
+    <None Remove="Content Security Policy Level 3\SecurityPolicyViolationEvent.idl" />
+    <None Remove="DOM Standard\2 Events\Event.idl" />
+    <None Remove="DOM Standard\2 Events\EventTarget.idl" />
+    <None Remove="DOM Standard\3 Aborting ongoing activities\AbortController.idl" />
+    <None Remove="DOM Standard\3 Aborting ongoing activities\AbortSignal.idl" />
+    <None Remove="File API\Blob.idl" />
+    <None Remove="File API\File.idl" />
+    <None Remove="File API\FileList.idl" />
+    <None Remove="File API\FileReader.idl" />
+    <None Remove="File API\URL.FileAPI.idl" />
+    <None Remove="HTML Standard\4.10.20.3 The constraint validation API\ValidityState.idl" />
+    <None Remove="HTML Standard\4.10.21 Form submission\FormDataEvent.idl" />
+    <None Remove="HTML Standard\4.10.21 Form submission\SubmitEvent.idl" />
+    <None Remove="HTML Standard\6.10 Drag and drop\DataTransfer.idl" />
+    <None Remove="HTML Standard\6.10 Drag and drop\DataTransferItem.idl" />
+    <None Remove="HTML Standard\6.10 Drag and drop\DataTransferItemList.idl" />
+    <None Remove="HTML Standard\6.10 Drag and drop\DragEvent.idl" />
+    <None Remove="HTML Standard\7.2 APIs related to navigation and session history\BeforeUnloadEvent.idl" />
+    <None Remove="HTML Standard\7.2 APIs related to navigation and session history\HashChangeEvent.idl" />
+    <None Remove="HTML Standard\7.2 APIs related to navigation and session history\PageTransitionEvent.idl" />
+    <None Remove="HTML Standard\7.2 APIs related to navigation and session history\PopStateEvent.idl" />
+    <None Remove="HTML Standard\8 Web application APIs\8.1.8 Events\EventHandlers.idl" />
+    <None Remove="HTML Standard\9 Communication\MessageEvent.idl" />
+    <None Remove="Pointer Events\Element.PointerEvents.idl" />
+    <None Remove="Pointer Events\GlobalEventHandlers.PointerEvents.idl" />
+    <None Remove="Pointer Events\Navigator.PointerEvents.idl" />
+    <None Remove="Pointer Events\PointerEvent.idl" />
+    <None Remove="UI Events\CompositionEvent.idl" />
+    <None Remove="UI Events\EventModifierInit.idl" />
+    <None Remove="UI Events\FocusEvent.idl" />
+    <None Remove="UI Events\InputEvent.idl" />
+    <None Remove="UI Events\KeyboardEvent.idl" />
+    <None Remove="UI Events\MouseEvent.idl" />
+    <None Remove="UI Events\UIEvent.idl" />
+    <None Remove="UI Events\WheelEvent.idl" />
+    <None Remove="Web IDL Standard\4. Common definitions\ArrayBufferView.idl" />
+    <None Remove="Web IDL Standard\4. Common definitions\BufferSource.idl" />
+    <None Remove="XMLHttpRequest Standard\FormData.idl" />
+    <None Remove="XMLHttpRequest Standard\ProgressEvent.idl" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="Clipboard API and events\Clipboard.idl" />
+    <AdditionalFiles Include="Clipboard API and events\ClipboardEvent.idl" />
+    <AdditionalFiles Include="Clipboard API and events\ClipboardItem.idl" />
+    <AdditionalFiles Include="Clipboard API and events\Navigator.ClipboardAPI.idl" />
+    <AdditionalFiles Include="Content Security Policy Level 3\SecurityPolicyViolationEvent.idl" />
+    <AdditionalFiles Include="DOM Standard\2 Events\Event.idl" />
+    <AdditionalFiles Include="DOM Standard\2 Events\EventTarget.idl" />
+    <AdditionalFiles Include="DOM Standard\3 Aborting ongoing activities\AbortController.idl" />
+    <AdditionalFiles Include="DOM Standard\3 Aborting ongoing activities\AbortSignal.idl" />
+    <AdditionalFiles Include="File API\Blob.idl" />
+    <AdditionalFiles Include="File API\File.idl" />
+    <AdditionalFiles Include="File API\FileList.idl" />
+    <AdditionalFiles Include="File API\FileReader.idl" />
+    <AdditionalFiles Include="File API\URL.FileAPI.idl" />
+    <AdditionalFiles Include="HTML Standard\4.10.20.3 The constraint validation API\ValidityState.idl" />
+    <AdditionalFiles Include="HTML Standard\4.10.21 Form submission\FormDataEvent.idl" />
+    <AdditionalFiles Include="HTML Standard\4.10.21 Form submission\SubmitEvent.idl" />
+    <AdditionalFiles Include="HTML Standard\6.10 Drag and drop\DataTransfer.idl" />
+    <AdditionalFiles Include="HTML Standard\6.10 Drag and drop\DataTransferItem.idl" />
+    <AdditionalFiles Include="HTML Standard\6.10 Drag and drop\DataTransferItemList.idl" />
+    <AdditionalFiles Include="HTML Standard\6.10 Drag and drop\DragEvent.idl" />
+    <AdditionalFiles Include="HTML Standard\7.2 APIs related to navigation and session history\BeforeUnloadEvent.idl" />
+    <AdditionalFiles Include="HTML Standard\7.2 APIs related to navigation and session history\HashChangeEvent.idl" />
+    <AdditionalFiles Include="HTML Standard\7.2 APIs related to navigation and session history\PageTransitionEvent.idl" />
+    <AdditionalFiles Include="HTML Standard\7.2 APIs related to navigation and session history\PopStateEvent.idl" />
+    <AdditionalFiles Include="HTML Standard\8 Web application APIs\8.1.8 Events\EventHandlers.idl" />
+    <AdditionalFiles Include="HTML Standard\9 Communication\9.4 Channel messaging\MessagePort.idl" />
+    <AdditionalFiles Include="HTML Standard\7.2 APIs related to navigation and session history\Window.idl" />
+    <AdditionalFiles Include="HTML Standard\9 Communication\MessageEvent.idl" />
+    <AdditionalFiles Include="Pointer Events\Element.PointerEvents.idl" />
+    <AdditionalFiles Include="Pointer Events\GlobalEventHandlers.PointerEvents.idl" />
+    <AdditionalFiles Include="Pointer Events\Navigator.PointerEvents.idl" />
+    <AdditionalFiles Include="Pointer Events\PointerEvent.idl" />
+    <AdditionalFiles Include="UI Events\CompositionEvent.idl" />
+    <AdditionalFiles Include="UI Events\EventModifierInit.idl" />
+    <AdditionalFiles Include="UI Events\FocusEvent.idl" />
+    <AdditionalFiles Include="UI Events\InputEvent.idl" />
+    <AdditionalFiles Include="UI Events\KeyboardEvent.idl" />
+    <AdditionalFiles Include="UI Events\MouseEvent.idl" />
+    <AdditionalFiles Include="UI Events\UIEvent.idl" />
+    <AdditionalFiles Include="UI Events\WheelEvent.idl" />
+    <AdditionalFiles Include="Web IDL Standard\4. Common definitions\ArrayBufferView.idl" />
+    <AdditionalFiles Include="Web IDL Standard\4. Common definitions\BufferSource.idl" />
+    <AdditionalFiles Include="XMLHttpRequest Standard\FormData.idl" />
+    <AdditionalFiles Include="XMLHttpRequest Standard\ProgressEvent.idl" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="deniszykov.TypeConversion" Version="3.1.1" />
+    <PackageReference Include="NodaTime" Version="3.1.6" />
+    <PackageReference Include="OneOf" Version="3.0.223" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WebIdlSourceGenerator\WebIdlSourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <Import Project="..\WebIdlParser\WebIdlParser.projitems" Label="Shared" />
+
+</Project>

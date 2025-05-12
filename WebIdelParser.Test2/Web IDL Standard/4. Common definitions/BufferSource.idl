@@ -1,0 +1,6 @@
+﻿/*
+R2D221 - 2023-03-11
+We remove this from IDL and define it in C# as an interface
+*/
+
+/* typedef (ArrayBufferView or ArrayBuffer) BufferSource; */

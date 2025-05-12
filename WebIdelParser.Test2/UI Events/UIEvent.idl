@@ -1,0 +1,11 @@
+﻿[Exposed=Window]
+interface UIEvent : Event {
+  constructor(DOMString type, optional UIEventInit eventInitDict = {});
+  readonly attribute Window? view;
+  readonly attribute long detail;
+};
+
+dictionary UIEventInit : EventInit {
+  Window? view = null;
+  long detail = 0;
+};

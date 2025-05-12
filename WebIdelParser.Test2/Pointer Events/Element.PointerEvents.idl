@@ -1,0 +1,5 @@
+﻿partial interface Element {
+  undefined setPointerCapture (long pointerId);
+  undefined releasePointerCapture (long pointerId);
+  boolean hasPointerCapture (long pointerId);
+};
