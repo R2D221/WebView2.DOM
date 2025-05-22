@@ -1,0 +1,26 @@
+<Solution>
+  <Folder Name="/Components/">
+    <Project Path="WebView2.DOM.Components.Test/WebView2.DOM.Components.Test.csproj" />
+    <Project Path="WebView2.DOM.Components/WebView2.DOM.Components.csproj" />
+  </Folder>
+  <Folder Name="/refactor/">
+    <Project Path="Refactor.WebView.DOM/Refactor.WebView2.DOM.csproj" />
+    <Project Path="Refactor.WebView2.DOM.Wpf/Refactor.WebView2.DOM.Wpf.csproj" />
+    <Project Path="Refactor.WebView_DOM_Wpf_Sample/Refactor.WebView2_DOM_Wpf_Sample.csproj" />
+  </Folder>
+  <Folder Name="/repo/">
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+  </Folder>
+  <Project Path="WebIdelParser.Test2/WebIdelParser.Test2.csproj" />
+  <Project Path="WebIdlParser.Test/WebIdlParser.Test.csproj" />
+  <Project Path="WebIdlParser/WebIdlParser.shproj" />
+  <Project Path="WebIdlSourceGenerator/WebIdlSourceGenerator.csproj" />
+  <Project Path="WebView2.DOM.Sample.NetFx/WebView2.DOM.Sample.NetFx.csproj" />
+  <Project Path="WebView2.DOM.Sample.Shared/WebView2.DOM.Sample.Shared.shproj" />
+  <Project Path="WebView2.DOM.Sample/WebView2.DOM.Sample.csproj" />
+  <Project Path="WebView2.DOM.Tests/WebView2.DOM.Tests.csproj" />
+  <Project Path="WebView2.DOM/WebView2.DOM.csproj" />
+</Solution>
