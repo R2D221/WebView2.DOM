@@ -1,14 +1,4 @@
-﻿using Refactor.WebView2.DOM.Wpf;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
 
 namespace Refactor.WebView2_DOM_Wpf_Sample
 {
@@ -22,9 +12,6 @@ namespace Refactor.WebView2_DOM_Wpf_Sample
 			InitializeComponent();
 		}
 
-		private void CsWebView_DOMContentLoaded(object sender, RoutedEventArgs e)
-		{
-			var result = Refactor.WebView2.DOM.Window.window;
-		}
+		private void CsWebView_DOMContentLoaded(object sender, RoutedEventArgs e) => WebApp.DOMContentLoaded();
 	}
 }

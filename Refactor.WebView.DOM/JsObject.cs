@@ -10,6 +10,8 @@ public abstract class JsObject
 
 	protected JsReference JS => reference ?? throw new InvalidOperationException();
 
+	internal ulong Id => JS.Id;
+
 	internal void SetJsReference(JsReference reference)
 	{
 		Debug.Assert(this.reference is null);

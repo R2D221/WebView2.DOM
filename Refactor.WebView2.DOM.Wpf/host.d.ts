@@ -37,6 +37,15 @@ type BridgeRequestSetter = {
 	readonly Value: string;
 }
 
+type BridgeRequestInvoke = {
+	readonly Type: "invoke";
+	readonly RefId: number;
+	readonly Method: string;
+	readonly Args: any[];
+}
+
 type BridgeRequest =
 	BridgeRequestGetter
-	| BridgeRequestSetter;
+	| BridgeRequestSetter
+	| BridgeRequestInvoke
+	;

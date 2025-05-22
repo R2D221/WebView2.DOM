@@ -12,6 +12,7 @@ public sealed class BrowsingContextBridge(
 	JsThread thread,
 	Channel<(Request, TaskCompletionSource<string?>)> requests,
 	Action onDOMContentLoaded,
+	JsonSerializerOptions jsonOptions,
 	CancellationToken cancellationToken)
 {
 	public void OnDOMContentLoaded()
@@ -38,7 +39,7 @@ public sealed class BrowsingContextBridge(
 			{
 				while (reader.TryRead(out var current))
 				{
-					yield return new ItemItemItem(current);
+					yield return new ItemItemItem(current, jsonOptions);
 				}
 			}
 		}
@@ -53,14 +54,16 @@ public sealed class BrowsingContextBridge(
 		public void Reset() => enumerator.Reset();
 	}
 
-	public sealed class ItemItemItem((Request, TaskCompletionSource<string?>) current)
+	public sealed class ItemItemItem(
+		(Request, TaskCompletionSource<string?>) current,
+		JsonSerializerOptions jsonOptions)
 	{
 		public string Request =>
 			// Type is declared as object since we need properties
 			// of derived classes to be serialized. This is the
 			// accepted solution according to
 			// https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-polymorphism
-			JsonSerializer.Serialize<object>(current.Item1);
+			JsonSerializer.Serialize<object>(current.Item1, jsonOptions);
 
 		public void Return(string? json) => current.Item2.SetResult(json);
 

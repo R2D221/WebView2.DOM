@@ -15,6 +15,8 @@ public sealed class JsReference
 		this.refId = refId;
 	}
 
+	internal ulong Id => refId;
+
 	private void ThreadAffinity()
 	{
 		if (Environment.CurrentManagedThreadId != threadID)
@@ -33,5 +35,14 @@ public sealed class JsReference
 
 	public T GetCached<T>([CallerMemberName] string? property = null) => Get<T>(property);
 
-	public string? Invoke(string a, string b) => throw new NotImplementedException();
+	internal Invoker<ValueTuple> Method([CallerMemberName] string method = "") => new(this, method);
+	internal Invoker<T> Method<T>([CallerMemberName] string method = "") => new(this, method);
+
+	internal readonly ref struct Invoker<T>(JsReference @this, string method)
+	{
+		internal T Invoke(params ReadOnlySpan<object?> @params)
+		{
+			return @this.browsingContext.Invoke<T>(@this.refId, method, @params);
+		}
+	}
 }

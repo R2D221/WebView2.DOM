@@ -70,7 +70,7 @@ public abstract partial class BrowsingContext : IDisposable
 	protected BrowsingContext(JsThread thread, Action onDOMContentLoaded)
 	{
 		this.thread = thread;
-		this.requests = Channel.CreateBounded<(Request, TaskCompletionSource<string?>)>(options: new(capacity: 1) { SingleReader = true, SingleWriter = true });
+		this.requests = Channel.CreateUnbounded<(Request, TaskCompletionSource<string?>)>(options: new() { SingleReader = true, SingleWriter = true });
 
 		thread.Enqueue(() =>
 		{
@@ -78,9 +78,8 @@ public abstract partial class BrowsingContext : IDisposable
 			global.Value = this;
 		});
 
-		bridge = new(thread, requests, onDOMContentLoaded, cancellation.Token);
-
 		jsonOptions = new(options: new() { Converters = { new JsObjectJsonConverter(this) } });
+		bridge = new(thread, requests, onDOMContentLoaded, jsonOptions, cancellation.Token);
 	}
 
 	public BrowsingContextBridge Bridge => bridge;
@@ -101,6 +100,12 @@ public abstract partial class BrowsingContext : IDisposable
 	internal T Get<T>(ulong refId, string property)
 	{
 		var request = new Getter(refId, property);
+		return Request<T>(request);
+	}
+
+	internal T Invoke<T>(ulong refId, string method, ReadOnlySpan<object?> @params)
+	{
+		var request = new Invoke(refId, method, [.. @params]);
 		return Request<T>(request);
 	}
 
@@ -146,7 +151,11 @@ public abstract partial class BrowsingContext : IDisposable
 
 		public override void Write(Utf8JsonWriter writer, JsObject value, JsonSerializerOptions options)
 		{
-			throw new NotImplementedException();
+			if (value is null) { writer.WriteNullValue(); return; }
+
+			writer.WriteStartObject();
+			writer.WriteNumber("#id", value.Id);
+			writer.WriteEndObject();
 		}
 	}
 

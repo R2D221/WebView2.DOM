@@ -143,6 +143,27 @@
 		return JSON.stringify(prepareForSerialization(value));
 	}
 
+	/**
+	 * 
+	 * @param {any} value
+	 * @returns {any}
+	 */
+	function getValueAfterDeserialization(value) {
+		if (value instanceof Array) {
+			return value.map(x => getValueAfterDeserialization(x));
+		}
+
+		if (value !== null && typeof value === "object") {
+			if ("#id" in value) {
+				const result = idToObj.get(value["#id"])?.deref();
+				console.log(result);
+				return result;
+			}
+		}
+
+		return value;
+	}
+
 	function execute() {
 		const iterator = bridge().GetEnumerator();
 
@@ -161,6 +182,10 @@
 						//case "setter":
 						//	iterator.Return(request.RefId);
 						//	break;
+						case "invoke":
+							const result = obj[request.Method](...request.Args.map(x => getValueAfterDeserialization(x)));
+							item.Return(serialize(result));
+							break;
 					}
 				}
 				catch (e) {
