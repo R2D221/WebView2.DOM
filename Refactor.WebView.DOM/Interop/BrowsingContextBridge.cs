@@ -8,7 +8,11 @@ using System.Threading.Tasks;
 
 namespace Refactor.WebView2.DOM.Interop;
 
-public sealed class BrowsingContextBridge(JsThread thread, Channel<(Request, TaskCompletionSource<string?>)> requests, CancellationToken cancellationToken, Action onDOMContentLoaded)
+public sealed class BrowsingContextBridge(
+	JsThread thread,
+	Channel<(Request, TaskCompletionSource<string?>)> requests,
+	Action onDOMContentLoaded,
+	CancellationToken cancellationToken)
 {
 	public void OnDOMContentLoaded()
 	{

@@ -78,7 +78,7 @@ public abstract partial class BrowsingContext : IDisposable
 			global.Value = this;
 		});
 
-		bridge = new(thread, requests, cancellation.Token, onDOMContentLoaded);
+		bridge = new(thread, requests, onDOMContentLoaded, cancellation.Token);
 
 		jsonOptions = new(options: new() { Converters = { new JsObjectJsonConverter(this) } });
 	}
