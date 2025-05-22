@@ -186,10 +186,32 @@
 							const result = obj[request.Method](...request.Args.map(x => getValueAfterDeserialization(x)));
 							item.Return(serialize(result));
 							break;
+
+						default:
+							throw new Error("Not supported");
 					}
 				}
 				catch (e) {
-					item.Throw(e);
+					let error;
+
+					if (e === null || e === undefined) {
+						error = { name: "Error", message: "" };
+					}
+					else if (typeof e === "object") {
+						const w = /** @type {typeof globalThis} */(e.constructor.constructor('return window')());
+
+						if (e instanceof w.Error || e instanceof w.DOMException) {
+							error = { name: e.name, message: e.message };
+						}
+						else {
+							error = { name: "Error", message: e.toString() };
+						}
+					}
+					else {
+						error = { name: "Error", message: e.toString() };
+					}
+
+					item.Throw(JSON.stringify(error));
 				}
 			}
 		}

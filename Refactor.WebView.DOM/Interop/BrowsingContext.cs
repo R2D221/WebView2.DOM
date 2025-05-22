@@ -50,6 +50,19 @@ public abstract partial class BrowsingContext : IDisposable
 			type => type
 		);
 
+	private readonly FrozenDictionary<string, Type> exceptions =
+		typeof(JsError).Assembly
+		.GetTypes()
+		.Where(x => x.IsClass && typeof(JsError).IsAssignableFrom(x))
+		.ToFrozenDictionary(
+			type => type.FullName!.Substring(type.Namespace!.Length + 1).Replace("+", " ") switch
+			{
+				"JsError" => "Error",
+				var x => x,
+			},
+			type => type
+		);
+
 	private readonly ConcurrentDictionary<ulong, WeakReference<JsObject>>
 		idToObj = new();
 	//private readonly FinalizationRegistry<JsObject, (IWebView2 webView, string referenceId)>
@@ -78,7 +91,15 @@ public abstract partial class BrowsingContext : IDisposable
 			global.Value = this;
 		});
 
-		jsonOptions = new(options: new() { Converters = { new JsObjectJsonConverter(this) } });
+		jsonOptions = new(options: new()
+		{
+			Converters =
+			{
+				new JsObjectJsonConverter(this),
+				new JsErrorJsonConverter(this),
+			}
+		});
+
 		bridge = new(thread, requests, onDOMContentLoaded, jsonOptions, cancellation.Token);
 	}
 
@@ -159,6 +180,47 @@ public abstract partial class BrowsingContext : IDisposable
 		}
 	}
 
+	sealed class JsErrorJsonConverter(BrowsingContext browsingContext) : JsonConverter<JsError>
+	{
+		public override bool CanConvert(Type typeToConvert) => typeof(JsError).IsAssignableFrom(typeToConvert);
+
+		public override JsError? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			if (reader.TokenType == JsonTokenType.Null)
+			{
+				return null;
+			}
+
+			if (true
+			&& reader.TokenType == JsonTokenType.StartObject
+			&& reader.Read()
+			&& reader.TokenType == JsonTokenType.PropertyName
+			&& reader.GetString() == "name"
+			&& reader.Read()
+			&& reader.GetString() is string name
+			&& reader.Read()
+			&& reader.TokenType == JsonTokenType.PropertyName
+			&& reader.GetString() == "message"
+			&& reader.Read()
+			&& reader.GetString() is string message
+			&& reader.Read()
+			&& reader.TokenType == JsonTokenType.EndObject
+			)
+			{
+				return browsingContext.NewError(name, message);
+			}
+			else
+			{
+				throw new InvalidOperationException();
+			}
+		}
+
+		public override void Write(Utf8JsonWriter writer, JsError value, JsonSerializerOptions options)
+		{
+			throw new NotSupportedException();
+		}
+	}
+
 	private JsObject? Load(ulong referenceId, string typeName, Type requestedType)
 	{
 		var weakRef = idToObj.GetOrAdd(referenceId, _ => new(null!));
@@ -189,5 +251,15 @@ public abstract partial class BrowsingContext : IDisposable
 		}
 
 		return target;
+	}
+
+	private JsError? NewError(string name, string message)
+	{
+		if (!exceptions.TryGetValue(name, out var type))
+		{
+			throw new Exception($"Type {name} could not be mapped.");
+		}
+
+		return (JsError)Activator.CreateInstance(type: type, [message])!;
 	}
 }

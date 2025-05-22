@@ -69,7 +69,7 @@ public sealed class BrowsingContextBridge(
 
 		public void Throw(string json)
 		{
-			var exception = JsonSerializer.Deserialize<Exception>(json);
+			var exception = JsonSerializer.Deserialize<JsError>(json, jsonOptions);
 			current.Item2.SetException(exception!);
 		}
 	}

@@ -17,7 +17,6 @@ public sealed class Window : EventTarget
 
 	public void alert(string message) => JS.Method().Invoke(message);
 	public bool confirm(string message) => JS.Method<bool>().Invoke(message);
-	public bool sendTest(Document document) => JS.Method<bool>().Invoke(document);
 }
 
 public abstract class Document : EventTarget;
