@@ -21,7 +21,7 @@ public partial class CsWebView : WebView
 
 	private BrowsingContext? browsingContext;
 	private CoreWebView2? webView;
-	private JsThread? thread;
+	private JsDispatcher? dispatcher;
 
 	public CsWebView()
 	{
@@ -30,13 +30,13 @@ public partial class CsWebView : WebView
 			if (args.IsSuccess is false) { throw args.InitializationException; }
 
 			webView = CoreWebView2;
-			thread = new JsThread();
+			dispatcher = new JsDispatcher();
 
 			webView.ContentLoading += (_, args) =>
 			{
 				browsingContext?.Dispose();
 
-				browsingContext = new Refactor.WebView2.DOM.Wpf.Interop.BrowsingContext_ForWpf(thread, () => OnDOMContentLoaded());
+				browsingContext = new Refactor.WebView2.DOM.Wpf.Interop.BrowsingContext_ForWpf(dispatcher, () => OnDOMContentLoaded());
 				webView.AddHostObjectToScript("Bridge", browsingContext.Bridge);
 			};
 

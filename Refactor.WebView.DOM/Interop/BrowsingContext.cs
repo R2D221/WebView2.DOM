@@ -28,7 +28,7 @@ public abstract partial class BrowsingContext
 
 public abstract partial class BrowsingContext : IDisposable
 {
-	private readonly JsThread thread;
+	private readonly JsDispatcher dispatcher;
 	private JsReference globalObject = default!;
 	private readonly BrowsingContextBridge bridge;
 	private readonly CancellationTokenSource cancellation = new();
@@ -78,14 +78,14 @@ public abstract partial class BrowsingContext : IDisposable
 
 	//--------
 
-	private readonly Channel<(Request, TaskCompletionSource<string?>)> requests;
+	private readonly Channel<(Request, TaskCompletionSource<string?>, JsDispatcherFrame)> requests;
 
-	protected BrowsingContext(JsThread thread, Action onDOMContentLoaded)
+	protected BrowsingContext(JsDispatcher dispatcher, Action onDOMContentLoaded)
 	{
-		this.thread = thread;
-		this.requests = Channel.CreateUnbounded<(Request, TaskCompletionSource<string?>)>(options: new() { SingleReader = true, SingleWriter = true });
+		this.dispatcher = dispatcher;
+		this.requests = Channel.CreateUnbounded<(Request, TaskCompletionSource<string?>, JsDispatcherFrame)>(options: new() { SingleReader = true, SingleWriter = true, AllowSynchronousContinuations = true });
 
-		thread.Enqueue(() =>
+		dispatcher.Enqueue(() =>
 		{
 			globalObject = new(this, 0);
 			global.Value = this;
@@ -100,19 +100,25 @@ public abstract partial class BrowsingContext : IDisposable
 			}
 		});
 
-		bridge = new(thread, requests, onDOMContentLoaded, jsonOptions, cancellation.Token);
+		bridge = new(dispatcher, requests, onDOMContentLoaded, jsonOptions, cancellation.Token);
 	}
 
 	public BrowsingContextBridge Bridge => bridge;
 
 	private T Request<T>(Request request)
 	{
+		var frame = new JsDispatcherFrame();
+
 		var taskSource = new TaskCompletionSource<string?>();
 		using var cancellationRegistration = cancellation.Token.Register(() => taskSource.TrySetCanceled());
 
-		var success = requests.Writer.TryWrite((request, taskSource));
+		var taskAwaiter = taskSource.Task.GetAwaiter();
+
+		var success = requests.Writer.TryWrite((request, taskSource, frame));
 		Debug.Assert(success);
-		var response = taskSource.Task.GetAwaiter().GetResult();
+
+		JsDispatcher.Current.PushFrame(frame);
+		var response = taskAwaiter.GetResult();
 
 		if (response is null) { return (T)(object)ValueTuple.Create(); }
 		return JsonSerializer.Deserialize<T>(response, jsonOptions)!;

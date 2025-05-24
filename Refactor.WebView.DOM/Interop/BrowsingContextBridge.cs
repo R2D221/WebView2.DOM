@@ -9,53 +9,49 @@ using System.Threading.Tasks;
 namespace Refactor.WebView2.DOM.Interop;
 
 public sealed class BrowsingContextBridge(
-	JsThread thread,
-	Channel<(Request, TaskCompletionSource<string?>)> requests,
+	JsDispatcher dispatcher,
+	Channel<(Request, TaskCompletionSource<string?>, JsDispatcherFrame)> requests,
 	Action onDOMContentLoaded,
 	JsonSerializerOptions jsonOptions,
 	CancellationToken cancellationToken)
 {
 	public void OnDOMContentLoaded()
 	{
-		thread.Enqueue(() =>
+		dispatcher.Enqueue(() =>
 		{
 			try { onDOMContentLoaded(); }
 			finally { requests.Writer.Complete(); }
 		});
 	}
 
-	public IEnumerator<ItemItemItem> GetEnumerator()
+	public IEnumerator<RequestWrapper> GetEnumerator()
 	{
 		return new WrapperEnumerator(Inner());
-		IEnumerator<ItemItemItem> Inner()
+		IEnumerator<RequestWrapper> Inner()
 		{
 			var reader = requests.Reader;
 
-			while (reader.WaitToReadAsync(cancellationToken) switch
-			{
-				{ IsCompleted: true } x => x.GetAwaiter().GetResult(),
-				{ IsCompleted: false } x => x.AsTask().GetAwaiter().GetResult(),
-			})
+			while (reader.WaitToRead(cancellationToken))
 			{
 				while (reader.TryRead(out var current))
 				{
-					yield return new ItemItemItem(current, jsonOptions);
+					yield return new RequestWrapper(current, jsonOptions);
 				}
 			}
 		}
 	}
 
-	public sealed class WrapperEnumerator(IEnumerator<ItemItemItem> enumerator) : IEnumerator<ItemItemItem>
+	public sealed class WrapperEnumerator(IEnumerator<RequestWrapper> enumerator) : IEnumerator<RequestWrapper>
 	{
-		public ItemItemItem Current => enumerator.Current;
+		public RequestWrapper Current => enumerator.Current;
 		object IEnumerator.Current => ((IEnumerator)enumerator).Current;
 		public void Dispose() => enumerator.Dispose();
 		public bool MoveNext() => enumerator.MoveNext();
 		public void Reset() => enumerator.Reset();
 	}
 
-	public sealed class ItemItemItem(
-		(Request, TaskCompletionSource<string?>) current,
+	public sealed class RequestWrapper(
+		(Request, TaskCompletionSource<string?>, JsDispatcherFrame) current,
 		JsonSerializerOptions jsonOptions)
 	{
 		public string Request =>
@@ -65,12 +61,16 @@ public sealed class BrowsingContextBridge(
 			// https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-polymorphism
 			JsonSerializer.Serialize<object>(current.Item1, jsonOptions);
 
-		public void Return(string? json) => current.Item2.SetResult(json);
+		public void Return(string? json)
+		{
+			current.Item2.SetResult(json);
+			current.Item3.Continue = false;
+		}
 
 		public void Throw(string json)
 		{
-			var exception = JsonSerializer.Deserialize<JsError>(json, jsonOptions);
-			current.Item2.SetException(exception!);
+			current.Item2.SetException(JsonSerializer.Deserialize<JsError>(json, jsonOptions)!);
+			current.Item3.Continue = false;
 		}
 	}
 }

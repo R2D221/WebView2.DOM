@@ -6,8 +6,9 @@ internal static class WebApp
 {
 	internal static void DOMContentLoaded()
 	{
-		var document = window.document;
+		var width = window.innerWidth;
+		var height = window.innerHeight;
 
-		_ = window.sendTest(document);
+		window.alert($"{width}, {height}");
 	}
 }
