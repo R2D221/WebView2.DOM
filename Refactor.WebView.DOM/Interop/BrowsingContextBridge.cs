@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
@@ -10,9 +9,8 @@ namespace Refactor.WebView2.DOM.Interop;
 
 public sealed class BrowsingContextBridge(
 	JsDispatcher dispatcher,
-	Channel<(Request, TaskCompletionSource<string?>, JsDispatcherFrame)> requests,
+	Channel<(Request, TaskCompletionSource<object?>, JsDispatcherFrame)> requests,
 	Action onDOMContentLoaded,
-	JsonSerializerOptions jsonOptions,
 	CancellationToken cancellationToken)
 {
 	public void OnDOMContentLoaded()
@@ -35,7 +33,7 @@ public sealed class BrowsingContextBridge(
 			{
 				while (reader.TryRead(out var current))
 				{
-					yield return new RequestWrapper(current, jsonOptions);
+					yield return new RequestWrapper(current);
 				}
 			}
 		}
@@ -51,25 +49,25 @@ public sealed class BrowsingContextBridge(
 	}
 
 	public sealed class RequestWrapper(
-		(Request, TaskCompletionSource<string?>, JsDispatcherFrame) current,
-		JsonSerializerOptions jsonOptions)
+		(Request, TaskCompletionSource<object?>, JsDispatcherFrame) current)
 	{
-		public string Request =>
-			// Type is declared as object since we need properties
-			// of derived classes to be serialized. This is the
-			// accepted solution according to
-			// https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-polymorphism
-			JsonSerializer.Serialize<object>(current.Item1, jsonOptions);
+		public object Request => current.Item1;
 
-		public void Return(string? json)
+		public void Return(object? value)
 		{
-			current.Item2.SetResult(json);
+			current.Item2.SetResult(value);
 			current.Item3.Continue = false;
 		}
 
-		public void Throw(string json)
+		public void ReturnVoid()
 		{
-			current.Item2.SetException(JsonSerializer.Deserialize<JsError>(json, jsonOptions)!);
+			current.Item2.SetResult(ValueTuple.Create());
+			current.Item3.Continue = false;
+		}
+
+		public void Throw(string name, string message)
+		{
+			current.Item2.SetException(JsError.NewError(name, message));
 			current.Item3.Continue = false;
 		}
 	}

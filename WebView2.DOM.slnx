@@ -5,6 +5,7 @@
   </Folder>
   <Folder Name="/refactor/">
     <Project Path="Refactor.WebView.DOM/Refactor.WebView2.DOM.csproj" />
+    <Project Path="Refactor.WebView2.DOM.Wasm/Refactor.WebView2.DOM.Wasm.csproj" Id="a920c7f4-6de3-4b4d-9a9d-bf78615742c2" />
     <Project Path="Refactor.WebView2.DOM.Wpf/Refactor.WebView2.DOM.Wpf.csproj" />
     <Project Path="Refactor.WebView_DOM_Wpf_Sample/Refactor.WebView2_DOM_Wpf_Sample.csproj" />
   </Folder>

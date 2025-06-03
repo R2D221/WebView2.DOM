@@ -2,8 +2,30 @@
 
 namespace Refactor.WebView2.DOM.Interop;
 
-public abstract record Request(string Type, ulong RefId);
+public sealed class PlainObjectWrapper
+{
+	private readonly Dictionary<string, object?> dict = new();
 
-public sealed record Getter(ulong RefId, string Property) : Request("getter", RefId);
+	public object? this[string x]
+	{
+		get => dict.TryGetValue(x, out var result) ? result : null;
+		set => dict[x] = value;
+	}
+}
 
-public sealed record Invoke(ulong RefId, string Method, IReadOnlyList<object?> Args) : Request("invoke", RefId);
+public abstract class Request(string type, ulong refId)
+{
+	public string Type => type;
+	public ulong RefId => refId;
+}
+
+public sealed class Getter(ulong RefId, string property) : Request("getter", RefId)
+{
+	public string Property => property;
+}
+
+public sealed class Invoke(ulong RefId, string method, object?[] args) : Request("invoke", RefId)
+{
+	public string Method => method;
+	public object?[] Args => args;
+}

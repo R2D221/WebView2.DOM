@@ -19,5 +19,16 @@ public sealed class Window : EventTarget
 	public bool confirm(string message) => JS.Method<bool>().Invoke(message);
 }
 
-public abstract class Document : EventTarget;
 public sealed class HTMLDocument : Document;
+public abstract class Document : Node
+{
+	public Element createElement(string localName) => JS.Method<Element>().Invoke(localName);
+}
+
+public abstract class Node : EventTarget
+{
+	public void append(Node node) => JS.Method().Invoke(node);
+}
+public abstract class Element : Node;
+public abstract class HTMLElement : Element;
+public sealed class HTMLAnchorElement : HTMLElement;

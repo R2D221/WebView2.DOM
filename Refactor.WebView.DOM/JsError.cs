@@ -1,9 +1,34 @@
 ﻿using System;
+using System.Collections.Frozen;
+using System.Linq;
 
 namespace Refactor.WebView2.DOM;
 
 public class JsError : Exception
 {
+	private static readonly FrozenDictionary<string, Type> exceptions =
+		typeof(JsError).Assembly
+		.GetTypes()
+		.Where(x => x.IsClass && typeof(JsError).IsAssignableFrom(x))
+		.ToFrozenDictionary(
+			type => type.FullName!.Substring(type.Namespace!.Length + 1).Replace("+", " ") switch
+			{
+				"JsError" => "Error",
+				var x => x,
+			},
+			type => type
+		);
+
+	public static JsError NewError(string name, string message)
+	{
+		if (!exceptions.TryGetValue(name, out var type))
+		{
+			throw new Exception($"Type {name} could not be mapped.");
+		}
+
+		return (JsError)Activator.CreateInstance(type: type, message)!;
+	}
+
 	public JsError() { }
 	public JsError(string? message) : base(message) { }
 	public JsError(string message, Exception innerException) : base(message, innerException) { }

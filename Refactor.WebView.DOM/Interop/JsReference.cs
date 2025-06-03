@@ -40,7 +40,7 @@ public sealed class JsReference
 
 	internal readonly ref struct Invoker<T>(JsReference @this, string method)
 	{
-		internal T Invoke(params ReadOnlySpan<object?> @params)
+		internal T Invoke(params object?[] @params)
 		{
 			return @this.browsingContext.Invoke<T>(@this.refId, method, @params);
 		}

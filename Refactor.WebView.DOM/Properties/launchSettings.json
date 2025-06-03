@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Refactor.WebView2.DOM": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

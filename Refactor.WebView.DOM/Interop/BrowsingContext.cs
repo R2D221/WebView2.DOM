@@ -3,8 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Frozen;
 using System.Diagnostics;
 using System.Linq;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
@@ -35,8 +33,6 @@ public abstract partial class BrowsingContext : IDisposable
 
 	//--------
 
-	private readonly JsonSerializerOptions jsonOptions;
-
 	private readonly FrozenDictionary<string, Type> types =
 		typeof(Window).Assembly
 		.GetTypes()
@@ -45,19 +41,6 @@ public abstract partial class BrowsingContext : IDisposable
 			type => type.FullName!.Substring(type.Namespace!.Length + 1).Replace("+", " ") switch
 			{
 				"JsObject" => "Object",
-				var x => x,
-			},
-			type => type
-		);
-
-	private readonly FrozenDictionary<string, Type> exceptions =
-		typeof(JsError).Assembly
-		.GetTypes()
-		.Where(x => x.IsClass && typeof(JsError).IsAssignableFrom(x))
-		.ToFrozenDictionary(
-			type => type.FullName!.Substring(type.Namespace!.Length + 1).Replace("+", " ") switch
-			{
-				"JsError" => "Error",
 				var x => x,
 			},
 			type => type
@@ -78,12 +61,12 @@ public abstract partial class BrowsingContext : IDisposable
 
 	//--------
 
-	private readonly Channel<(Request, TaskCompletionSource<string?>, JsDispatcherFrame)> requests;
+	private readonly Channel<(Request, TaskCompletionSource<object?>, JsDispatcherFrame)> requests;
 
 	protected BrowsingContext(JsDispatcher dispatcher, Action onDOMContentLoaded)
 	{
 		this.dispatcher = dispatcher;
-		this.requests = Channel.CreateUnbounded<(Request, TaskCompletionSource<string?>, JsDispatcherFrame)>(options: new() { SingleReader = true, SingleWriter = true, AllowSynchronousContinuations = true });
+		this.requests = Channel.CreateUnbounded<(Request, TaskCompletionSource<object?>, JsDispatcherFrame)>(options: new() { SingleReader = true, SingleWriter = true, AllowSynchronousContinuations = true });
 
 		dispatcher.Enqueue(() =>
 		{
@@ -91,16 +74,7 @@ public abstract partial class BrowsingContext : IDisposable
 			global.Value = this;
 		});
 
-		jsonOptions = new(options: new()
-		{
-			Converters =
-			{
-				new JsObjectJsonConverter(this),
-				new JsErrorJsonConverter(this),
-			}
-		});
-
-		bridge = new(dispatcher, requests, onDOMContentLoaded, jsonOptions, cancellation.Token);
+		bridge = new(dispatcher, requests, onDOMContentLoaded, cancellation.Token);
 	}
 
 	public BrowsingContextBridge Bridge => bridge;
@@ -109,7 +83,7 @@ public abstract partial class BrowsingContext : IDisposable
 	{
 		var frame = new JsDispatcherFrame();
 
-		var taskSource = new TaskCompletionSource<string?>();
+		var taskSource = new TaskCompletionSource<object?>();
 		using var cancellationRegistration = cancellation.Token.Register(() => taskSource.TrySetCanceled());
 
 		var taskAwaiter = taskSource.Task.GetAwaiter();
@@ -120,8 +94,7 @@ public abstract partial class BrowsingContext : IDisposable
 		JsDispatcher.Current.PushFrame(frame);
 		var response = taskAwaiter.GetResult();
 
-		if (response is null) { return (T)(object)ValueTuple.Create(); }
-		return JsonSerializer.Deserialize<T>(response, jsonOptions)!;
+		return Unpack<T>(response);
 	}
 
 	internal T Get<T>(ulong refId, string property)
@@ -130,9 +103,14 @@ public abstract partial class BrowsingContext : IDisposable
 		return Request<T>(request);
 	}
 
-	internal T Invoke<T>(ulong refId, string method, ReadOnlySpan<object?> @params)
+	internal T Invoke<T>(ulong refId, string method, object?[] @params)
 	{
-		var request = new Invoke(refId, method, [.. @params]);
+		for (var i = 0; i < @params.Length; i++)
+		{
+			@params[i] = Pack(@params[i]);
+		}
+
+		var request = new Invoke(refId, method, @params);
 		return Request<T>(request);
 	}
 
@@ -141,93 +119,38 @@ public abstract partial class BrowsingContext : IDisposable
 		cancellation.Cancel();
 	}
 
-	sealed class JsObjectJsonConverter(BrowsingContext browsingContext) : JsonConverter<JsObject>
+	private static object? Pack(object? value)
 	{
-		public override bool CanConvert(Type typeToConvert) => typeof(JsObject).IsAssignableFrom(typeToConvert);
-
-		public override JsObject? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		if (value is JsObject js)
 		{
-			if (reader.TokenType == JsonTokenType.Null)
+			return new PlainObjectWrapper
 			{
-				return null;
-			}
-
-			if (true
-			&& reader.TokenType == JsonTokenType.StartObject
-			&& reader.Read()
-			&& reader.TokenType == JsonTokenType.PropertyName
-			&& reader.GetString() == "id"
-			&& reader.Read()
-			&& reader.GetUInt64() is ulong referenceId
-			&& reader.Read()
-			&& reader.TokenType == JsonTokenType.PropertyName
-			&& reader.GetString() == "type"
-			&& reader.Read()
-			&& reader.GetString() is string referenceType
-			&& reader.Read()
-			&& reader.TokenType == JsonTokenType.EndObject
-			)
-			{
-				return browsingContext.Load(referenceId, referenceType, typeToConvert);
-			}
-			else
-			{
-				throw new InvalidOperationException();
-			}
+				["#id"] = js.Id
+			};
 		}
 
-		public override void Write(Utf8JsonWriter writer, JsObject value, JsonSerializerOptions options)
-		{
-			if (value is null) { writer.WriteNullValue(); return; }
-
-			writer.WriteStartObject();
-			writer.WriteNumber("#id", value.Id);
-			writer.WriteEndObject();
-		}
+		return value;
 	}
 
-	sealed class JsErrorJsonConverter(BrowsingContext browsingContext) : JsonConverter<JsError>
+	private T Unpack<T>(object? value)
 	{
-		public override bool CanConvert(Type typeToConvert) => typeof(JsError).IsAssignableFrom(typeToConvert);
+		if (value is null) { return (T)value!; }
 
-		public override JsError? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		//if (TryConvert(out T converted)) { return converted; }
+		if (value is T converted) { return converted; }
+
+		if (typeof(JsObject).IsAssignableFrom(typeof(T)))
 		{
-			if (reader.TokenType == JsonTokenType.Null)
-			{
-				return null;
-			}
+			var referenceId = (ulong)Unpack<int>(ComObject.GetProperty(value, "id"));
+			var referenceType = Unpack<string>(ComObject.GetProperty(value, "type"));
 
-			if (true
-			&& reader.TokenType == JsonTokenType.StartObject
-			&& reader.Read()
-			&& reader.TokenType == JsonTokenType.PropertyName
-			&& reader.GetString() == "name"
-			&& reader.Read()
-			&& reader.GetString() is string name
-			&& reader.Read()
-			&& reader.TokenType == JsonTokenType.PropertyName
-			&& reader.GetString() == "message"
-			&& reader.Read()
-			&& reader.GetString() is string message
-			&& reader.Read()
-			&& reader.TokenType == JsonTokenType.EndObject
-			)
-			{
-				return browsingContext.NewError(name, message);
-			}
-			else
-			{
-				throw new InvalidOperationException();
-			}
+			return (T)Load(referenceId, referenceType, typeof(T));
 		}
 
-		public override void Write(Utf8JsonWriter writer, JsError value, JsonSerializerOptions options)
-		{
-			throw new NotSupportedException();
-		}
+		return (T)value!;
 	}
 
-	private JsObject? Load(ulong referenceId, string typeName, Type requestedType)
+	private object Load(ulong referenceId, string typeName, Type requestedType)
 	{
 		var weakRef = idToObj.GetOrAdd(referenceId, _ => new(null!));
 
@@ -257,15 +180,5 @@ public abstract partial class BrowsingContext : IDisposable
 		}
 
 		return target;
-	}
-
-	private JsError? NewError(string name, string message)
-	{
-		if (!exceptions.TryGetValue(name, out var type))
-		{
-			throw new Exception($"Type {name} could not be mapped.");
-		}
-
-		return (JsError)Activator.CreateInstance(type: type, [message])!;
 	}
 }

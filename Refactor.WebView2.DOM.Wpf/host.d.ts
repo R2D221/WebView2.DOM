@@ -19,9 +19,10 @@ interface RequestEnumerator {
 }
 
 interface ItemItemItem {
-	readonly Request: string;
-	Return(value: string | undefined): void;
-	Throw(value: string): void;
+	readonly Request: BridgeRequest;
+	ReturnVoid(): void;
+	Return(value: any): void;
+	Throw(name: string, message: string): void;
 }
 
 type BridgeRequestGetter = {

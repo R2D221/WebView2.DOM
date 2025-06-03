@@ -44,103 +44,95 @@
 	}
 
 	/** @type {WeakMap<object, any>} */
-	const prepareForSerialization_Memo = new WeakMap();
+	const pack_Memo = new WeakMap();
 
 	/**
-	 * 
-	 * @param {any} value
-	 */
-	function serialize(value) {
-		/**
-		 * 
-		 * @param {any} value
-		 */
-		function prepareForSerialization(value) {
-			switch (typeof value) {
-				case "boolean":
-				case "number":
-				case "string":
-				case "undefined":
-					return value;
+		* 
+		* @param {any} value
+		*/
+	function pack(value) {
+		switch (typeof value) {
+			case "boolean":
+			case "number":
+			case "string":
+			case "undefined":
+				return value;
 
-				case "bigint":
-					return value.toString();
+			case "bigint":
+				return value.toString();
 
-				case "object":
-					if (value === null) { return null; }
+			case "object":
+				if (value === null) { return null; }
 
-					let result = prepareForSerialization_Memo.get(value);
+				let result = pack_Memo.get(value);
 
-					if (result === undefined) {
-						const inner = () => {
-							const w = /** @type {typeof globalThis} */(value.constructor.constructor('return window')());
+				if (result === undefined) {
+					const inner = () => {
+						const w = /** @type {typeof globalThis} */(value.constructor.constructor('return window')());
 
-							if (value instanceof w.Array) {
-								return value.map(x => prepareForSerialization(x));
+						if (value instanceof w.Array) {
+							return value.map(x => pack(x));
+						}
+
+						if (value instanceof w.DOMStringList) {
+							return Array.from(value, x => pack(x));
+						}
+
+						if (value instanceof w.DOMRectList) {
+							return Array.from(value, x => pack(x));
+						}
+
+						if (value instanceof w.TouchList) {
+							return Array.from(value, x => pack(x));
+						}
+
+						if (value instanceof w.CSSNumericArray) {
+							return Array.from(value, x => pack(x));
+						}
+
+						const kind =
+							Object.getPrototypeOf(value) !== w.Object.prototype ? "object" :
+								value[w.Symbol.toStringTag] !== undefined ? "namespace" :
+									"literal"
+							;
+
+						if (kind === "literal") {
+							/** @type {{ [key: string]: any }} */
+							const newObj = {};
+
+							for (const key in value) {
+								newObj[key] = pack(value[key]);
 							}
 
-							if (value instanceof w.DOMStringList) {
-								return Array.from(value, x => prepareForSerialization(x));
-							}
+							return newObj;
+						}
 
-							if (value instanceof w.DOMRectList) {
-								return Array.from(value, x => prepareForSerialization(x));
-							}
+						heldRefs.add(value);
+						const id = getId(value);
 
-							if (value instanceof w.TouchList) {
-								return Array.from(value, x => prepareForSerialization(x));
-							}
-
-							if (value instanceof w.CSSNumericArray) {
-								return Array.from(value, x => prepareForSerialization(x));
-							}
-
-							const kind =
-								Object.getPrototypeOf(value) !== w.Object.prototype ? "object" :
-									value[w.Symbol.toStringTag] !== undefined ? "namespace" :
-										"literal"
-								;
-
-							if (kind === "literal") {
-								/** @type {{ [key: string]: any }} */
-								const newObj = {};
-
-								for (const key in value) {
-									newObj[key] = prepareForSerialization(value[key]);
+						switch (kind) {
+							case "namespace":
+								return { id: id, type: value[w.Symbol.toStringTag] };
+							case "object":
+								if (value instanceof w.HTMLInputElement) {
+									return { id: id, type: value.constructor.name + ' ' + value.type.replace('-', '_') };
 								}
+								else {
+									return { id: id, type: value.constructor.name };
+								}
+						}
+					};
 
-								return newObj;
-							}
+					result = inner();
+					pack_Memo.set(value, result);
+				}
 
-							heldRefs.add(value);
-							const id = getId(value);
+				return result;
 
-							switch (kind) {
-								case "namespace":
-									return { id: id, type: value[w.Symbol.toStringTag] };
-								case "object":
-									if (value instanceof w.HTMLInputElement) {
-										return { id: id, type: value.constructor.name + ' ' + value.type.replace('-', '_') };
-									}
-									else {
-										return { id: id, type: value.constructor.name };
-									}
-							}
-						};
-
-						result = inner();
-						prepareForSerialization_Memo.set(value, result);
-					}
-
-					return result;
-
-				case "function":
-				case "symbol":
-					throw new Error("Not supported");
-			}
+			case "function":
+			case "symbol":
+				throw new Error("Not supported");
 		}
-
-		return JSON.stringify(prepareForSerialization(value));
 	}
 
 	/**
@@ -148,16 +140,19 @@
 	 * @param {any} value
 	 * @returns {any}
 	 */
-	function getValueAfterDeserialization(value) {
+	function unpack(value) {
 		if (value instanceof Array) {
-			return value.map(x => getValueAfterDeserialization(x));
+			for (let i = 0; i < value.length; i++) {
+				value[i] = unpack(value[i]);
+			}
+
+			return value;
 		}
 
-		if (value !== null && typeof value === "object") {
-			if ("#id" in value) {
-				const result = idToObj.get(value["#id"])?.deref();
-				console.log(result);
-				return result;
+		if (value !== null && typeof value === "function" /* Proxy is a function */) {
+			const id = value["#id"];
+			if (id !== null) {
+				return idToObj.get(id)?.deref();
 			}
 		}
 
@@ -172,19 +167,24 @@
 				const item = iterator.Current;
 
 				try {
-					const request = /** @type {BridgeRequest} */(JSON.parse(item.Request));
+					const request = item.Request;
 					const obj = /** @type {any} */(idToObj.get(request.RefId)?.deref());
 
 					switch (request.Type) {
 						case "getter":
-							item.Return(serialize(obj[request.Property]));
+							item.Return(pack(obj[request.Property]));
 							break;
 						//case "setter":
 						//	iterator.Return(request.RefId);
 						//	break;
 						case "invoke":
-							const result = obj[request.Method](...request.Args.map(x => getValueAfterDeserialization(x)));
-							item.Return(serialize(result));
+							const result = obj[request.Method](...request.Args.map(x => unpack(x)));
+							if (result === undefined) {
+								item.ReturnVoid();
+							}
+							else {
+								item.Return(pack(result));
+							}
 							break;
 
 						default:
@@ -192,26 +192,19 @@
 					}
 				}
 				catch (e) {
-					let error;
+					let errorName = "Error";
+					let errorMessage = e?.toString() ?? "";
 
-					if (e === null || e === undefined) {
-						error = { name: "Error", message: "" };
-					}
-					else if (typeof e === "object") {
+					if (e !== null && typeof e === "object") {
 						const w = /** @type {typeof globalThis} */(e.constructor.constructor('return window')());
 
 						if (e instanceof w.Error || e instanceof w.DOMException) {
-							error = { name: e.name, message: e.message };
+							errorName = e.name;
+							errorMessage = e.message;
 						}
-						else {
-							error = { name: "Error", message: e.toString() };
-						}
-					}
-					else {
-						error = { name: "Error", message: e.toString() };
 					}
 
-					item.Throw(JSON.stringify(error));
+					item.Throw(errorName, errorMessage);
 				}
 			}
 		}
