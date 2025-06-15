@@ -25,6 +25,12 @@ public partial class CsWebView : WebView
 
 	public CsWebView()
 	{
+		Application.Current.Exit += (_, args) =>
+		{
+			browsingContext?.Dispose();
+			dispatcher?.Dispose();
+		};
+
 		CoreWebView2InitializationCompleted += (_, args) =>
 		{
 			if (args.IsSuccess is false) { throw args.InitializationException; }

@@ -24,7 +24,7 @@ public sealed class JsDispatcherFrame
 	}
 }
 
-public sealed class JsDispatcher
+public sealed class JsDispatcher : IDisposable
 {
 	private static readonly ThreadLocal<JsDispatcher> threadLocal = new();
 
@@ -64,5 +64,11 @@ public sealed class JsDispatcher
 	{
 		var result = actions.Writer.TryWrite(action);
 		Debug.Assert(result is true);
+	}
+
+	public void Dispose()
+	{
+		var success = actions.Writer.TryComplete();
+		Debug.Assert(success);
 	}
 }
