@@ -35,6 +35,14 @@ public sealed class JsReference
 
 	public T GetCached<T>([CallerMemberName] string? property = null) => Get<T>(property);
 
+	public void Set<T>(T value, [CallerMemberName] string? property = null)
+	{
+		if (property is null) { throw new InvalidOperationException(); }
+		ThreadAffinity();
+
+		browsingContext.Set(refId, property, value);
+	}
+
 	internal Invoker<ValueTuple> Method([CallerMemberName] string method = "") => new(this, method);
 	internal Invoker<T> Method<T>([CallerMemberName] string method = "") => new(this, method);
 
@@ -42,6 +50,7 @@ public sealed class JsReference
 	{
 		internal T Invoke(params object?[] @params)
 		{
+			@this.ThreadAffinity();
 			return @this.browsingContext.Invoke<T>(@this.refId, method, @params);
 		}
 	}

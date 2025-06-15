@@ -71,6 +71,12 @@ public sealed class Getter(ulong RefId, string property) : Request("getter", Ref
 	public string Property => property;
 }
 
+public sealed class Setter(ulong RefId, string property, object? setValue) : Request("setter", RefId)
+{
+	public string Property => property;
+	public object? SetValue => setValue;
+}
+
 public sealed class Invoke(ulong RefId, string method, object?[] args) : Request("invoke", RefId)
 {
 	public string Method => method;

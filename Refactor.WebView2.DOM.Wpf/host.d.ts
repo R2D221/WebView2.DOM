@@ -36,7 +36,7 @@ type BridgeRequestSetter = {
 	readonly Type: "setter";
 	readonly RefId: number;
 	readonly Property: string;
-	readonly Value: string;
+	readonly SetValue: any;
 }
 
 type BridgeRequestInvoke = {

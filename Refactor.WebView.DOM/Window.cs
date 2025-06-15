@@ -11,9 +11,12 @@ public sealed class Window : EventTarget
 
 	private Window() { }
 
+	public string title { get => JS.Get<string>(); set => JS.Set(value); }
 	public int innerWidth => JS.Get<int>();
 	public int innerHeight => JS.Get<int>();
 	public Document document => JS.Get<Document>();
+
+	public Location location => JS.Get<Location>();
 
 	public void alert(string message) => JS.Method().Invoke(message);
 	public bool confirm(string message) => JS.Method<bool>().Invoke(message);
@@ -53,4 +56,10 @@ public sealed class NodeIterator : JsObject
 	public Node? previousNode() => JS.Method<Node?>().Invoke();
 
 	public void detach() => JS.Method().Invoke();
+}
+
+public sealed class Location : JsObject
+{
+	public string href { get => JS.Get<string>(); set => JS.Set(value); }
+	public void reload() => JS.Method().Invoke();
 }

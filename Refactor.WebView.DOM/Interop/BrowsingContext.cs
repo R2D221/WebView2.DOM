@@ -105,6 +105,12 @@ public abstract partial class BrowsingContext : IDisposable
 		return Request<T>(request);
 	}
 
+	internal void Set(ulong refId, string property, object? value)
+	{
+		var request = new Setter(refId, property, Pack(value));
+		_ = Request<ValueTuple>(request);
+	}
+
 	internal T Invoke<T>(ulong refId, string method, object?[] @params)
 	{
 		for (var i = 0; i < @params.Length; i++)

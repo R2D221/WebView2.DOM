@@ -226,9 +226,10 @@ class Exception extends Error {
 						case "getter":
 							item.Return(pack(obj[request.Property]));
 							break;
-						//case "setter":
-						//	iterator.Return(request.RefId);
-						//	break;
+						case "setter":
+							obj[request.Property] = unpack(request.SetValue);
+							item.ReturnVoid();
+							break;
 						case "invoke":
 							const result = obj[request.Method](...request.Args.map(x => unpack(x)));
 							if (result === undefined) {
