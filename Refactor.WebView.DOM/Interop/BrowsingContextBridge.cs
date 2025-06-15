@@ -8,19 +8,12 @@ using System.Threading.Tasks;
 namespace Refactor.WebView2.DOM.Interop;
 
 public sealed class BrowsingContextBridge(
-	JsDispatcher dispatcher,
+	BrowsingContext browsingContext,
 	Channel<(Request, TaskCompletionSource<object?>, JsDispatcherFrame)> requests,
 	Action onDOMContentLoaded,
 	CancellationToken cancellationToken)
 {
-	public void OnDOMContentLoaded()
-	{
-		dispatcher.Enqueue(() =>
-		{
-			try { onDOMContentLoaded(); }
-			finally { requests.Writer.Complete(); }
-		});
-	}
+	public void OnDOMContentLoaded() => browsingContext.Call(onDOMContentLoaded, []);
 
 	public IEnumerator<RequestWrapper> GetEnumerator()
 	{
@@ -68,6 +61,14 @@ public sealed class BrowsingContextBridge(
 		public void Throw(string name, string message)
 		{
 			current.Item2.SetException(JsError.NewError(name, message));
+			current.Item3.Continue = false;
+		}
+
+		public void ThrowWrapper(object obj)
+		{
+			_ = obj is ExceptionWrapper wrapper ? true : throw new Exception();
+
+			current.Item2.SetException(wrapper.Exception);
 			current.Item3.Continue = false;
 		}
 	}

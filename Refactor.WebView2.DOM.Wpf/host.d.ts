@@ -23,6 +23,7 @@ interface ItemItemItem {
 	ReturnVoid(): void;
 	Return(value: any): void;
 	Throw(name: string, message: string): void;
+	ThrowWrapper(wrapper: any): void;
 }
 
 type BridgeRequestGetter = {
@@ -45,8 +46,28 @@ type BridgeRequestInvoke = {
 	readonly Args: any[];
 }
 
+type BridgeRequestReturnVoid = {
+	readonly Type: "return void";
+	readonly RefId: number;
+}
+
+type BridgeRequestReturn = {
+	readonly Type: "return";
+	readonly RefId: number;
+	readonly ReturnValue: any;
+}
+
+type BridgeRequestThrow = {
+	readonly Type: "throw";
+	readonly RefId: number;
+	readonly Exception: any;
+}
+
 type BridgeRequest =
 	BridgeRequestGetter
 	| BridgeRequestSetter
 	| BridgeRequestInvoke
+	| BridgeRequestReturnVoid
+	| BridgeRequestReturn
+	| BridgeRequestThrow
 	;

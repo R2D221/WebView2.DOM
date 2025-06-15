@@ -1,7 +1,51 @@
 "use strict";
 
-(() => {
+class Exception extends Error {
+	/** @type {{ [key: string]: typeof Exception; }} */
+	static #classes = {};
 
+	/**
+	 * 
+	 * @param {Error} wrapper
+	 */
+	static create(wrapper) {
+		const constructor = Exception.#classes[wrapper.name] ??= new Function(`
+			return class ${wrapper.name} extends Exception {
+				constructor(wrapper) {
+					super(wrapper);
+				}
+			}
+		`)();
+
+		return new constructor(wrapper);
+	}
+
+	/**
+	 * 
+	 * @param {any} cause
+	 * @returns {ErrorOptions | undefined}
+	 */
+	static #getOptions(cause) {
+		if (cause == null) { return; }
+
+		return { cause: Exception.create(cause) };
+	}
+
+	#wrapper;
+
+	/**
+	 * 
+	 * @param {Error} wrapper
+	 */
+	constructor(wrapper) {
+		super(wrapper.message, Exception.#getOptions(wrapper.cause));
+		this.#wrapper = wrapper;
+	}
+
+	get wrapper() { return this.#wrapper; }
+};
+
+(() => {
 	const hostObjects = window.chrome.webview.hostObjects;
 	function bridge() { return hostObjects.sync.Bridge; }
 
@@ -145,14 +189,21 @@
 			for (let i = 0; i < value.length; i++) {
 				value[i] = unpack(value[i]);
 			}
-
 			return value;
 		}
 
 		if (value !== null && typeof value === "function" /* Proxy is a function */) {
-			const id = value["#id"];
-			if (id !== null) {
-				return idToObj.get(id)?.deref();
+			switch (value["#type#"]) {
+				case "reference":
+					return idToObj.get(value.Id)?.deref();
+				case "callback":
+					return /** @type {(...args: unknown[]) => unknown} */((...args) => {
+						for (let i = 0; i < args.length; i++) {
+							args[i] = pack(args[i]);
+						}
+						value.Call(args);
+						return execute();
+					});
 			}
 		}
 
@@ -166,6 +217,7 @@
 			while (iterator.MoveNext()) {
 				const item = iterator.Current;
 
+				let returnException = false;
 				try {
 					const request = item.Request;
 					const obj = /** @type {any} */(idToObj.get(request.RefId)?.deref());
@@ -187,11 +239,23 @@
 							}
 							break;
 
+						case "return void":
+							return;
+
+						case "return":
+							return unpack(request.ReturnValue);
+
+						case "throw":
+							returnException = true;
+							throw Exception.create(request.Exception);
+
 						default:
 							throw new Error("Not supported");
 					}
 				}
 				catch (e) {
+					if (returnException) { throw e; }
+
 					let errorName = "Error";
 					let errorMessage = e?.toString() ?? "";
 
@@ -204,7 +268,12 @@
 						}
 					}
 
-					item.Throw(errorName, errorMessage);
+					if (e instanceof Exception) {
+						item.ThrowWrapper(e.wrapper);
+					}
+					else {
+						item.Throw(errorName, errorMessage);
+					}
 				}
 			}
 		}

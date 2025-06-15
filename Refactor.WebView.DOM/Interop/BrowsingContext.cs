@@ -2,7 +2,9 @@
 using System.Collections.Concurrent;
 using System.Collections.Frozen;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
@@ -74,7 +76,7 @@ public abstract partial class BrowsingContext : IDisposable
 			global.Value = this;
 		});
 
-		bridge = new(dispatcher, requests, onDOMContentLoaded, cancellation.Token);
+		bridge = new(this, requests, onDOMContentLoaded, cancellation.Token);
 	}
 
 	public BrowsingContextBridge Bridge => bridge;
@@ -94,7 +96,7 @@ public abstract partial class BrowsingContext : IDisposable
 		JsDispatcher.Current.PushFrame(frame);
 		var response = taskAwaiter.GetResult();
 
-		return Unpack<T>(response);
+		return (T)Unpack(response, typeof(T))!;
 	}
 
 	internal T Get<T>(ulong refId, string property)
@@ -114,40 +116,79 @@ public abstract partial class BrowsingContext : IDisposable
 		return Request<T>(request);
 	}
 
+	internal void ReturnVoid()
+	{
+		var request = new ReturnVoid();
+		var success = requests.Writer.TryWrite((request, null!, null!));
+		Debug.Assert(success);
+	}
+
+	internal void Return(object? value)
+	{
+		var request = new Return(Pack(value));
+		var success = requests.Writer.TryWrite((request, null!, null!));
+		Debug.Assert(success);
+	}
+
+	internal void Throw(Exception exception)
+	{
+		var request = new Throw(new(exception));
+		var success = requests.Writer.TryWrite((request, null!, null!));
+		Debug.Assert(success);
+	}
+
 	public void Dispose()
 	{
 		cancellation.Cancel();
 	}
 
-	private static object? Pack(object? value)
+	private object? Pack(object? value)
 	{
 		if (value is JsObject js)
 		{
-			return new PlainObjectWrapper
-			{
-				["#id"] = js.Id
-			};
+			//return new PlainObjectWrapper
+			//{
+			//	["#id"] = js.Id
+			//};
+
+			return new IdWrapper { Id = js.Id };
+		}
+
+		if (value is Delegate @delegate)
+		{
+			return new CallbackWrapper(this, @delegate);
 		}
 
 		return value;
 	}
 
-	private T Unpack<T>(object? value)
+	[return: NotNullIfNotNull(nameof(value))]
+	internal object? Unpack(object? value, Type requestedType)
 	{
-		if (value is null) { return (T)value!; }
+		if (value is null) { return null; }
 
 		//if (TryConvert(out T converted)) { return converted; }
-		if (value is T converted) { return converted; }
+		if (value.GetType() == requestedType) { return value; }
 
-		if (typeof(JsObject).IsAssignableFrom(typeof(T)))
+		if (typeof(JsObject).IsAssignableFrom(requestedType))
 		{
-			var referenceId = (ulong)Unpack<int>(ComObject.GetProperty(value, "id"));
-			var referenceType = Unpack<string>(ComObject.GetProperty(value, "type"));
+			var referenceId = ComObject.GetProperty(value, "id") switch
+			{
+				int i => (ulong)i,
+				double d => (ulong)d,
+				_ => throw new Exception(),
+			};
 
-			return (T)Load(referenceId, referenceType, typeof(T));
+			var referenceType = ComObject.GetProperty(value, "type") switch
+			{
+				string s => s,
+				_ => throw new Exception(),
+			};
+
+			return Load(referenceId, referenceType, requestedType);
 		}
 
-		return (T)value!;
+		return value;
 	}
 
 	private object Load(ulong referenceId, string typeName, Type requestedType)
@@ -180,5 +221,42 @@ public abstract partial class BrowsingContext : IDisposable
 		}
 
 		return target;
+	}
+
+	internal void Call(Delegate @delegate, object[] args)
+	{
+		dispatcher.Enqueue(() =>
+		{
+			try
+			{
+				var @params = @delegate.Method.GetParameters();
+
+				var length = Math.Max(args.Length, @params.Length);
+
+				for (var i = 0; i < length; i++)
+				{
+					args[i] = Unpack(args[i], @params[i].ParameterType);
+				}
+
+				var result = @delegate.DynamicInvoke(args);
+
+				if (@delegate.Method.ReturnType == typeof(void))
+				{
+					ReturnVoid();
+				}
+				else
+				{
+					Return(result);
+				}
+			}
+			catch (TargetInvocationException ex)
+			{
+				Throw(ex.InnerException!);
+			}
+			catch (Exception ex)
+			{
+				Throw(ex);
+			}
+		});
 	}
 }
